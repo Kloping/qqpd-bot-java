@@ -18,7 +18,7 @@ import java.util.Map;
  * @author github.kloping
  */
 public class Starter implements Runnable {
-    public static final String NET_MAIN = "https://sandbox.api.sgroup.qq.com";
+    public static final String NET_MAIN = "https://api.sgroup.qq.com/";
     public static final String APPID_ID = "appid";
     public static final String TOKEN_ID = "token";
     public static final String AUTH_ID = "appid-token";

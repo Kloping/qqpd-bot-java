@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="bot-java" />
+        <module name="bot-qqpd-java" />
       </profile>
     </annotationProcessing>
   </component>
