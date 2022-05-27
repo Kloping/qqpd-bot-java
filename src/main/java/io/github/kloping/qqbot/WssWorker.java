@@ -10,6 +10,7 @@ import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
 import io.github.kloping.qqbot.http.BotBase;
+import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import io.github.kloping.qqbot.interfaces.OnMessageListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import org.java_websocket.client.WebSocketClient;
@@ -118,20 +119,28 @@ public class WssWorker implements Runnable {
     private void onReceive(Pack<JSONObject> pack) {
         String t = pack.getT();
         if (t == null) return;
+        JSONObject jo = pack.getD();
+        Message m = jo.toJavaObject(Message.class);
         switch (t) {
             case "MESSAGE_CREATE":
-                JSONObject jo = pack.getD();
-                Message m = jo.toJavaObject(Message.class);
                 Iterator<OnMessageListener> iterator = listeners.iterator();
                 while (iterator.hasNext()) {
                     iterator.next().onMessage(m);
                 }
+                return;
+            case "AT_MESSAGE_CREATE":
+                Iterator<OnAtMessageListener> iterator0 = listeners0.iterator();
+                while (iterator0.hasNext()) {
+                    iterator0.next().onMessage(m);
+                }
+                return;
             default:
                 break;
         }
     }
 
     public List<OnMessageListener> listeners = new ArrayList<>();
+    public List<OnAtMessageListener> listeners0 = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
 

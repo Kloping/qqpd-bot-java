@@ -5,11 +5,12 @@ import io.github.kloping.qqbot.http.GuildBase;
 import io.github.kloping.qqbot.http.MessageBase;
 
 import java.util.AbstractMap;
+import java.util.Scanner;
 
 /**
  * @author github.kloping
  */
-public class test_sendMessage {
+public class test_inputSendMessage {
     public static void main(String[] args) throws Exception {
         Starter starter = test_main.factory();
         starter.run();
@@ -24,7 +25,13 @@ public class test_sendMessage {
             }
         }
         Thread.sleep(5000);
-        System.out.println(base.send(channel.getId(), new AbstractMap.SimpleEntry<>("content", "测试消息")));
-        System.out.println(channel.send("1"));
+
+        String line = null;
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            line = sc.nextLine();
+            if (line == null || line.isEmpty()) continue;
+            System.out.println(base.send(channel.getId(), new AbstractMap.SimpleEntry<>("content", line)));
+        }
     }
 }

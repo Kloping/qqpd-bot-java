@@ -8,6 +8,7 @@ import io.github.kloping.qqbot.api.User;
 import io.github.kloping.qqbot.entitys.Bot;
 import io.github.kloping.qqbot.http.GuildBase;
 import io.github.kloping.qqbot.http.UserBase;
+import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import io.github.kloping.qqbot.interfaces.OnMessageListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 
@@ -66,8 +67,12 @@ public class Starter implements Runnable {
         StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(WssWorker.class).setOnPackReceive(onPackReceive);
     }
 
-    public void addMessageListener(OnMessageListener listener) {
+    public void addListener(OnMessageListener listener) {
         StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(WssWorker.class).listeners.add(listener);
+    }
+
+    public void addListener(OnAtMessageListener listener) {
+        StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(WssWorker.class).listeners0.add(listener);
     }
 
     public Bot getBot() {

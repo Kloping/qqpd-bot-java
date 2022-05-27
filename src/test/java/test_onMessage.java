@@ -9,7 +9,7 @@ public class test_onMessage {
     public static void main(String[] args) throws Exception {
         Starter starter = test_main.factory();
         starter.run();
-        starter.addMessageListener(new OnMessageListener() {
+        starter.addListener(new OnMessageListener() {
             @Override
             public void onMessage(Message message) {
                 System.out.println(message);

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,10 @@ public class Channel {
 
     public MessageAudited send(String text) {
         return StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(MessageBase.class).send(id, String.format("{\"content\": \"%s\"}", text), MAP);
+    }
+
+    public String send0(String text) {
+        return StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(MessageBase.class).send(id, new AbstractMap.SimpleEntry<>("content", text));
     }
 
     public MessageAudited send(JSONObject jo) {
