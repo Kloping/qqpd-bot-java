@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
 import io.github.kloping.qqbot.http.BotBase;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
+import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnMessageListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import org.java_websocket.client.WebSocketClient;
@@ -105,6 +106,9 @@ public class WssWorker implements Runnable {
             @Override
             public void onClose(int i, String s, boolean b) {
                 logger.waring("wss closed");
+                for (OnCloseListener onCloseListener : listeners1) {
+                    onCloseListener.onReceive();
+                }
             }
 
             @Override
@@ -141,6 +145,7 @@ public class WssWorker implements Runnable {
 
     public List<OnMessageListener> listeners = new ArrayList<>();
     public List<OnAtMessageListener> listeners0 = new ArrayList<>();
+    public List<OnCloseListener> listeners1 = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
 
