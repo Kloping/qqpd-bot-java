@@ -2,6 +2,8 @@ package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.interfaces.Sender;
+import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.message.MessageReference;
 import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
 import lombok.Data;
@@ -41,12 +43,19 @@ public class Channel implements Sender {
     }
 
     @Override
+    public MessageAudited sendAndReply(String text, Message message) {
+        PreMessage msg = new PreMessage(text);
+        msg.setMessage_reference(new MessageReference(message.getId()));
+        return Resource.messageBase.send(Channel.this.id, msg, MAP);
+    }
+
+    @Override
     public MessageAudited send(String text) {
-        return Resource.messageBase.send(id, new PreMessage(text), MAP);
+        return Resource.messageBase.send(Channel.this.id, new PreMessage(text), MAP);
     }
 
     @Override
     public MessageAudited send(PreMessage msg) {
-        return Resource.messageBase.send(id, msg, MAP);
+        return Resource.messageBase.send(Channel.this.id, msg, MAP);
     }
 }

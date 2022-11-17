@@ -40,7 +40,7 @@ public class test_comprehensive {
                 } else if (content.startsWith(w1)) {
                     String s = content.substring(w1.length());
                     String r0 = w1(s.trim());
-                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + r0);
+                    message.sendAndReply("<@!" + message.getAuthor().getId() + ">  \n" + r0, message);
                 }
             }
         });

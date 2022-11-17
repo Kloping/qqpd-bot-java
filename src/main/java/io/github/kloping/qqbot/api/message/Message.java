@@ -30,6 +30,14 @@ public class Message implements Sender {
     private String timestamp;
 
     @Override
+    public MessageAudited sendAndReply(String text, Message message) {
+        PreMessage msg = new PreMessage(text);
+        msg.setMsg_id(Message.this.id);
+        msg.setMessage_reference(new MessageReference(message.getId()));
+        return Resource.messageBase.send(Message.this.channel_id, msg, MAP);
+    }
+
+    @Override
     public MessageAudited send(String text) {
         PreMessage msg = new PreMessage(text);
         msg.setMsg_id(Message.this.id);

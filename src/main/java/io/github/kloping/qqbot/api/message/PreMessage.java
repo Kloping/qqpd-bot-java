@@ -12,7 +12,7 @@ public class PreMessage {
     private String content;
     private Object embed;
     private Object ark;
-    private Object message_reference;
+    private MessageReference message_reference;
     private String image;
     private String msg_id;
     private String event_id;

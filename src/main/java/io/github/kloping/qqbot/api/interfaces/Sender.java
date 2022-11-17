@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.interfaces;
 
+import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
 
@@ -17,6 +18,16 @@ public interface Sender {
      * @return
      */
     public MessageAudited send(String text);
+
+    /**
+     * 以JSON方式发送文本消息并引用指定消息
+     *
+     * @param text
+     * @param message
+     * @return
+     */
+    public MessageAudited sendAndReply(String text, Message message);
+
 
     /**
      * 以header方式发送文本消息
