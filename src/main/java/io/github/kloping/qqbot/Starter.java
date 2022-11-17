@@ -60,7 +60,6 @@ public class Starter implements Runnable {
     private String appid;
     private String token;
 
-
     public Starter(String appid, String token) {
         this.appid = appid;
         this.token = token;
@@ -89,7 +88,7 @@ public class Starter implements Runnable {
     }
 
     protected void wssWork() {
-        Public.EXECUTOR_SERVICE.submit(() -> wssWorker.run());
+        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> wssWorker.run());
     }
 
     public ContextManager getContextManager() {

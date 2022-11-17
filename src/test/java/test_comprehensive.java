@@ -1,7 +1,9 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.github.kloping.number.NumberUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.message.MessagePacket;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +17,7 @@ public class test_comprehensive {
     public static void main(String[] args) {
         Starter starter = test_main.factory();
         starter.run();
+        starter.getWssWorker().setReconnect(true);
 
         String w0 = String.format("<@!%s> /天气", starter.getBot().getInfo().getId());
         starter.addListener(new OnAtMessageListener() {
@@ -25,7 +28,7 @@ public class test_comprehensive {
                     return;
                 } else if (content.startsWith(w0)) {
                     String s = content.substring(w0.length());
-                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + w0(s.trim()));
+                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + w0(s.trim()), message);
                 }
             }
         });
@@ -40,10 +43,34 @@ public class test_comprehensive {
                 } else if (content.startsWith(w1)) {
                     String s = content.substring(w1.length());
                     String r0 = w1(s.trim());
-                    message.sendAndReply("<@!" + message.getAuthor().getId() + ">  \n" + r0, message);
+                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + r0, message);
                 }
             }
         });
+
+        String w2 = String.format("<@!%s> /蹭", starter.getBot().getInfo().getId());
+        starter.addListener(new OnAtMessageListener() {
+            @Override
+            public void onMessage(Message message) {
+
+                String content = message.getContent();
+                if (content == null && content.isEmpty()) {
+                    return;
+                } else if (content.startsWith(w2)) {
+                    String s = content.substring(w2.length());
+                    String qid = NumberUtils.findNumberFromString(s);
+                    String avatar = starter.getBot().getGuild(message.getGuild_id())
+                            .memberMap().get(qid).getUser().getAvatar();
+                    MessagePacket packet = new MessagePacket()
+                            .setContent("<@!" + message.getAuthor().getId() + ">")
+                            //这里上传图片的网址必须是经过备案的域名下的文件
+                            .setImage("")
+                            .setReplyId(message.getId());
+                    message.send(packet);
+                }
+            }
+        });
+
     }
 
 

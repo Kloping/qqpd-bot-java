@@ -19,7 +19,6 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,7 +58,7 @@ public class WssWorker implements Runnable {
         URI u = null;
         try {
             u = new URI(botBase.gateway().getUrl());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         logger.log("ws url:" + u);
@@ -131,8 +130,12 @@ public class WssWorker implements Runnable {
                     }
                 } finally {
                     if (isReconnect) {
+                        webSocket.close();
+                        if (Resource.mainFuture != null) {
+                            Resource.mainFuture.cancel(true);
+                        }
                         isFirst = true;
-                        Public.EXECUTOR_SERVICE.submit(() -> WssWorker.this.run());
+                        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> WssWorker.this.run());
                     }
                 }
             }
@@ -143,7 +146,6 @@ public class WssWorker implements Runnable {
                 e.printStackTrace();
             }
         };
-
         webSocket.run();
     }
 

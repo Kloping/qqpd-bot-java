@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import static io.github.kloping.qqbot.Resource.packet2pre;
 import static io.github.kloping.qqbot.api.Channel.MAP;
 
 /**
@@ -30,17 +31,20 @@ public class Message implements Sender {
     private String timestamp;
 
     @Override
-    public MessageAudited sendAndReply(String text, Message message) {
-        PreMessage msg = new PreMessage(text);
-        msg.setMsg_id(Message.this.id);
-        msg.setMessage_reference(new MessageReference(message.getId()));
-        return Resource.messageBase.send(Message.this.channel_id, msg, MAP);
+    public MessageAudited send(String text, Message message) {
+        return send(new MessagePacket().setContent(text).setReplyId(message.id));
     }
 
     @Override
     public MessageAudited send(String text) {
-        PreMessage msg = new PreMessage(text);
+        return send(new MessagePacket().setContent(text));
+    }
+
+    @Override
+    public MessageAudited send(MessagePacket packet) {
+        PreMessage msg = new PreMessage();
         msg.setMsg_id(Message.this.id);
+        packet2pre(packet, msg);
         return Resource.messageBase.send(Message.this.channel_id, msg, MAP);
     }
 

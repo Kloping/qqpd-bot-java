@@ -3,7 +3,13 @@ package io.github.kloping.qqbot;
 import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.judge.Judge;
+import io.github.kloping.qqbot.api.message.MessagePacket;
+import io.github.kloping.qqbot.api.message.MessageReference;
+import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.http.*;
+
+import java.util.concurrent.Future;
 
 /**
  * @author github.kloping
@@ -26,4 +32,21 @@ public class Resource {
 
     @AutoStand
     public static UserBase userBase;
+
+    public static Future mainFuture;
+
+    public static void packet2pre(MessagePacket packet, PreMessage msg) {
+        if (Judge.isNotEmpty(packet.getContent())) {
+            msg.setContent(packet.getContent());
+        }
+        if (Judge.isNotEmpty(packet.getImage())) {
+            msg.setImage(packet.getImage());
+        }
+        if (Judge.isNotEmpty(packet.getImage())) {
+            msg.setImage(packet.getImage());
+        }
+        if (Judge.isNotEmpty(packet.getReplyId())) {
+            msg.setMessage_reference(new MessageReference(packet.getReplyId()));
+        }
+    }
 }

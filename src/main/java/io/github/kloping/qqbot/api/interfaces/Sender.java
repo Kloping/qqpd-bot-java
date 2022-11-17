@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.api.interfaces;
 
 import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.message.MessagePacket;
 import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
 
@@ -26,8 +27,15 @@ public interface Sender {
      * @param message
      * @return
      */
-    public MessageAudited sendAndReply(String text, Message message);
+    public MessageAudited send(String text, Message message);
 
+    /**
+     * 以自定义方式发送消息
+     *
+     * @param packet
+     * @return
+     */
+    public MessageAudited send(MessagePacket packet);
 
     /**
      * 以header方式发送文本消息

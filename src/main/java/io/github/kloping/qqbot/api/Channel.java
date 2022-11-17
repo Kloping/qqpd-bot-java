@@ -3,6 +3,7 @@ package io.github.kloping.qqbot.api;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.interfaces.Sender;
 import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.message.MessagePacket;
 import io.github.kloping.qqbot.api.message.MessageReference;
 import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
@@ -13,6 +14,8 @@ import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.github.kloping.qqbot.Resource.packet2pre;
 
 
 /**
@@ -40,22 +43,56 @@ public class Channel implements Sender {
 
     static {
         MAP.put("Content-Type", "application/json");
+        MAP.put("Accept-Encoding", "*");
     }
 
+    /**
+     * 此方式发送的消息 为主动消息 会受到次数限制
+     *
+     * @param text
+     * @param message
+     * @return
+     */
     @Override
-    public MessageAudited sendAndReply(String text, Message message) {
+    public MessageAudited send(String text, Message message) {
         PreMessage msg = new PreMessage(text);
         msg.setMessage_reference(new MessageReference(message.getId()));
         return Resource.messageBase.send(Channel.this.id, msg, MAP);
     }
 
+    /**
+     * 此方式发送的消息 为主动消息 会受到次数限制
+     *
+     * @param text
+     * @return
+     */
     @Override
     public MessageAudited send(String text) {
         return Resource.messageBase.send(Channel.this.id, new PreMessage(text), MAP);
     }
 
+    /**
+     * 此方式发送的消息 为主动消息 会受到次数限制
+     *
+     * @param packet
+     * @return
+     */
+    @Override
+    public MessageAudited send(MessagePacket packet) {
+        PreMessage msg = new PreMessage();
+        packet2pre(packet, msg);
+        return Resource.messageBase.send(Channel.this.id, msg, MAP);
+    }
+
+    /**
+     * 此方式发送的消息 为主动消息 会受到次数限制
+     *
+     * @param msg
+     * @return
+     */
     @Override
     public MessageAudited send(PreMessage msg) {
         return Resource.messageBase.send(Channel.this.id, msg, MAP);
     }
+
 }
