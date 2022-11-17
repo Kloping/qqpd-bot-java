@@ -2,6 +2,18 @@ package io.github.kloping.qqbot;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.channels.NotYetConnectedException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
@@ -14,18 +26,12 @@ import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnMessageListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.channels.NotYetConnectedException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static io.github.kloping.qqbot.Starter.*;
+import static io.github.kloping.qqbot.Starter.AUTH_ID;
+import static io.github.kloping.qqbot.Starter.INTENTS_ID;
+import static io.github.kloping.qqbot.Starter.PROPERTIES_ID;
+import static io.github.kloping.qqbot.Starter.SHARD_ID;
+import static io.github.kloping.qqbot.Starter.TOKEN_ID;
 
 /**
  * @author github.kloping
@@ -37,7 +43,8 @@ public class WssWorker implements Runnable {
     public Pack jumpPack = new Pack();
     public long heartbeatInterval;
     public int newstId = 1;
-    public Pack authPack = null;
+    public Pack<JSONObject> authPack = null;
+    public String sessionId = "";
 
     @AutoStand
     ContextManager contextManager;
@@ -59,6 +66,7 @@ public class WssWorker implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+       logger.log("ws url:" + u);
         webSocket = new WebSocketClient(u) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
@@ -82,10 +90,26 @@ public class WssWorker implements Runnable {
                             },
                             heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
                 } else {
-                    Pack pack = JSON.parseObject(s).toJavaObject(Pack.class);
-                    if (pack.getS() != null)
-                        newstId = pack.getS().intValue();
+                    Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
                     logger.log("receive " + pack);
+                    if (pack.getS() != null) {
+                        newstId = pack.getS().intValue();
+                    }
+
+                    if (pack.getOp().equals(0)) {
+                        try {
+                            sessionId = pack.getD().getString("session_id");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (pack.getOp().equals(7)) {
+                        logger.info("断线重连");
+                        authPack.setOp(6);
+                        authPack.getD().put("session_id",sessionId);
+                        authPack.getD().put("seq",newstId);
+                        webSocket.send(JSON.toJSONString(authPack));
+                    }
                     if (onPackReceive != null) {
                         try {
                             onPackReceive.onReceive(pack);
@@ -117,6 +141,7 @@ public class WssWorker implements Runnable {
                 e.printStackTrace();
             }
         };
+
         webSocket.run();
     }
 

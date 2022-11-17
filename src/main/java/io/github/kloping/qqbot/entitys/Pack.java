@@ -2,71 +2,30 @@ package io.github.kloping.qqbot.entitys;
 
 import java.util.Objects;
 
+import lombok.Data;
+
 /**
  * @author github-kloping
  */
+@Data
 public class Pack<T> {
-    private Number op;
+
+    /**
+     * CODE	名称	客户端操作	描述
+     * 0	Dispatch	Receive	服务端进行消息推送
+     * 1	Heartbeat	Send/Receive	客户端或服务端发送心跳
+     * 2	Identify	Send	客户端发送鉴权
+     * 6	Resume	Send	客户端恢复连接
+     * 7	Reconnect	Receive	服务端通知客户端重新连接
+     * 9	Invalid Session	Receive	当identify或resume的时候，如果参数有错，服务端会返回该消息
+     * 10	Hello	Receive	当客户端与网关建立ws连接之后，网关下发的第一条消息
+     * 11	Heartbeat ACK	Receive/Reply	当发送心跳成功之后，就会收到该消息
+     * 12	HTTP Callback ACK	Reply	仅用于 http 回调模式的回包，代表机器人收到了平台推送的数据
+     */
+    private Integer op;
     private Number s;
     private T d;
     private String t;
 
-    public Number getOp() {
-        return this.op;
-    }
 
-    public Pack setOp(Number op) {
-        this.op = op;
-        return this;
-    }
-
-    public Number getS() {
-        return this.s;
-    }
-
-    public Pack setS(Number s) {
-        this.s = s;
-        return this;
-    }
-
-    public T getD() {
-        return this.d;
-    }
-
-    public Pack setD(T d) {
-        this.d = d;
-        return this;
-    }
-
-    public String getT() {
-        return this.t;
-    }
-
-    public Pack setT(String t) {
-        this.t = t;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pack pack = (Pack) o;
-        return Objects.equals(op, pack.op) && Objects.equals(s, pack.s) && Objects.equals(d, pack.d) && Objects.equals(t, pack.t);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(op, s, d, t);
-    }
-
-    @Override
-    public String toString() {
-        return "Pack{" +
-                "op=" + op +
-                ", s=" + s +
-                ", d=" + d +
-                ", t='" + t + '\'' +
-                '}';
-    }
 }
