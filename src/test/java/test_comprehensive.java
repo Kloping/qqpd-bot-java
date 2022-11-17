@@ -62,9 +62,9 @@ public class test_comprehensive {
                     String avatar = starter.getBot().getGuild(message.getGuild_id())
                             .memberMap().get(qid).getUser().getAvatar();
                     MessagePacket packet = new MessagePacket()
-                            .setContent("<@!" + message.getAuthor().getId() + ">")
+                            .setContent("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..")
                             //这里上传图片的网址必须是经过备案的域名下的文件
-                            .setImage("")
+                            .setImage(avatar)
                             .setReplyId(message.getId());
                     message.send(packet);
                 }
