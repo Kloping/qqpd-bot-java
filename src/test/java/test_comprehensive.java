@@ -67,27 +67,14 @@ public class test_comprehensive {
         try {
             Document document = null;
             try {
-                document = Jsoup.connect("http://kloping.top/api/get/weather?address=" + s0).ignoreContentType(true)
+                document = Jsoup.connect("https://xiaoapi.cn/API/zs_tq.php?type=cytq&msg=" + s0 + "&num=20&n=1").ignoreContentType(true)
                         .get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             String json = document.body().text();
             JSONObject jo = JSON.parseObject(json);
-            test_weather.WeatherDetail wd = jo.toJavaObject(test_weather.WeatherDetail.class);
-            StringBuilder sb = new StringBuilder();
-            sb.append(wd.getTime()).append("\n");
-            sb.append(wd.getAddress()).append(":").append(wd.getDescribed()).append("\n");
-            sb.append(wd.getWind()).append("\n");
-            sb.append(wd.getAir()).append("\n");
-            sb.append(wd.getHumidity()).append("\n");
-            sb.append(wd.getPm()).append("\n");
-            sb.append("现在温度:").append(wd.getTemperatureNow()).append("\n");
-            sb.append("今日温度:").append(wd.getTemperature()).append("\n");
-            sb.append(wd.getUva()).append("\n");
-            sb.append(wd.getSunOn()).append("\n");
-            sb.append(wd.getSunDown()).append("\n");
-            return sb.toString().trim();
+            return jo.getString("data");
         } catch (Exception e) {
             e.printStackTrace();
             return "查询失败";

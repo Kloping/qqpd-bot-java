@@ -84,7 +84,7 @@ public class Starter implements Runnable {
         APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
         APPLICATION.INSTANCE.getContextManager().append(StarterApplication.logger);
         contextManager = APPLICATION.INSTANCE.getContextManager();
-        wssWorker = wssWorker;
+        wssWorker = APPLICATION.INSTANCE.getContextManager().getContextEntity(WssWorker.class);
         wssWork();
     }
 
