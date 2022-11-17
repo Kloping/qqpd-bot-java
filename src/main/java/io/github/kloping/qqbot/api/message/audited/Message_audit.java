@@ -5,6 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * @author HRS-Computer
+ */
 @Data
 @Accessors(chain = true)
 @ToString

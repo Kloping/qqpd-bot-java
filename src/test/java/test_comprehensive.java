@@ -1,12 +1,7 @@
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Channel;
-import io.github.kloping.qqbot.api.Guild;
 import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.http.GuildBase;
-import io.github.kloping.qqbot.http.MessageBase;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,10 +11,11 @@ import java.io.IOException;
 /**
  * @author github.kloping
  */
-public class test_weather {
-    public static void main(String[] args) throws Exception {
+public class test_comprehensive {
+    public static void main(String[] args) {
         Starter starter = test_main.factory();
         starter.run();
+
         String w0 = String.format("<@!%s> /天气", starter.getBot().getInfo().getId());
         starter.addListener(new OnAtMessageListener() {
             @Override
@@ -33,6 +29,38 @@ public class test_weather {
                 }
             }
         });
+
+        String w1 = String.format("<@!%s> /小爱", starter.getBot().getInfo().getId());
+        starter.addListener(new OnAtMessageListener() {
+            @Override
+            public void onMessage(Message message) {
+                String content = message.getContent();
+                if (content == null && content.isEmpty()) {
+                    return;
+                } else if (content.startsWith(w1)) {
+                    String s = content.substring(w1.length());
+                    String r0 = w1(s.trim());
+                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + r0);
+                }
+            }
+        });
+    }
+
+
+    public static String w1(String s0) {
+        try {
+            Document document = null;
+            try {
+                document = Jsoup.connect("https://xiaobapi.top/api/xb/api/xiaoai.php?msg=" + s0).ignoreContentType(true)
+                        .get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return document.body().text();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "???";
+        }
     }
 
     public static String w0(String s0) {
@@ -46,7 +74,7 @@ public class test_weather {
             }
             String json = document.body().text();
             JSONObject jo = JSON.parseObject(json);
-            WeatherDetail wd = jo.toJavaObject(WeatherDetail.class);
+            test_weather.WeatherDetail wd = jo.toJavaObject(test_weather.WeatherDetail.class);
             StringBuilder sb = new StringBuilder();
             sb.append(wd.getTime()).append("\n");
             sb.append(wd.getAddress()).append(":").append(wd.getDescribed()).append("\n");

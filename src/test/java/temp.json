@@ -1,0 +1,19 @@
+{
+  "id": "08b087a4d8f5c8db9777109fbdce063810489addd79b06",
+  "channel_id": "13868703",
+  "guild_id": "8588204267167876016",
+  "content": "回复测试",
+  "timestamp": "2022-11-17T16:19:38+08:00",
+  "tts": false,
+  "mention_everyone": false,
+  "author": {
+    "id": "1030502486605646623",
+    "username": "",
+    "avatar": "",
+    "bot": true
+  },
+  "pinned": false,
+  "type": 0,
+  "flags": 0,
+  "seq_in_channel": "16"
+}

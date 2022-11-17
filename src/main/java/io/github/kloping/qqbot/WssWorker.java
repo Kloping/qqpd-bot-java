@@ -2,7 +2,19 @@ package io.github.kloping.qqbot;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
+import io.github.kloping.MySpringTool.annotations.AutoStand;
+import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.MySpringTool.interfaces.Logger;
+import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.common.Public;
+import io.github.kloping.date.FrameUtils;
+import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.entitys.Pack;
+import io.github.kloping.qqbot.http.BotBase;
+import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
+import io.github.kloping.qqbot.interfaces.OnCloseListener;
+import io.github.kloping.qqbot.interfaces.OnMessageListener;
+import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -14,24 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.interfaces.Logger;
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
-import io.github.kloping.date.FrameUtils;
-import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.entitys.Pack;
-import io.github.kloping.qqbot.http.BotBase;
-import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
-import io.github.kloping.qqbot.interfaces.OnCloseListener;
-import io.github.kloping.qqbot.interfaces.OnMessageListener;
-import io.github.kloping.qqbot.interfaces.OnPackReceive;
-
-import static io.github.kloping.qqbot.Starter.AUTH_ID;
-import static io.github.kloping.qqbot.Starter.INTENTS_ID;
-import static io.github.kloping.qqbot.Starter.PROPERTIES_ID;
-import static io.github.kloping.qqbot.Starter.SHARD_ID;
-import static io.github.kloping.qqbot.Starter.TOKEN_ID;
+import static io.github.kloping.qqbot.Starter.*;
 
 /**
  * @author github.kloping
@@ -45,6 +40,7 @@ public class WssWorker implements Runnable {
     public int newstId = 1;
     public Pack<JSONObject> authPack = null;
     public String sessionId = "";
+    private Boolean isReconnect = false;
 
     @AutoStand
     ContextManager contextManager;
@@ -66,7 +62,7 @@ public class WssWorker implements Runnable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-       logger.log("ws url:" + u);
+        logger.log("ws url:" + u);
         webSocket = new WebSocketClient(u) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
@@ -95,7 +91,6 @@ public class WssWorker implements Runnable {
                     if (pack.getS() != null) {
                         newstId = pack.getS().intValue();
                     }
-
                     if (pack.getOp().equals(0)) {
                         try {
                             sessionId = pack.getD().getString("session_id");
@@ -106,8 +101,8 @@ public class WssWorker implements Runnable {
                     if (pack.getOp().equals(7)) {
                         logger.info("断线重连");
                         authPack.setOp(6);
-                        authPack.getD().put("session_id",sessionId);
-                        authPack.getD().put("seq",newstId);
+                        authPack.getD().put("session_id", sessionId);
+                        authPack.getD().put("seq", newstId);
                         webSocket.send(JSON.toJSONString(authPack));
                     }
                     if (onPackReceive != null) {
@@ -129,9 +124,16 @@ public class WssWorker implements Runnable {
 
             @Override
             public void onClose(int i, String s, boolean b) {
-                logger.waring("wss closed");
-                for (OnCloseListener onCloseListener : listeners1) {
-                    onCloseListener.onReceive();
+                try {
+                    logger.waring("wss closed");
+                    for (OnCloseListener onCloseListener : closeListeners) {
+                        onCloseListener.onReceive();
+                    }
+                } finally {
+                    if (isReconnect) {
+                        isFirst = true;
+                        Public.EXECUTOR_SERVICE.submit(() -> WssWorker.this.run());
+                    }
                 }
             }
 
@@ -152,13 +154,13 @@ public class WssWorker implements Runnable {
         Message m = jo.toJavaObject(Message.class);
         switch (t) {
             case "MESSAGE_CREATE":
-                Iterator<OnMessageListener> iterator = listeners.iterator();
+                Iterator<OnMessageListener> iterator = messageListeners.iterator();
                 while (iterator.hasNext()) {
                     iterator.next().onMessage(m);
                 }
                 return;
             case "AT_MESSAGE_CREATE":
-                Iterator<OnAtMessageListener> iterator0 = listeners0.iterator();
+                Iterator<OnAtMessageListener> iterator0 = atMessageListeners.iterator();
                 while (iterator0.hasNext()) {
                     iterator0.next().onMessage(m);
                 }
@@ -168,9 +170,9 @@ public class WssWorker implements Runnable {
         }
     }
 
-    public List<OnMessageListener> listeners = new ArrayList<>();
-    public List<OnAtMessageListener> listeners0 = new ArrayList<>();
-    public List<OnCloseListener> listeners1 = new ArrayList<>();
+    public List<OnMessageListener> messageListeners = new ArrayList<>();
+    public List<OnAtMessageListener> atMessageListeners = new ArrayList<>();
+    public List<OnCloseListener> closeListeners = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
 
@@ -195,4 +197,11 @@ public class WssWorker implements Runnable {
         logger = contextManager.getContextEntity(Logger.class);
     }
 
+    public Boolean getReconnect() {
+        return isReconnect;
+    }
+
+    public void setReconnect(Boolean reconnect) {
+        isReconnect = reconnect;
+    }
 }

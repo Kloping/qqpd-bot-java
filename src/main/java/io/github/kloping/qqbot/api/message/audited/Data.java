@@ -10,5 +10,4 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class Data {
 	private Message_audit message_audit;
-
 }

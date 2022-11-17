@@ -1,3 +1,4 @@
+import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entitys.Pack;
 import io.github.kloping.qqbot.entitys.UrlPack;
@@ -16,7 +17,7 @@ public class test_gateway {
             public void onReceive(Pack pack) {
             }
         });
-        UrlPack pack = starter.getContextManager().getContextEntity(BotBase.class).gateway();
+        UrlPack pack = Resource.botBase.gateway();
         System.out.println(pack);
     }
 }

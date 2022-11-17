@@ -1,7 +1,10 @@
-import io.github.kloping.MySpringTool.StarterApplication;
+import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
 
 /**
+ * <a href="https://bot.q.qq.com/wiki/develop/api/gateway/intents.html#%E4%BA%8B%E4%BB%B6%E8%AE%A2%E9%98%85-intents">
+ * 事件订阅方式</a>
+ *
  * @author github.kloping
  */
 public class test_main {
@@ -15,7 +18,7 @@ public class test_main {
             @Override
             protected void after() {
                 super.after();
-                StarterApplication.Setting.INSTANCE.getContextManager().append("1073742336", INTENTS_ID);
+                Resource.APPLICATION.INSTANCE.getContextManager().append("1073742336", INTENTS_ID);
             }
 
             @Override

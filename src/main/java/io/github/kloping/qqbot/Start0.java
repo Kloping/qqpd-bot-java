@@ -17,9 +17,6 @@ import static io.github.kloping.qqbot.Starter.AUTH_ID;
 public class Start0 {
 
     @AutoStand
-    BotBase botBase;
-
-    @AutoStand
     ContextManager contextManager;
 
     public Map<String, String> headers = new HashMap();

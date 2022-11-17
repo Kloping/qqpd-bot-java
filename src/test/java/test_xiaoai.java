@@ -20,17 +20,7 @@ public class test_xiaoai {
     public static void main(String[] args) throws Exception {
         Starter starter = test_main.factory();
         starter.run();
-        GuildBase base0 = starter.getContextManager().getContextEntity(GuildBase.class);
-        MessageBase base = starter.getContextManager().getContextEntity(MessageBase.class);
-        Guild[] guilds = base0.getGuilds();
-        Channel[] channels = base0.getChannels(guilds[0].getId());
-        Channel channel = null;
-        for (Channel channel1 : channels) {
-            if (channel1.getName().equals("游戏大厅"))
-                channel = channel1;
-        }
         String w0 = String.format("<@!%s> /小爱", starter.getBot().getInfo().getId());
-        Channel finalChannel = channel;
         starter.addListener(new OnAtMessageListener() {
             @Override
             public void onMessage(Message message) {
@@ -39,8 +29,8 @@ public class test_xiaoai {
                     return;
                 } else if (content.startsWith(w0)) {
                     String s = content.substring(w0.length());
-                    String r0 =  w0(s.trim());
-                    finalChannel.send0("<@!" + message.getAuthor().getId() + ">  \n" +r0);
+                    String r0 = w0(s.trim());
+                    message.send("<@!" + message.getAuthor().getId() + ">  \n" + r0);
                 }
             }
         });

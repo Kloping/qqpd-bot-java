@@ -3,8 +3,8 @@ package io.github.kloping.qqbot.http;
 import io.github.kloping.MySpringTool.annotations.PathValue;
 import io.github.kloping.MySpringTool.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
-import io.github.kloping.qqbot.entitys.Pack;
 
 import java.util.Map;
 
@@ -17,14 +17,16 @@ import java.util.Map;
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface MessageBase {
     /**
-     * send a message
+     * send
      *
      * @param cid
      * @param data
      * @return
      */
+    @Deprecated
+    @SuppressWarnings("deprecation")
     @PostPath("/channels/{channel_id}/messages")
-    String send(@PathValue("channel_id") String cid, @RequestData Map.Entry<String, String> data);
+    String send(@PathValue("channel_id") String cid, @RequestData io.github.kloping.MySpringTool.entity.RequestData data);
 
     /**
      * send a message
@@ -35,5 +37,5 @@ public interface MessageBase {
      * @return
      */
     @PostPath("/channels/{channel_id}/messages")
-    MessageAudited send(@PathValue("channel_id") String cid, @RequestBody String body, @Headers Map<String, String> headers);
+    MessageAudited send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) PreMessage body, @Headers Map<String, String> headers);
 }

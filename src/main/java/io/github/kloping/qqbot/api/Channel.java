@@ -1,15 +1,14 @@
 package io.github.kloping.qqbot.api;
 
-import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.StarterApplication;
+import io.github.kloping.qqbot.Resource;
+import io.github.kloping.qqbot.api.interfaces.Sender;
+import io.github.kloping.qqbot.api.message.PreMessage;
 import io.github.kloping.qqbot.api.message.audited.MessageAudited;
-import io.github.kloping.qqbot.http.MessageBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Channel {
+public class Channel implements Sender {
     private Number speak_permission;
     private Number sub_type;
     private String owner_id;
@@ -41,15 +40,13 @@ public class Channel {
         MAP.put("Content-Type", "application/json");
     }
 
+    @Override
     public MessageAudited send(String text) {
-        return StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(MessageBase.class).send(id, String.format("{\"content\": \"%s\"}", text), MAP);
+        return Resource.messageBase.send(id, new PreMessage(text), MAP);
     }
 
-    public String send0(String text) {
-        return StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(MessageBase.class).send(id, new AbstractMap.SimpleEntry<>("content", text));
-    }
-
-    public MessageAudited send(JSONObject jo) {
-        return StarterApplication.Setting.INSTANCE.getContextManager().getContextEntity(MessageBase.class).send(id, jo.toJSONString(), MAP);
+    @Override
+    public MessageAudited send(PreMessage msg) {
+        return Resource.messageBase.send(id, msg, MAP);
     }
 }
