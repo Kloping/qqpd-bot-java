@@ -6,6 +6,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
@@ -19,6 +20,7 @@ import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.kloping.qqbot.Starter.*;
@@ -29,12 +31,6 @@ import static io.github.kloping.qqbot.Starter.*;
 @Entity
 public class WssWorker implements Runnable {
     private WebSocketClient webSocket;
-    private boolean isFirst = true;
-    public Pack jumpPack = new Pack();
-    public long heartbeatInterval;
-    public int newstId = 1;
-    public Pack<JSONObject> authPack = null;
-    public String sessionId = "";
     private Boolean isReconnect = false;
 
     @AutoStand
@@ -43,103 +39,119 @@ public class WssWorker implements Runnable {
     public WssWorker() {
     }
 
+
     @AutoStand
     private BotBase botBase;
 
     private Logger logger;
 
+    private ScheduledFuture scheduledFuture;
+
+    public Pack jumpPack = new Pack();
+    public Pack<JSONObject> authPack = null;
+    public String sessionId = "";
+
+    private boolean isFirst = true;
+    private boolean connected = false;
+    public long heartbeatInterval;
+    public int newstId = 1;
+
     @Override
     public void run() {
-        init();
-        URI u = null;
         try {
-            u = new URI(botBase.gateway().getUrl());
+            init();
+            URI u = new URI(botBase.gateway().getUrl());
+            logger.log("ws url:" + u);
+            if (webSocket != null && !webSocket.isClosed()) {
+                webSocket.close();
+            }
+            webSocket = new WebSocketClient(u) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    logger.info("wss opened");
+                }
+
+                @Override
+                public void onMessage(String s) {
+                    if (isFirst) {
+                        logger.info("鉴权");
+                        webSocket.send(JSON.toJSONString(authPack));
+                        isFirst = false;
+                        Pack<JSONObject> pack = JSON.parseObject(s).toJavaObject(Pack.class);
+                        heartbeatInterval = pack.getD().getLong("heartbeat_interval");
+                        jumpPack.setOp(1);
+                        if (scheduledFuture != null && !scheduledFuture.isCancelled())
+                            scheduledFuture.cancel(true);
+                        scheduledFuture = FrameUtils.SERVICE.scheduleAtFixedRate(() -> {
+                            if (newstId != -1) {
+                                jumpPack.setD(newstId);
+                            }
+                            webSocket.send(JSON.toJSONString(jumpPack));
+                        }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
+                    } else {
+                        Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
+                        logger.log("receive " + pack);
+                        if (pack.getS() != null) {
+                            newstId = pack.getS().intValue();
+                        }
+                        if (pack.getOp().equals(0)) {
+                            sessionId = pack.getD().getString("session_id");
+                        }
+                        if (pack.getOp().equals(7)) {
+                            logger.info("服务端通知客户端重新连接");
+                            connected = false;
+                            return;
+                        }
+                        if (onPackReceive != null) {
+                            try {
+                                onPackReceive.onReceive(pack);
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        onReceive(pack);
+                    }
+                }
+
+                @Override
+                public void send(String text) throws NotYetConnectedException {
+                    super.send(text);
+                    logger.log("wss send: " + text);
+                }
+
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    try {
+                        logger.waring("wss closed");
+                        for (OnCloseListener onCloseListener : closeListeners) {
+                            onCloseListener.onReceive();
+                        }
+                    } finally {
+                        if (isReconnect && !connected) {
+                            reConnect();
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    logger.error("wss error");
+                    e.printStackTrace();
+                }
+            };
+            webSocket.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.log("ws url:" + u);
-        webSocket = new WebSocketClient(u) {
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                logger.info("wss opened");
-            }
+    }
 
-            @Override
-            public void onMessage(String s) {
-                if (isFirst) {
-                    logger.info("鉴权");
-                    webSocket.send(JSON.toJSONString(authPack));
-                    isFirst = false;
-                    Pack<JSONObject> pack = JSON.parseObject(s).toJavaObject(Pack.class);
-                    heartbeatInterval = pack.getD().getLong("heartbeat_interval");
-                    jumpPack.setOp(1);
-                    FrameUtils.SERVICE.scheduleAtFixedRate(() -> {
-                                if (newstId != -1) {
-                                    jumpPack.setD(newstId);
-                                }
-                                webSocket.send(JSON.toJSONString(jumpPack));
-                            }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
-                } else {
-                    Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
-                    logger.log("receive " + pack);
-                    if (pack.getS() != null) {
-                        newstId = pack.getS().intValue();
-                    }
-                    if (pack.getOp().equals(0)) {
-                        try {
-                            sessionId = pack.getD().getString("session_id");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (pack.getOp().equals(7)) {
-                        logger.info("断线重连");
-                        authPack.setOp(6);
-                        authPack.getD().put("session_id", sessionId);
-                        authPack.getD().put("seq", newstId);
-                        webSocket.send(JSON.toJSONString(authPack));
-                    }
-                    if (onPackReceive != null) {
-                        try {
-                            onPackReceive.onReceive(pack);
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    onReceive(pack);
-                }
-            }
-
-            @Override
-            public void send(String text) throws NotYetConnectedException {
-                super.send(text);
-                logger.log("wss send: " + text);
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                try {
-                    logger.waring("wss closed");
-                    for (OnCloseListener onCloseListener : closeListeners) {
-                        onCloseListener.onReceive();
-                    }
-                } finally {
-                    if (isReconnect) {
-                        authPack.setOp(6);
-                        authPack.getD().put("session_id", sessionId);
-                        authPack.getD().put("seq", newstId);
-                        webSocket.send(JSON.toJSONString(authPack));
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                logger.error("wss error");
-                e.printStackTrace();
-            }
-        };
-        webSocket.run();
+    private void reConnect() {
+        authPack = new Pack<>();
+        jumpPack = new Pack();
+        if (Resource.mainFuture != null && !Resource.mainFuture.isCancelled()) {
+            Resource.mainFuture.cancel(true);
+        }
+        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> this.run());
     }
 
     private void onReceive(Pack<JSONObject> pack) {
@@ -160,12 +172,15 @@ public class WssWorker implements Runnable {
                     iterator1.next().onMessage(m);
                 }
                 return;
-            case "PUBLIC_MESSAGE_DELETE":
             case "MESSAGE_DELETE":
                 Iterator<OnMessageDeleteListener> iterator2 = messageDeleteListeners.iterator();
                 while (iterator2.hasNext()) {
                     iterator2.next().onDelete(m);
                 }
+                break;
+            case "READY":
+                connected = true;
+                break;
             default:
                 Iterator<OnOtherEventListener> iterator = otherEventListeners.iterator();
                 while (iterator.hasNext()) {
@@ -187,12 +202,7 @@ public class WssWorker implements Runnable {
         this.onPackReceive = onPackReceive;
     }
 
-    private boolean uninitialized = true;
-
     private void init() {
-        if (!uninitialized)
-            return;
-        uninitialized = false;
         authPack = new Pack();
         authPack.setOp(2);
         JSONObject jo = new JSONObject();
