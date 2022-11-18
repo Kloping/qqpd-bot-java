@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.MySpringTool.StarterApplication;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.Guild;
@@ -78,10 +77,11 @@ public class Starter implements Runnable {
         APPLICATION.INSTANCE.getContextManager().append(this);
         APPLICATION.INSTANCE.getContextManager().append(appid, APPID_ID);
         APPLICATION.INSTANCE.getContextManager().append(token, TOKEN_ID);
-        APPLICATION.INSTANCE.getContextManager().append("512", INTENTS_ID);
+        //22.11.18 修改为默认监听所有事件 by kloping
+        APPLICATION.INSTANCE.getContextManager().append("1544295939", INTENTS_ID);
         APPLICATION.INSTANCE.getContextManager().append(new Integer[]{0, 1}, SHARD_ID);
         APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
-        APPLICATION.INSTANCE.getContextManager().append(StarterApplication.logger);
+        APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
         contextManager = APPLICATION.INSTANCE.getContextManager();
         wssWorker = APPLICATION.INSTANCE.getContextManager().getContextEntity(WssWorker.class);
         wssWork();

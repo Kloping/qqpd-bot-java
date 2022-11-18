@@ -17,7 +17,7 @@ public class test_comprehensive {
     public static void main(String[] args) {
         Starter starter = test_main.factory();
         starter.run();
-        starter.getWssWorker().setReconnect(true);
+//        starter.getWssWorker().setReconnect(true);
 
         String w0 = String.format("<@!%s> /天气", starter.getBot().getInfo().getId());
         starter.addListener(new OnAtMessageListener() {
@@ -52,22 +52,25 @@ public class test_comprehensive {
         starter.addListener(new OnAtMessageListener() {
             @Override
             public void onMessage(Message message) {
-
-                String content = message.getContent();
-                if (content == null && content.isEmpty()) {
-                    return;
-                } else if (content.startsWith(w2)) {
-                    String s = content.substring(w2.length());
-                    String qid = NumberUtils.findNumberFromString(s);
-                    String avatar = starter.getBot().getGuild(message.getGuild_id())
-                            .memberMap().get(qid).getUser().getAvatar();
-                    MessagePacket packet = new MessagePacket()
-                            .setContent("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..")
-                            //这里上传图片的网址必须是经过备案的域名下的文件
-                            .setImage(avatar)
-                            .setReplyId(message.getId());
-                    message.send(packet);
-                }
+                message.send("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..");
+//                String content = message.getContent();
+//                if (content == null && content.isEmpty()) {
+//                    return;
+//                } else if (content.startsWith(w2)) {
+//                    String s = content.substring(w2.length());
+//                    String qid = NumberUtils.findNumberFromString(s);
+//                    if (qid.isEmpty()){
+//
+//                    }
+//                    String avatar = starter.getBot().getGuild(message.getGuild_id())
+//                            .memberMap().get(qid).getUser().getAvatar();
+//                    MessagePacket packet = new MessagePacket()
+//                            .setContent("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..")
+//                            //这里上传图片的网址必须是经过备案的域名下的文件
+//                            .setImage(avatar)
+//                            .setReplyId(message.getId());
+//                    message.send(packet);
+//                }
             }
         });
 

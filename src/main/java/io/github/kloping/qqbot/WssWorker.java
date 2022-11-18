@@ -11,10 +11,7 @@ import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
 import io.github.kloping.qqbot.http.BotBase;
-import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
-import io.github.kloping.qqbot.interfaces.OnCloseListener;
-import io.github.kloping.qqbot.interfaces.OnMessageListener;
-import io.github.kloping.qqbot.interfaces.OnPackReceive;
+import io.github.kloping.qqbot.interfaces.*;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -44,8 +41,7 @@ public class WssWorker implements Runnable {
     @AutoStand
     ContextManager contextManager;
 
-    public WssWorker() {
-    }
+    public WssWorker() {}
 
     @AutoStand
     private BotBase botBase;
@@ -130,12 +126,10 @@ public class WssWorker implements Runnable {
                     }
                 } finally {
                     if (isReconnect) {
-                        webSocket.close();
-                        if (Resource.mainFuture != null) {
-                            Resource.mainFuture.cancel(true);
-                        }
-                        isFirst = true;
-                        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> WssWorker.this.run());
+                        authPack.setOp(6);
+                        authPack.getD().put("session_id", sessionId);
+                        authPack.getD().put("seq", newstId);
+                        webSocket.send(JSON.toJSONString(authPack));
                     }
                 }
             }
@@ -168,6 +162,10 @@ public class WssWorker implements Runnable {
                 }
                 return;
             default:
+                Iterator<OnOtherEventListener> iterator1 = otherEventListeners.iterator();
+                while (iterator1.hasNext()) {
+                    iterator1.next().onEvent(t, m);
+                }
                 break;
         }
     }
@@ -175,6 +173,7 @@ public class WssWorker implements Runnable {
     public List<OnMessageListener> messageListeners = new ArrayList<>();
     public List<OnAtMessageListener> atMessageListeners = new ArrayList<>();
     public List<OnCloseListener> closeListeners = new ArrayList<>();
+    public List<OnOtherEventListener> otherEventListeners = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
 

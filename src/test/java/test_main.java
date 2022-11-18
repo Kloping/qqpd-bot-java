@@ -1,4 +1,3 @@
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
 
 /**
@@ -9,23 +8,17 @@ import io.github.kloping.qqbot.Starter;
  */
 public class test_main {
 
+    //0 1 9 10 12 18 19 26 27 28 29 30
     public static void main(String[] args) {
-        System.out.println(0 | 1 << 30 | 1 << 9);
+        System.out.println(0 | 1 << 0 | 1 << 30
+                | 1 << 1 | 1 << 9 | 1 << 10
+                | 1 << 12 | 1 << 18 | 1 << 19
+                | 1 << 28 | 1 << 27 | 1 << 26
+        );
     }
 
     public static Starter factory() {
-        Starter starter = new Starter("appid", "token") {
-            @Override
-            protected void after() {
-                super.after();
-                Resource.APPLICATION.INSTANCE.getContextManager().append("1073742336", INTENTS_ID);
-            }
-
-            @Override
-            protected void wssWork() {
-                super.wssWork();
-            }
-        };
+        Starter starter = new Starter("appid", "token");
         return starter;
     }
 }
