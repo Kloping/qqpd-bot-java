@@ -13,4 +13,12 @@ import io.github.kloping.qqbot.api.Channel;
 @HttpClient(Starter.NET_MAIN)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface ChannelBase {
+    /**
+     * 获取子频道详情
+     *
+     * @param cid
+     * @return
+     */
+    @GetPath("/channels/{channels_id}")
+    Channel getChannel(@PathValue("channels_id") String cid);
 }

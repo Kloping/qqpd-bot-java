@@ -6,7 +6,6 @@ import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
-import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.api.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
@@ -41,7 +40,8 @@ public class WssWorker implements Runnable {
     @AutoStand
     ContextManager contextManager;
 
-    public WssWorker() {}
+    public WssWorker() {
+    }
 
     @AutoStand
     private BotBase botBase;
@@ -150,21 +150,27 @@ public class WssWorker implements Runnable {
         Message m = jo.toJavaObject(Message.class);
         switch (t) {
             case "MESSAGE_CREATE":
-                Iterator<OnMessageListener> iterator = messageListeners.iterator();
-                while (iterator.hasNext()) {
-                    iterator.next().onMessage(m);
-                }
-                return;
-            case "AT_MESSAGE_CREATE":
-                Iterator<OnAtMessageListener> iterator0 = atMessageListeners.iterator();
+                Iterator<OnMessageListener> iterator0 = messageListeners.iterator();
                 while (iterator0.hasNext()) {
                     iterator0.next().onMessage(m);
                 }
                 return;
-            default:
-                Iterator<OnOtherEventListener> iterator1 = otherEventListeners.iterator();
+            case "AT_MESSAGE_CREATE":
+                Iterator<OnAtMessageListener> iterator1 = atMessageListeners.iterator();
                 while (iterator1.hasNext()) {
-                    iterator1.next().onEvent(t, m);
+                    iterator1.next().onMessage(m);
+                }
+                return;
+            case "PUBLIC_MESSAGE_DELETE":
+            case "MESSAGE_DELETE":
+                Iterator<OnMessageDeleteListener> iterator2 = messageDeleteListeners.iterator();
+                while (iterator2.hasNext()) {
+                    iterator2.next().onDelete(m);
+                }
+            default:
+                Iterator<OnOtherEventListener> iterator = otherEventListeners.iterator();
+                while (iterator.hasNext()) {
+                    iterator.next().onEvent(t, m);
                 }
                 break;
         }
@@ -174,6 +180,7 @@ public class WssWorker implements Runnable {
     public List<OnAtMessageListener> atMessageListeners = new ArrayList<>();
     public List<OnCloseListener> closeListeners = new ArrayList<>();
     public List<OnOtherEventListener> otherEventListeners = new ArrayList<>();
+    public List<OnMessageDeleteListener> messageDeleteListeners = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
 

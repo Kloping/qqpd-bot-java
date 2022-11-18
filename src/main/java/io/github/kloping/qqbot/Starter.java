@@ -5,9 +5,7 @@ import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.Guild;
 import io.github.kloping.qqbot.api.User;
 import io.github.kloping.qqbot.entitys.Bot;
-import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
-import io.github.kloping.qqbot.interfaces.OnMessageListener;
-import io.github.kloping.qqbot.interfaces.OnPackReceive;
+import io.github.kloping.qqbot.interfaces.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +103,14 @@ public class Starter implements Runnable {
 
     public void addListener(OnAtMessageListener listener) {
         wssWorker.atMessageListeners.add(listener);
+    }
+
+    public void addListener(OnOtherEventListener listener) {
+        wssWorker.otherEventListeners.add(listener);
+    }
+
+    public void addListener(OnMessageDeleteListener listener) {
+        wssWorker.messageDeleteListeners.add(listener);
     }
 
     public Bot getBot() {

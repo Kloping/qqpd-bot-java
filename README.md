@@ -2,8 +2,6 @@
 
 JAVA SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
 
-
-
 可用于 Java 8+
 
 Maven
@@ -17,54 +15,40 @@ Maven
 </dependency>
 ```
 
-## 使用前提
+#### TIPS: 目前仅支持单bot运行
+
+### 使用前提
 
 1. 到https://q.qq.com/ 申请机器人 获得BotAppID（开发者ID） 和 机器人令牌（token）
 
 2. 发布审核
 
-## 使用示例
+### 使用示例
 
-发送消息
+启动方式
 
-```java
-         Starter starter = new Starter("BotAppID", "token") {
-            @Override
-            protected void after() {
-                super.after();
-                StarterApplication.Setting.INSTANCE.getContextManager().append("1073742336", INTENTS_ID);
-            }
-
-            @Override
-            protected void wssWork() {
-                super.wssWork();
-            }
-        };
-        
-        starter.run();
-        GuildBase base0 = starter.getContextManager().getContextEntity(GuildBase.class);
-        MessageBase base = starter.getContextManager().getContextEntity(MessageBase.class);
-        Guild[] guilds = base0.getGuilds();
-        Channel[] channels = base0.getChannels(guilds[0].getId());
-        Channel channel = channels[0];
-        for (Channel channel1 : channels) {
-            if (channel1.getName().equals("游戏大厅")) {
-                channel = channel1;
-            }
-        }
-        Thread.sleep(1000);
-        System.out.println(base.send(channel.getId(), new AbstractMap.SimpleEntry<>("content", "测试消息")));
-        System.out.println(channel.send("1"));
+```java 
+    Starter starter = new Starter("appid","token");
+    starter.run();
 ```
 
+导入指引
 
+```java
+import io.github.kloping.qqbot.Starter;
+```
 
+消息监听及回复
 
+```java
+starter.addListener(new OnMessageListener(){
+    @Override
+    public void onMessage(Message message){
+        message.send("回复测试");
+    }
+});
+```
 
 使用方式参考查看 [test](https://github.com/Kloping/qqpd-bot-java/tree/master/src/test/java)
-
-
-
-
 
 该sdk尚在编写中..
