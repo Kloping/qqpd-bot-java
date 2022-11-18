@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.interfaces;
 
+import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.Message;
 
 /**
@@ -14,5 +15,5 @@ public interface OnOtherEventListener {
      * @param eventName
      * @param message
      */
-    void onEvent(String eventName, Message message);
+    void onEvent(String eventName, JSONObject obj);
 }

@@ -184,7 +184,7 @@ public class WssWorker implements Runnable {
             default:
                 Iterator<OnOtherEventListener> iterator = otherEventListeners.iterator();
                 while (iterator.hasNext()) {
-                    iterator.next().onEvent(t, m);
+                    iterator.next().onEvent(t, jo);
                 }
                 break;
         }
