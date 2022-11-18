@@ -39,7 +39,6 @@ public class WssWorker implements Runnable {
     public WssWorker() {
     }
 
-
     @AutoStand
     private BotBase botBase;
 
@@ -146,6 +145,7 @@ public class WssWorker implements Runnable {
     }
 
     private void reConnect() {
+        isFirst = true;
         authPack = new Pack<>();
         jumpPack = new Pack();
         if (Resource.mainFuture != null && !Resource.mainFuture.isCancelled()) {
@@ -165,13 +165,13 @@ public class WssWorker implements Runnable {
                 while (iterator0.hasNext()) {
                     iterator0.next().onMessage(m);
                 }
-                return;
+                break;
             case "AT_MESSAGE_CREATE":
                 Iterator<OnAtMessageListener> iterator1 = atMessageListeners.iterator();
                 while (iterator1.hasNext()) {
                     iterator1.next().onMessage(m);
                 }
-                return;
+                break;
             case "MESSAGE_DELETE":
                 Iterator<OnMessageDeleteListener> iterator2 = messageDeleteListeners.iterator();
                 while (iterator2.hasNext()) {
