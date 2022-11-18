@@ -1,8 +1,7 @@
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.api.message.audited.MessageAudited;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
-import io.github.kloping.qqbot.interfaces.OnMessageListener;
+import io.github.kloping.qqbot.api.message.audited.MessageAudited;
 
 /**
  * @author github.kloping

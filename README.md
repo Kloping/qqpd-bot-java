@@ -36,6 +36,8 @@ Maven
 
 ```java
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 ```
 
 消息监听及回复
