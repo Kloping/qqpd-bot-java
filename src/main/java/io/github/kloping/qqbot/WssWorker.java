@@ -78,8 +78,7 @@ public class WssWorker implements Runnable {
                                     jumpPack.setD(newstId);
                                 }
                                 webSocket.send(JSON.toJSONString(jumpPack));
-                            },
-                            heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
+                            }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
                 } else {
                     Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
                     logger.log("receive " + pack);

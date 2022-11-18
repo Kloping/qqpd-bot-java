@@ -1,3 +1,5 @@
 # Project exclude paths
 /target/
 .idea
+temp.log
+bot-qqpd-java.iml

@@ -17,7 +17,7 @@ public class test_comprehensive {
     public static void main(String[] args) {
         Starter starter = test_main.factory();
         starter.run();
-//        starter.getWssWorker().setReconnect(true);
+        starter.getWssWorker().setReconnect(true);
 
         String w0 = String.format("<@!%s> /天气", starter.getBot().getInfo().getId());
         starter.addListener(new OnAtMessageListener() {
