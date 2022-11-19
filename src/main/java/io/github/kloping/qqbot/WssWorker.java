@@ -181,6 +181,8 @@ public class WssWorker implements Runnable {
             case "READY":
                 connected = true;
                 break;
+            case "DIRECT_MESSAGE_CREATE":
+                break;
             default:
                 Iterator<OnOtherEventListener> iterator = otherEventListeners.iterator();
                 while (iterator.hasNext()) {

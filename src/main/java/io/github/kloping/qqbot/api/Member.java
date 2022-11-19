@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class Member {
 	private String nick;
-	private String joined_at;
+	private String joinedAt;
 	private String[] roles;
 	private Boolean pending;
 	private Boolean deaf;

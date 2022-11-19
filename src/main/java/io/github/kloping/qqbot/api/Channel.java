@@ -56,7 +56,7 @@ public class Channel implements Sender {
     @Override
     public MessageAudited send(String text, Message message) {
         PreMessage msg = new PreMessage(text);
-        msg.setMessage_reference(new MessageReference(message.getId()));
+        msg.setMessageReference(new MessageReference(message.getId()));
         return Resource.messageBase.send(Channel.this.id, msg, MAP);
     }
 

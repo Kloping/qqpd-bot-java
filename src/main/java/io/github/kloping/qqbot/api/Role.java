@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 public class Role {
     private Number number;
     private Number color;
-    private Number member_limit;
+    private Number memberLimit;
     private String name;
     private String id;
     private Number hoist;

@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.message;
 
+import com.sun.istack.internal.Nullable;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.Member;
 import io.github.kloping.qqbot.api.interfaces.Sender;
@@ -23,10 +24,16 @@ import static io.github.kloping.qqbot.api.Channel.MAP;
 @EqualsAndHashCode
 public class Message implements Sender {
     private Author author;
-    private String guild_id;
+    private String guildId;
+    /**
+     * 仅用于私信
+     * 用于私信场景下识别真实的来源频道id（即用户发起私信的频道id)。guild_id 为私信场景下的临时频道id，并非真实频道id，因此不应用作其他地方。
+     */
+    @Nullable
+    private String srcGuildId;
     private Member member;
     private String id;
-    private String channel_id;
+    private String channelId;
     private String content;
     private String timestamp;
 
@@ -43,13 +50,13 @@ public class Message implements Sender {
     @Override
     public MessageAudited send(MessagePacket packet) {
         PreMessage msg = new PreMessage();
-        msg.setMsg_id(Message.this.id);
+        msg.setMsgId(Message.this.id);
         packet2pre(packet, msg);
-        return Resource.messageBase.send(Message.this.channel_id, msg, MAP);
+        return Resource.messageBase.send(Message.this.channelId, msg, MAP);
     }
 
     @Override
     public MessageAudited send(PreMessage msg) {
-        return Resource.messageBase.send(Message.this.channel_id, msg, MAP);
+        return Resource.messageBase.send(Message.this.channelId, msg, MAP);
     }
 }

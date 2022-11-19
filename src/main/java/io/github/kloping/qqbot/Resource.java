@@ -46,7 +46,7 @@ public class Resource {
             msg.setImage(packet.getImage());
         }
         if (Judge.isNotEmpty(packet.getReplyId())) {
-            msg.setMessage_reference(new MessageReference(packet.getReplyId()));
+            msg.setMessageReference(new MessageReference(packet.getReplyId()));
         }
     }
 }

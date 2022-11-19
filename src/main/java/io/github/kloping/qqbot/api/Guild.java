@@ -20,14 +20,14 @@ import java.util.*;
 @EqualsAndHashCode
 public class Guild {
     private Boolean owner;
-    private String joined_at;
-    private String owner_id;
+    private String joinedAt;
+    private String ownerId;
     private String name;
     private String icon;
-    private Integer max_members;
+    private Integer maxMembers;
     private String description;
     private String id;
-    private Integer member_count;
+    private Integer memberCount;
 
     public List<Member> members() {
         Member[] members = Resource.guildBase.getMembers(id, 100);

@@ -14,13 +14,13 @@ public class PreMessage {
     private String content;
     private Object embed;
     private Object ark;
-    private MessageReference message_reference;
+    private MessageReference messageReference;
     /**
      * 这里上传图片的网址必须是经过备案的域名下的文件 <br/> 否则将报错500 <br/>
      */
     private String image;
-    private String msg_id;
-    private String event_id;
+    private String msgId;
+    private String eventId;
     private Object markdown;
 
     public PreMessage(String content) {

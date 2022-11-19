@@ -12,6 +12,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Message_audit {
-	private String audit_id;
+public class MessageAudit {
+	private String auditId;
 }

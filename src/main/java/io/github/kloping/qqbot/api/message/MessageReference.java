@@ -7,9 +7,9 @@ import lombok.Data;
  */
 @Data
 public class MessageReference {
-    private String message_id;
+    private String messageId;
 
-    public MessageReference(String message_id) {
-        this.message_id = message_id;
+    public MessageReference(String messageId) {
+        this.messageId = messageId;
     }
 }

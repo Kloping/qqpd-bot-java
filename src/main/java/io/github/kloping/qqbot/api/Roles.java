@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @ToString
 @EqualsAndHashCode
 public class Roles {
-    private String role_num_limit;
+    private String roleNumLimit;
     private Role[] roles;
-    private String guild_id;
+    private String guildId;
 }

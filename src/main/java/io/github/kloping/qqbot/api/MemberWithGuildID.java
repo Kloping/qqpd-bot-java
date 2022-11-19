@@ -18,8 +18,8 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class MemberWithGuildID {
     private String nick;
-    private String guild_id;
-    private String joined_at;
+    private String guildId;
+    private String joinedAt;
     private String[] roles;
     private Boolean pending;
     private Boolean deaf;
