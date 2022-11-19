@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.api;
+package io.github.kloping.qqbot.api.qqpd;
 
 import io.github.kloping.qqbot.Resource;
 import lombok.Data;

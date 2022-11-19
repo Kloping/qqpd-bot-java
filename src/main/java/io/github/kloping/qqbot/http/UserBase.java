@@ -3,9 +3,7 @@ package io.github.kloping.qqbot.http;
 import io.github.kloping.MySpringTool.annotations.http.GetPath;
 import io.github.kloping.MySpringTool.annotations.http.Headers;
 import io.github.kloping.MySpringTool.annotations.http.HttpClient;
-import io.github.kloping.qqbot.api.User;
-
-import java.util.Map;
+import io.github.kloping.qqbot.api.qqpd.User;
 
 import static io.github.kloping.qqbot.Starter.NET_MAIN;
 

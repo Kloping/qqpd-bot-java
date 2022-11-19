@@ -8,7 +8,8 @@ import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
-import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.EventManager;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.entitys.Pack;
 import io.github.kloping.qqbot.http.BotBase;
 import io.github.kloping.qqbot.interfaces.*;
@@ -158,6 +159,7 @@ public class WssWorker implements Runnable {
         String t = pack.getT();
         if (t == null) return;
         JSONObject jo = pack.getD();
+        Public.EXECUTOR_SERVICE.submit(() -> EventManager.onEvent(t, jo));
         Message m = jo.toJavaObject(Message.class);
         switch (t) {
             case "MESSAGE_CREATE":

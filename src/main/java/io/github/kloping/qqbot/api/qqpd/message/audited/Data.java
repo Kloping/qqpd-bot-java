@@ -1,17 +1,16 @@
-package io.github.kloping.qqbot.api.message.audited;
+package io.github.kloping.qqbot.api.qqpd.message.audited;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
 /**
- * @author HRS-Computer
+ *
+ * @author github.kloping
  */
-@Data
+@lombok.Data
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class MessageAudit {
-	private String auditId;
+public class Data {
+	private MessageAudit messageAudit;
 }

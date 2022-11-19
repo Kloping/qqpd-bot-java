@@ -1,5 +1,5 @@
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Guild;
+import io.github.kloping.qqbot.api.qqpd.Guild;
 
 import java.util.Arrays;
 

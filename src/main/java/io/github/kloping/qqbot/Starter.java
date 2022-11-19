@@ -2,8 +2,9 @@ package io.github.kloping.qqbot;
 
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
-import io.github.kloping.qqbot.api.Guild;
-import io.github.kloping.qqbot.api.User;
+import io.github.kloping.qqbot.api.data.ListenerHost;
+import io.github.kloping.qqbot.api.qqpd.Guild;
+import io.github.kloping.qqbot.api.qqpd.User;
 import io.github.kloping.qqbot.entitys.Bot;
 import io.github.kloping.qqbot.interfaces.*;
 
@@ -60,6 +61,7 @@ public class Starter implements Runnable {
     public Starter(String appid, String token) {
         this.appid = appid;
         this.token = token;
+        Resource.starter = this;
     }
 
     private ContextManager contextManager;
@@ -124,5 +126,9 @@ public class Starter implements Runnable {
 
     public WssWorker getWssWorker() {
         return wssWorker;
+    }
+
+    public void registerListenerHost(ListenerHost listenerHost) {
+        Resource.LISTENER_HOSTS.add(listenerHost);
     }
 }

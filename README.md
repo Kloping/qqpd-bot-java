@@ -32,25 +32,52 @@ Maven
     starter.run();
 ```
 
+消息监听及回复
+
+```java
+    starter.addListener(new OnMessageListener(){
+        @Override
+        public void onMessage(Message message){
+            message.send("回复测试");
+        }
+    });
+```
+
+V1.4+ 注册监听器主机方式 [荐]
+
+```java
+     starter.registerListenerHost(new ListenerHost() {
+        @Override
+        public void handleException(Throwable e) {
+
+        }
+
+        @EventReceiver
+        public void onEvent(MessageEvent event) {
+            event.send("测试");
+        }
+
+        @EventReceiver
+        public void onEvent(MessageDirectReceiveEvent event) {
+            event.send("测试通过");
+        }
+     });
+```
+
+
 导入指引
 
 ```java
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.message.Message;
+import io.github.kloping.qqbot.api.data.EventReceiver;
+import io.github.kloping.qqbot.api.data.ListenerHost;
+import io.github.kloping.qqbot.api.interfaces.message.MessageDirectReceiveEvent;
+import io.github.kloping.qqbot.api.interfaces.message.MessageEvent;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 ```
 
-消息监听及回复
 
-```java
-starter.addListener(new OnMessageListener(){
-    @Override
-    public void onMessage(Message message){
-        message.send("回复测试");
-    }
-});
-```
-
-使用方式参考查看 [test](https://github.com/Kloping/qqpd-bot-java/tree/master/src/test/java)
+使用方式参考查看 [test](./src/test/java)
 
 该sdk尚在编写中..

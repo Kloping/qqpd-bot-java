@@ -1,9 +1,7 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.number.NumberUtils;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.api.message.MessagePacket;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,32 +43,6 @@ public class test_comprehensive {
                     String r0 = w1(s.trim());
                     message.send("<@!" + message.getAuthor().getId() + ">  \n" + r0, message);
                 }
-            }
-        });
-
-        String w2 = String.format("<@!%s> /蹭", starter.getBot().getInfo().getId());
-        starter.addListener(new OnAtMessageListener() {
-            @Override
-            public void onMessage(Message message) {
-                message.send("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..");
-//                String content = message.getContent();
-//                if (content == null && content.isEmpty()) {
-//                    return;
-//                } else if (content.startsWith(w2)) {
-//                    String s = content.substring(w2.length());
-//                    String qid = NumberUtils.findNumberFromString(s);
-//                    if (qid.isEmpty()){
-//
-//                    }
-//                    String avatar = starter.getBot().getGuild(message.getGuild_id())
-//                            .memberMap().get(qid).getUser().getAvatar();
-//                    MessagePacket packet = new MessagePacket()
-//                            .setContent("<@!" + message.getAuthor().getId() + "> 功能失效,尽量修复中..")
-//                            //这里上传图片的网址必须是经过备案的域名下的文件
-//                            .setImage(avatar)
-//                            .setReplyId(message.getId());
-//                    message.send(packet);
-//                }
             }
         });
 

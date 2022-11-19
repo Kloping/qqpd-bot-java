@@ -4,11 +4,14 @@ import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.api.message.MessagePacket;
-import io.github.kloping.qqbot.api.message.MessageReference;
-import io.github.kloping.qqbot.api.message.PreMessage;
+import io.github.kloping.qqbot.api.data.ListenerHost;
+import io.github.kloping.qqbot.api.data.MessagePacket;
+import io.github.kloping.qqbot.api.qqpd.message.MessageReference;
+import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
 import io.github.kloping.qqbot.http.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
@@ -17,6 +20,7 @@ import java.util.concurrent.Future;
 @Entity
 public class Resource {
     public static final StarterObjectApplication APPLICATION = new StarterObjectApplication();
+    public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();
 
     @AutoStand
     public static BotBase botBase;
@@ -33,7 +37,12 @@ public class Resource {
     @AutoStand
     public static UserBase userBase;
 
+    @AutoStand
+    public static DmsBase dmsBase;
+
     public static Future mainFuture;
+
+    public static Starter starter;
 
     public static void packet2pre(MessagePacket packet, PreMessage msg) {
         if (Judge.isNotEmpty(packet.getContent())) {

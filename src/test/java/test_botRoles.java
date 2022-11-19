@@ -1,12 +1,7 @@
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Member;
-import io.github.kloping.qqbot.api.Role;
-import io.github.kloping.qqbot.api.Roles;
-import io.github.kloping.qqbot.http.GuildBase;
-
-import java.util.Arrays;
+import io.github.kloping.qqbot.api.qqpd.Roles;
 
 /**
  * @author github.kloping

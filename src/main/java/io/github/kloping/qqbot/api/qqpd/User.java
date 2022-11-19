@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.api;
+package io.github.kloping.qqbot.api.qqpd;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

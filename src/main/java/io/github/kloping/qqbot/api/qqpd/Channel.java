@@ -1,12 +1,12 @@
-package io.github.kloping.qqbot.api;
+package io.github.kloping.qqbot.api.qqpd;
 
 import io.github.kloping.qqbot.Resource;
-import io.github.kloping.qqbot.api.interfaces.Sender;
-import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.api.message.MessagePacket;
-import io.github.kloping.qqbot.api.message.MessageReference;
-import io.github.kloping.qqbot.api.message.PreMessage;
-import io.github.kloping.qqbot.api.message.audited.MessageAudited;
+import io.github.kloping.qqbot.api.data.MessagePacket;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
+import io.github.kloping.qqbot.api.qqpd.message.MessageReference;
+import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.api.qqpd.interfaces.Sender;
+import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,16 +29,16 @@ import static io.github.kloping.qqbot.Resource.packet2pre;
 @ToString
 @EqualsAndHashCode
 public class Channel implements Sender {
-    private Number speak_permission;
-    private Number sub_type;
-    private String owner_id;
-    private String guild_id;
+    private Number speakPermission;
+    private Number subType;
+    private String ownerId;
+    private String guildId;
     private String name;
     private String id;
     private Number position;
     private Number type;
-    private Number private_type;
-    private String application_id;
+    private Number privateType;
+    private String applicationId;
     public static final Map<String, String> MAP = new HashMap<>();
 
     static {

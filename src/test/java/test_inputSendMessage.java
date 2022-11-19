@@ -1,9 +1,7 @@
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Channel;
-import io.github.kloping.qqbot.api.Guild;
-import io.github.kloping.qqbot.http.GuildBase;
-import io.github.kloping.qqbot.http.MessageBase;
+import io.github.kloping.qqbot.api.qqpd.Channel;
+import io.github.kloping.qqbot.api.qqpd.Guild;
 
 import java.util.Scanner;
 

@@ -1,11 +1,8 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.MySpringTool.annotations.PathValue;
-import io.github.kloping.MySpringTool.annotations.http.GetPath;
 import io.github.kloping.MySpringTool.annotations.http.Headers;
 import io.github.kloping.MySpringTool.annotations.http.HttpClient;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Member;
 
 /**
  * @author github.kloping

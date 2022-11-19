@@ -1,9 +1,9 @@
-package io.github.kloping.qqbot.api.interfaces;
+package io.github.kloping.qqbot.api.qqpd.interfaces;
 
-import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.api.message.MessagePacket;
-import io.github.kloping.qqbot.api.message.PreMessage;
-import io.github.kloping.qqbot.api.message.audited.MessageAudited;
+import io.github.kloping.qqbot.api.data.MessagePacket;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
+import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
 
 /**
  * 发送者(消息)接口

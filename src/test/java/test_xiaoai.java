@@ -2,11 +2,7 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Channel;
-import io.github.kloping.qqbot.api.Guild;
-import io.github.kloping.qqbot.api.message.Message;
-import io.github.kloping.qqbot.http.GuildBase;
-import io.github.kloping.qqbot.http.MessageBase;
+import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

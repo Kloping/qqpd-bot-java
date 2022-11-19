@@ -1,8 +1,10 @@
-package io.github.kloping.qqbot.api.message;
+package io.github.kloping.qqbot.api.qqpd.message;
 
 import lombok.Data;
 
 /**
+ * 引用消息
+ *
  * @author github.kloping
  */
 @Data

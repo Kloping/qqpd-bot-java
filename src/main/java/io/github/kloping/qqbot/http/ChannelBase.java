@@ -5,7 +5,7 @@ import io.github.kloping.MySpringTool.annotations.http.GetPath;
 import io.github.kloping.MySpringTool.annotations.http.Headers;
 import io.github.kloping.MySpringTool.annotations.http.HttpClient;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Channel;
+import io.github.kloping.qqbot.api.qqpd.Channel;
 
 /**
  * @author github.kloping

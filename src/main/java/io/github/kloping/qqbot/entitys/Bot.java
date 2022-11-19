@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.entitys;
 
-import io.github.kloping.qqbot.api.Guild;
-import io.github.kloping.qqbot.api.User;
+import io.github.kloping.qqbot.api.qqpd.Guild;
+import io.github.kloping.qqbot.api.qqpd.User;
 
 import java.util.Collection;
 import java.util.HashMap;
