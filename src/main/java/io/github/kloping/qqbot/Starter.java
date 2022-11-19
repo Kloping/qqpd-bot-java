@@ -79,7 +79,7 @@ public class Starter implements Runnable {
         APPLICATION.INSTANCE.getContextManager().append(appid, APPID_ID);
         APPLICATION.INSTANCE.getContextManager().append(token, TOKEN_ID);
         //22.11.18 修改为默认监听所有事件 by kloping
-        APPLICATION.INSTANCE.getContextManager().append("1544295939", INTENTS_ID);
+        APPLICATION.INSTANCE.getContextManager().append("2081166851", INTENTS_ID);
         APPLICATION.INSTANCE.getContextManager().append(new Integer[]{0, 1}, SHARD_ID);
         APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
         APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
