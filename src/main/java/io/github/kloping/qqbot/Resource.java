@@ -8,6 +8,7 @@ import io.github.kloping.qqbot.api.data.ListenerHost;
 import io.github.kloping.qqbot.api.data.MessagePacket;
 import io.github.kloping.qqbot.api.qqpd.message.MessageReference;
 import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entitys.Bot;
 import io.github.kloping.qqbot.http.*;
 
 import java.util.HashSet;
@@ -43,6 +44,9 @@ public class Resource {
     public static Future mainFuture;
 
     public static Starter starter;
+
+    public static Bot bot;
+
 
     public static void packet2pre(MessagePacket packet, PreMessage msg) {
         if (Judge.isNotEmpty(packet.getContent())) {

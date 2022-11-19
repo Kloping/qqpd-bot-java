@@ -7,8 +7,6 @@ import io.github.kloping.qqbot.api.interfaces.message.MessageEvent;
 import io.github.kloping.qqbot.api.qqpd.Channel;
 import io.github.kloping.qqbot.api.qqpd.Guild;
 import io.github.kloping.qqbot.api.qqpd.Member;
-import io.github.kloping.qqbot.api.qqpd.interfaces.DirectSender;
-import io.github.kloping.qqbot.api.qqpd.interfaces.Sender;
 import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
 import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
@@ -31,7 +29,7 @@ public class BaseMessageEvent implements MessageEvent {
         this.metadata = jo;
         this.guild = Resource.starter.getBot().getGuild(message.getGuildId());
         this.channel = getGuild().channelMap().get(message.getChannelId());
-        this.sender = message.getMember();
+        this.sender = getGuild().memberMap().get(message.getAuthor().getId());
     }
 
     @Override
@@ -57,26 +55,6 @@ public class BaseMessageEvent implements MessageEvent {
     @Override
     public Channel getChannel() {
         return channel;
-    }
-
-    @Override
-    public MessageAudited sendDirect(String text) {
-        return getMessage().sendDirect(text);
-    }
-
-    @Override
-    public MessageAudited sendDirect(String text, Message message) {
-        return getMessage().sendDirect(text, message);
-    }
-
-    @Override
-    public MessageAudited sendDirect(MessagePacket packet) {
-        return getMessage().sendDirect(packet);
-    }
-
-    @Override
-    public MessageAudited sendDirect(PreMessage msg) {
-        return getMessage().sendDirect(msg);
     }
 
     @Override

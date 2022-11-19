@@ -11,7 +11,7 @@ import io.github.kloping.qqbot.api.qqpd.message.Message;
  *
  * @author github.kloping
  */
-public interface MessageEvent extends ChannelEvent, DirectSender, Sender {
+public interface MessageEvent extends ChannelEvent, Sender {
     /**
      * 获取消息
      *

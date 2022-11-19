@@ -1,6 +1,9 @@
 package io.github.kloping.qqbot.api.interfaces.message;
 
 import io.github.kloping.qqbot.api.data.MessagePacket;
+import io.github.kloping.qqbot.api.qqpd.Guild;
+import io.github.kloping.qqbot.api.qqpd.interfaces.DirectSender;
+import io.github.kloping.qqbot.api.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
 import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
@@ -10,13 +13,27 @@ import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
  *
  * @author github.kloping
  */
-public interface MessageDirectReceiveEvent extends MessageReceiveEvent {
+public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSender {
     /**
      * 来源guild
      *
      * @return
      */
     String getSrcGuildId();
+
+    /**
+     * 来源guild
+     *
+     * @return
+     */
+    Guild getSrcGuild();
+
+    /**
+     * 获取私信消息
+     *
+     * @return
+     */
+    DirectMessage getDirectMessage();
 
     /**
      * 替换默认

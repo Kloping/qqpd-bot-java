@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.github.kloping.qqbot.Resource.APPLICATION;
+import static io.github.kloping.qqbot.Resource.bot;
 
 /**
  * <h3>一般启动方式</h3>
@@ -116,12 +117,16 @@ public class Starter implements Runnable {
     }
 
     public Bot getBot() {
-        User user = Resource.userBase.botInfo();
-        Map<String, Guild> guildMap = new HashMap<>();
-        for (Guild guild : Resource.guildBase.getGuilds()) {
-            guildMap.put(guild.getId(), guild);
+        if (Resource.bot == null) {
+            User user = Resource.userBase.botInfo();
+            Map<String, Guild> guildMap = new HashMap<>();
+            for (Guild guild : Resource.guildBase.getGuilds()) {
+                guildMap.put(guild.getId(), guild);
+            }
+            return bot = new Bot(user, guildMap);
+        } else {
+            return bot;
         }
-        return new Bot(user, guildMap);
     }
 
     public WssWorker getWssWorker() {

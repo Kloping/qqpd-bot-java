@@ -5,7 +5,6 @@ import io.github.kloping.qqbot.api.data.MessagePacket;
 import io.github.kloping.qqbot.api.qqpd.Member;
 import io.github.kloping.qqbot.api.qqpd.interfaces.DeleteAble;
 import io.github.kloping.qqbot.api.qqpd.interfaces.DirectSender;
-import io.github.kloping.qqbot.api.qqpd.interfaces.Sender;
 import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,9 +22,9 @@ import static io.github.kloping.qqbot.api.qqpd.Channel.MAP;
 @Data
 @Accessors(chain = true)
 @ToString
-@EqualsAndHashCode
-public class Message
-        implements Sender, DeleteAble {
+@EqualsAndHashCode(callSuper = false)
+public class DirectMessage extends Message
+        implements DirectSender, DeleteAble {
     private String id;
     private String channelId;
     private String guildId;
@@ -44,31 +43,42 @@ public class Message
     private MessageReference messageReference;
     private String srcGuildId;
 
-    @Override
-    public MessageAudited send(String text, Message message) {
-        return send(new MessagePacket().setContent(text).setReplyId(message.id));
+    public static DirectMessage messageAsDirectMessage(Message message) {
+        return new DirectMessage().setId(message.getId()).setChannelId(message.getChannelId())
+                .setGuildId(message.getGuildId()).setContent(message.getContent()).setTimestamp(message.getTimestamp())
+                .setEditedTimestamp(message.getEditedTimestamp()).setMentionEveryone(message.getMentionEveryone())
+                .setAuthor(message.getAuthor()).setAttachments(message.getAttachments()).setEmbed(message.getEmbed())
+                .setMentions(message.getMentions()).setMember(message.getMember()).setArk(message.getArk()).setSeq(message.getSeq())
+                .setSeqInChannel(message.getSeqInChannel()).setMessageReference(message.getMessageReference()).setSrcGuildId(message.getSrcGuildId());
     }
 
     @Override
-    public MessageAudited send(String text) {
-        return send(new MessagePacket().setContent(text));
+    public MessageAudited sendDirect(String text) {
+        return sendDirect(new MessagePacket().setContent(text));
     }
 
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public MessageAudited sendDirect(String text, Message message) {
+        return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
+    }
+
+    @Override
+    public MessageAudited sendDirect(MessagePacket packet) {
         PreMessage msg = new PreMessage();
-        msg.setMsgId(Message.this.id);
+        msg.setMsgId(DirectMessage.this.id);
         packet2pre(packet, msg);
-        return Resource.messageBase.send(Message.this.channelId, msg, MAP);
+        return Resource.dmsBase.send(DirectMessage.this.guildId, msg, MAP);
     }
 
     @Override
-    public MessageAudited send(PreMessage msg) {
-        return Resource.messageBase.send(Message.this.channelId, msg, MAP);
+    public MessageAudited sendDirect(PreMessage msg) {
+        return Resource.dmsBase.send(DirectMessage.this.guildId, msg, MAP);
     }
 
     @Override
     public Object delete() {
-        return Resource.messageBase.delete(this.channelId, this.id, false);
+        if (Resource.starter.getBot().getInfo().getId() == this.getAuthor().getId())
+            return Resource.dmsBase.delete(this.guildId, this.id, false);
+        return "DELETE FAIL";
     }
 }

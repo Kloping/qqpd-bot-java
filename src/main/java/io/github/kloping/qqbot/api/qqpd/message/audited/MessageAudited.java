@@ -13,6 +13,6 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class MessageAudited {
     private Number code;
-    private Data data;
+    private MessageAuditData data;
     private String message;
 }

@@ -2,6 +2,8 @@
 /target/
 .idea
 temp.log
+temp.json
+temp.http
 bot-qqpd-java.iml
 test_temp.java
-temp.json
+logs

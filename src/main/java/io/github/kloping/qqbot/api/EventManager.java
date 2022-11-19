@@ -6,15 +6,9 @@ import io.github.kloping.MySpringTool.interfaces.AutomaticWiringParams;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.data.ListenerHost;
-import io.github.kloping.qqbot.api.data.message.BaseMessageContainsAtEvent;
-import io.github.kloping.qqbot.api.data.message.BaseMessageDeleteEvent;
-import io.github.kloping.qqbot.api.data.message.BaseMessageDirectReceiveEvent;
-import io.github.kloping.qqbot.api.data.message.BaseMessageReceiveEvent;
+import io.github.kloping.qqbot.api.data.message.*;
 import io.github.kloping.qqbot.api.interfaces.Event;
-import io.github.kloping.qqbot.api.interfaces.message.MessageContainsAtEvent;
-import io.github.kloping.qqbot.api.interfaces.message.MessageDeleteEvent;
-import io.github.kloping.qqbot.api.interfaces.message.MessageDirectReceiveEvent;
-import io.github.kloping.qqbot.api.interfaces.message.MessageReceiveEvent;
+import io.github.kloping.qqbot.api.interfaces.message.*;
 import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.api.utils.InvokeUtils;
 
@@ -38,8 +32,10 @@ public class EventManager {
                 case "MESSAGE_CREATE":
                     if (msg.getMentions() != null && msg.getMentions().length > 0) {
                         c0 = MessageContainsAtEvent.class;
+                    } else if (msg.getSrcGuildId() != null && !msg.getSrcGuildId().isEmpty()) {
+                        c0 = MessageDirectReceiveEvent.class;
                     } else {
-                        c0 = MessageReceiveEvent.class;
+                        c0 = MessageChannelReceiveEvent.class;
                     }
                     break;
                 case "AT_MESSAGE_CREATE":
@@ -75,7 +71,7 @@ public class EventManager {
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    e.getTargetException().printStackTrace();
                     l.handleException(e.getTargetException());
                 }
             });
@@ -94,6 +90,8 @@ public class EventManager {
             event = new BaseMessageDeleteEvent(message, jo);
         } else if (cla == MessageDirectReceiveEvent.class) {
             event = new BaseMessageDirectReceiveEvent(message, jo);
+        } else if (cla == MessageChannelReceiveEvent.class) {
+            event = new BaseMessageChannelReceiveEvent(message, jo);
         }
         return (T) event;
     }

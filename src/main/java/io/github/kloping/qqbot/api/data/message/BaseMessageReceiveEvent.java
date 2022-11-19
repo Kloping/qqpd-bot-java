@@ -13,10 +13,10 @@ public class BaseMessageReceiveEvent extends BaseMessageEvent implements Message
 
     public BaseMessageReceiveEvent(Message message, JSONObject jo) {
         super(message, jo);
-        this.content = message.getContent();
+        this.content = getMessage().getContent() == null ? "" : getMessage().getContent();
     }
 
-    private String content;
+    protected String content;
 
     @Override
     public String getContent() {

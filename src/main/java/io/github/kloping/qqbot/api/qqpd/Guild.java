@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.api.qqpd;
 
 import io.github.kloping.qqbot.Resource;
+import io.github.kloping.qqbot.api.qqpd.interfaces.SessionCreator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -18,7 +19,7 @@ import java.util.*;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Guild {
+public class Guild implements SessionCreator {
     private Boolean owner;
     private String joinedAt;
     private String ownerId;
@@ -28,6 +29,15 @@ public class Guild {
     private String description;
     private String id;
     private Integer memberCount;
+
+    @Override
+    public Dms create(String uid) {
+        if (!memberMap().containsKey(uid)) return null;
+        DmsRequest request = new DmsRequest();
+        request.setSourceGuildId(Guild.this.id);
+        request.setRecipientId(uid);
+        return Resource.dmsBase.create(request);
+    }
 
     public List<Member> members() {
         Member[] members = Resource.guildBase.getMembers(id, 100);

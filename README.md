@@ -53,7 +53,7 @@ V1.4+ 注册监听器主机方式 [荐]
         }
 
         @EventReceiver
-        public void onEvent(MessageEvent event) {
+        public void onEvent(MessageChannelReceiveEvent event) {
             event.send("测试");
         }
 

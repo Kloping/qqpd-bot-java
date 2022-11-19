@@ -94,5 +94,4 @@ public class Channel implements Sender {
     public MessageAudited send(PreMessage msg) {
         return Resource.messageBase.send(Channel.this.id, msg, MAP);
     }
-
 }
