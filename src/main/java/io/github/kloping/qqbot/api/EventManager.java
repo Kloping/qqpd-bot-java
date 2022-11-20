@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static io.github.kloping.qqbot.Resource.APPLICATION;
+
 /**
  * @author github.kloping
  */
@@ -34,7 +36,7 @@ public class EventManager {
             if (msg != null) {
                 if (msg.getId() != null && !msg.getId().isEmpty()) {
                     if (IDS.contains(msg.getId())){
-                        Resource.logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
+                        APPLICATION.logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
                         return;
                     }else{
                         (IDS).add(msg.getId());
