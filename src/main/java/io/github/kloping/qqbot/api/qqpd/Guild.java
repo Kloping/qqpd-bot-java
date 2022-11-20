@@ -30,6 +30,12 @@ public class Guild implements SessionCreator {
     private String id;
     private Integer memberCount;
 
+    /**
+     * 目前尚存在一些问题
+     *
+     * @param uid
+     * @return
+     */
     @Override
     public Dms create(String uid) {
         if (!memberMap().containsKey(uid)) return null;
