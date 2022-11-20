@@ -3,6 +3,7 @@ package io.github.kloping.qqbot;
 import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.data.ListenerHost;
 import io.github.kloping.qqbot.api.data.MessagePacket;
@@ -22,6 +23,9 @@ import java.util.concurrent.Future;
 public class Resource {
     public static final StarterObjectApplication APPLICATION = new StarterObjectApplication();
     public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();
+
+    @AutoStand
+    public static Logger logger;
 
     @AutoStand
     public static BotBase botBase;
@@ -46,7 +50,6 @@ public class Resource {
     public static Starter starter;
 
     public static Bot bot;
-
 
     public static void packet2pre(MessagePacket packet, PreMessage msg) {
         if (Judge.isNotEmpty(packet.getContent())) {

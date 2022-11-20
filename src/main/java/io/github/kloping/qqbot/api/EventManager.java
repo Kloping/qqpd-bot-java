@@ -15,7 +15,9 @@ import io.github.kloping.qqbot.api.utils.InvokeUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author github.kloping
@@ -23,11 +25,22 @@ import java.util.Map;
 public class EventManager {
     private static final AutomaticWiringParams WIRING_PARAMS = new AutomaticWiringParamsH2Impl();
     private static final Map<Method, ListenerHost> M2L = new HashMap<>();
+    private static final Set<String> IDS = new HashSet<>();
 
-    public static void onEvent(String t, JSONObject obj) {
+    public static synchronized void onEvent(String t, JSONObject obj) {
         try {
             Class<? extends Event> c0 = null;
             Message msg = obj.toJavaObject(Message.class);
+            if (msg != null) {
+                if (msg.getId() != null && !msg.getId().isEmpty()) {
+                    if (IDS.contains(msg.getId())){
+                        Resource.logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
+                        return;
+                    }else{
+                        (IDS).add(msg.getId());
+                    }
+                }
+            }
             switch (t) {
                 case "MESSAGE_CREATE":
                     if (msg.getMentions() != null && msg.getMentions().length > 0) {
