@@ -33,10 +33,11 @@ public interface DmsBase {
      * create The session
      *
      * @param request
+     * @param header0
      * @return
      */
     @PostPath("/users/@me/dms")
-    Dms create(@RequestBody(type = RequestBody.type.json)  DmsRequest request);
+    Dms create(@RequestBody(type = RequestBody.type.json) DmsRequest request, @Headers Map<String, String> header0);
 
 
     /**

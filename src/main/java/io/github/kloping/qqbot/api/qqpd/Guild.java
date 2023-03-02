@@ -7,7 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h3 id="guild"><a href="#guild" class="header-anchor">#</a> Guild</h3>
@@ -42,35 +45,56 @@ public class Guild implements SessionCreator {
         DmsRequest request = new DmsRequest();
         request.setSourceGuildId(Guild.this.id);
         request.setRecipientId(uid);
-        return Resource.dmsBase.create(request);
+        return Resource.dmsBase.create(request, Channel.MAP);
+    }
+
+    private synchronized void initTemp0() {
+        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
+            Map<String, Member> map = new HashMap<>();
+            Member[] members = Resource.guildBase.getMembers(id, 100);
+            for (Member member : members) {
+                map.put(member.getUser().getId(), member);
+            }
+            Common.GUILD_MEMBER_TEMP.put(id, map);
+        }
+    }
+
+    private synchronized void initTemp1() {
+        if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
+            Map<String, Channel> map = new HashMap<>();
+            Channel[] channels = Resource.guildBase.getChannels(id);
+            for (Channel channel : channels) {
+                map.put(channel.getId(), channel);
+            }
+            Common.GUILD_CHANNEL_TEMP.put(id, map);
+        }
     }
 
     public List<Member> members() {
-        Member[] members = Resource.guildBase.getMembers(id, 100);
-        List<Member> memberList = new ArrayList<>(Arrays.asList(members));
-        return memberList;
+        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
+            initTemp0();
+        }
+        return new ArrayList<>(Common.GUILD_MEMBER_TEMP.get(id).values());
     }
 
     public Map<String, Member> memberMap() {
-        Map<String, Member> map = new HashMap<>();
-        Member[] members = Resource.guildBase.getMembers(id, 100);
-        for (Member member : members) {
-            map.put(member.getUser().getId(), member);
+        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
+            initTemp0();
         }
-        return map;
+        return Common.GUILD_MEMBER_TEMP.get(id);
     }
 
     public List<Channel> channels() {
-        Channel[] channels = Resource.guildBase.getChannels(id);
-        return new ArrayList<Channel>(Arrays.asList(channels));
+        if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
+            initTemp1();
+        }
+        return new ArrayList<>(Common.GUILD_CHANNEL_TEMP.get(id).values());
     }
 
     public Map<String, Channel> channelMap() {
-        Map<String, Channel> map = new HashMap<>();
-        Channel[] channels = Resource.guildBase.getChannels(id);
-        for (Channel channel : channels) {
-            map.put(channel.getId(), channel);
+        if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
+            initTemp1();
         }
-        return map;
+        return Common.GUILD_CHANNEL_TEMP.get(id);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
@@ -9,6 +10,8 @@ import lombok.Data;
  */
 @Data
 public class DmsRequest {
+    @JSONField(name = "recipient_id")
     private String recipientId;
+    @JSONField(name = "source_guild_id")
     private String sourceGuildId;
 }
