@@ -19,6 +19,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -77,8 +78,10 @@ public class WssWorker implements Runnable {
                         logger.info("鉴权");
                         webSocket.send(JSON.toJSONString(authPack));
                         isFirst = false;
-                        Pack<JSONObject> pack = JSON.parseObject(s).toJavaObject(Pack.class);
-                        heartbeatInterval = pack.getD().getLong("heartbeat_interval");
+                        Pack pack = JSON.parseObject(s).toJavaObject(Pack.class);
+                        heartbeatInterval = Long.parseLong(JSON.parseObject(pack.getD().toString(),
+                                        HashMap.class).
+                                get("heartbeat_interval").toString());
                         jumpPack.setOp(1);
                         if (scheduledFuture != null && !scheduledFuture.isCancelled())
                             scheduledFuture.cancel(true);

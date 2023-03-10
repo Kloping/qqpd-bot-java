@@ -10,11 +10,9 @@ public class test_main {
 
     //0 1 9 10 12 18 19 26 27 28 29 30
     public static void main(String[] args) {
-        System.out.println(0 | 1 << 0 | 1 << 30
-                | 1 << 1 | 1 << 9 | 1 << 10 | 1 << 29
-                | 1 << 12 | 1 << 18 | 1 << 19
-                | 1 << 28 | 1 << 27 | 1 << 26
-        );
+        Starter factory = factory();
+        factory.run();
+        factory.getWssWorker().setReconnect(true);
     }
 
     public static Starter factory() {
