@@ -92,13 +92,15 @@ public class WssWorker implements Runnable {
                             webSocket.send(JSON.toJSONString(jumpPack));
                         }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
                     } else {
-                        Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
+                        Pack pack = JSON.parseObject(s, Pack.class);
                         logger.log("receive " + pack);
                         if (pack.getS() != null) {
                             newstId = pack.getS().intValue();
                         }
                         if (pack.getOp().equals(0)) {
-                            sessionId = pack.getD().getString("session_id");
+                            sessionId = JSON.parseObject(pack.getD().toString(),
+                                            HashMap.class).
+                                    get("session_id").toString();
                         }
                         if (pack.getOp().equals(7)) {
                             logger.info("服务端通知客户端重新连接");
