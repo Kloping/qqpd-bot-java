@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.entitys;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 /**
@@ -8,9 +9,16 @@ import lombok.Data;
  * @author github-kloping
  */
 @Data
-public class Pack<T> {
+public class Pack {
     private Integer op;
     private Number s;
-    private T d;
+    private Object d;
     private String t;
+
+    public JSONObject dAsJsonObject() {
+        if (d instanceof JSONObject) {
+            return (JSONObject) d;
+        }
+        return null;
+    }
 }

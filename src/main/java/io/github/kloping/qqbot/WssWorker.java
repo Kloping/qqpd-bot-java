@@ -31,8 +31,8 @@ import static io.github.kloping.qqbot.Starter.*;
  */
 @Entity
 public class WssWorker implements Runnable {
-    private WebSocketClient webSocket;
-    private Boolean isReconnect = false;
+    protected WebSocketClient webSocket;
+    private Boolean isReconnect = true;
 
     @AutoStand
     ContextManager contextManager;
@@ -48,13 +48,25 @@ public class WssWorker implements Runnable {
     private ScheduledFuture scheduledFuture;
 
     public Pack jumpPack = new Pack();
-    public Pack<JSONObject> authPack = null;
-    public String sessionId = "";
+    public Pack authPack = null;
+    protected String sessionId = "";
 
     private boolean isFirst = true;
     private boolean connected = false;
     public long heartbeatInterval;
     public int newstId = 1;
+
+    private void init() {
+        authPack = new Pack();
+        authPack.setOp(2);
+        JSONObject jo = new JSONObject();
+        jo.put(TOKEN_ID, contextManager.getContextEntity(String.class, AUTH_ID));
+        jo.put(INTENTS_ID, contextManager.getContextEntity(String.class, INTENTS_ID));
+        jo.put(SHARD_ID, contextManager.getContextEntity(Integer[].class, SHARD_ID));
+        jo.put(PROPERTIES_ID, new Object());
+        authPack.setD(jo);
+        logger = contextManager.getContextEntity(Logger.class);
+    }
 
     @Override
     public void run() {
@@ -77,11 +89,10 @@ public class WssWorker implements Runnable {
                         logger.info("鉴权");
                         webSocket.send(JSON.toJSONString(authPack));
                         isFirst = false;
-                        Pack<JSONObject> pack = JSON.parseObject(s).toJavaObject(Pack.class);
-                        heartbeatInterval = pack.getD().getLong("heartbeat_interval");
+                        Pack pack = JSON.parseObject(s).toJavaObject(Pack.class);
+                        heartbeatInterval = pack.dAsJsonObject().getLong("heartbeat_interval");
                         jumpPack.setOp(1);
-                        if (scheduledFuture != null && !scheduledFuture.isCancelled())
-                            scheduledFuture.cancel(true);
+                        if (scheduledFuture != null && !scheduledFuture.isCancelled()) scheduledFuture.cancel(true);
                         scheduledFuture = FrameUtils.SERVICE.scheduleAtFixedRate(() -> {
                             if (newstId != -1) {
                                 jumpPack.setD(newstId);
@@ -89,13 +100,13 @@ public class WssWorker implements Runnable {
                             webSocket.send(JSON.toJSONString(jumpPack));
                         }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
                     } else {
-                        Pack<JSONObject> pack = JSON.parseObject(s, Pack.class);
+                        Pack pack = JSON.parseObject(s, Pack.class);
                         logger.log("receive " + pack);
                         if (pack.getS() != null) {
                             newstId = pack.getS().intValue();
                         }
                         if (pack.getOp().equals(0)) {
-                            sessionId = pack.getD().getString("session_id");
+                            sessionId = pack.dAsJsonObject().getString("session_id");
                         }
                         if (pack.getOp().equals(7)) {
                             logger.info("服务端通知客户端重新连接");
@@ -124,10 +135,10 @@ public class WssWorker implements Runnable {
                     try {
                         logger.waring("wss closed");
                         for (OnCloseListener onCloseListener : closeListeners) {
-                            onCloseListener.onReceive();
+                            onCloseListener.onReceive(i, webSocket);
                         }
                     } finally {
-                        if (isReconnect && !connected) {
+                        if (getReconnect() && !connected) {
                             reConnect();
                         }
                     }
@@ -145,9 +156,9 @@ public class WssWorker implements Runnable {
         }
     }
 
-    private void reConnect() {
+    protected void reConnect() {
         isFirst = true;
-        authPack = new Pack<>();
+        authPack = new Pack();
         jumpPack = new Pack();
         if (Resource.mainFuture != null && !Resource.mainFuture.isCancelled()) {
             Resource.mainFuture.cancel(true);
@@ -155,10 +166,10 @@ public class WssWorker implements Runnable {
         Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> this.run());
     }
 
-    private void onReceive(Pack<JSONObject> pack) {
+    private void onReceive(Pack pack) {
         String t = pack.getT();
         if (t == null) return;
-        JSONObject jo = pack.getD();
+        JSONObject jo = pack.dAsJsonObject();
         Public.EXECUTOR_SERVICE.submit(() -> EventManager.onEvent(t, jo));
         Message m = jo.toJavaObject(Message.class);
         switch (t) {
@@ -193,11 +204,11 @@ public class WssWorker implements Runnable {
                 break;
         }
     }
-
     public List<OnMessageListener> messageListeners = new ArrayList<>();
     public List<OnAtMessageListener> atMessageListeners = new ArrayList<>();
     public List<OnCloseListener> closeListeners = new ArrayList<>();
     public List<OnOtherEventListener> otherEventListeners = new ArrayList<>();
+
     public List<OnMessageDeleteListener> messageDeleteListeners = new ArrayList<>();
 
     private OnPackReceive onPackReceive;
@@ -206,23 +217,39 @@ public class WssWorker implements Runnable {
         this.onPackReceive = onPackReceive;
     }
 
-    private void init() {
-        authPack = new Pack();
-        authPack.setOp(2);
-        JSONObject jo = new JSONObject();
-        jo.put(TOKEN_ID, contextManager.getContextEntity(String.class, AUTH_ID));
-        jo.put(INTENTS_ID, contextManager.getContextEntity(String.class, INTENTS_ID));
-        jo.put(SHARD_ID, contextManager.getContextEntity(Integer[].class, SHARD_ID));
-        jo.put(PROPERTIES_ID, new Object());
-        authPack.setD(jo);
-        logger = contextManager.getContextEntity(Logger.class);
-    }
-
     public Boolean getReconnect() {
         return isReconnect;
     }
 
     public void setReconnect(Boolean reconnect) {
         isReconnect = reconnect;
+    }
+
+    public List<OnMessageListener> getMessageListeners() {
+        return messageListeners;
+    }
+
+    public List<OnAtMessageListener> getAtMessageListeners() {
+        return atMessageListeners;
+    }
+
+    public List<OnCloseListener> getCloseListeners() {
+        return closeListeners;
+    }
+
+    public List<OnOtherEventListener> getOtherEventListeners() {
+        return otherEventListeners;
+    }
+
+    public List<OnMessageDeleteListener> getMessageDeleteListeners() {
+        return messageDeleteListeners;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 }

@@ -35,13 +35,16 @@ public class EventManager {
             Message msg = obj.toJavaObject(Message.class);
             if (msg != null) {
                 if (msg.getId() != null && !msg.getId().isEmpty()) {
-                    if (IDS.contains(msg.getId())){
+                    if (IDS.contains(msg.getId())) {
                         APPLICATION.logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
                         return;
-                    }else{
+                    } else {
                         (IDS).add(msg.getId());
                     }
                 }
+            } else {
+                APPLICATION.logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
+                return;
             }
             switch (t) {
                 case "MESSAGE_CREATE":

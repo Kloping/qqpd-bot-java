@@ -101,19 +101,19 @@ public class Starter implements Runnable {
     }
 
     public void addListener(OnMessageListener listener) {
-        wssWorker.messageListeners.add(listener);
+        wssWorker.getMessageListeners().add(listener);
     }
 
     public void addListener(OnAtMessageListener listener) {
-        wssWorker.atMessageListeners.add(listener);
+        wssWorker.getAtMessageListeners().add(listener);
     }
 
     public void addListener(OnOtherEventListener listener) {
-        wssWorker.otherEventListeners.add(listener);
+        wssWorker.getOtherEventListeners().add(listener);
     }
 
     public void addListener(OnMessageDeleteListener listener) {
-        wssWorker.messageDeleteListeners.add(listener);
+        wssWorker.getMessageDeleteListeners().add(listener);
     }
 
     public Bot getBot() {

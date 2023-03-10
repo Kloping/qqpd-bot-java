@@ -21,6 +21,12 @@ import java.util.concurrent.Future;
  */
 @Entity
 public class Resource {
+    public static final Integer CODE_4006 = 4006;
+    public static final Integer CODE_4007 = 4007;
+    public static final Integer CODE_4008 = 4008;
+    public static final Integer CODE_4009 = 4009;
+    public static final Integer CODE_4900 = 4900;
+    public static final Integer CODE_4913 = 4913;
     public static final StarterObjectApplication APPLICATION = new StarterObjectApplication();
     public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();
 
@@ -51,6 +57,12 @@ public class Resource {
 
     public static Bot bot;
 
+    /**
+     * 类型转换
+     *
+     * @param packet
+     * @param msg
+     */
     public static void packet2pre(MessagePacket packet, PreMessage msg) {
         if (Judge.isNotEmpty(packet.getContent())) {
             msg.setContent(packet.getContent());
