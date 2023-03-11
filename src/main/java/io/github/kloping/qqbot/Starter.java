@@ -65,7 +65,6 @@ public class Starter implements Runnable {
         Resource.starter = this;
     }
 
-    private ContextManager contextManager;
     private WssWorker wssWorker;
 
     @Override
@@ -83,17 +82,13 @@ public class Starter implements Runnable {
         APPLICATION.INSTANCE.getContextManager().append(new Integer[]{0, 1}, SHARD_ID);
         APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
         APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
-        contextManager = APPLICATION.INSTANCE.getContextManager();
+        Resource.contextManager = APPLICATION.INSTANCE.getContextManager();
         wssWorker = APPLICATION.INSTANCE.getContextManager().getContextEntity(WssWorker.class);
         wssWork();
     }
 
     protected void wssWork() {
         Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> wssWorker.run());
-    }
-
-    public ContextManager getContextManager() {
-        return contextManager;
     }
 
     public void setOnPackReceive(OnPackReceive onPackReceive) {

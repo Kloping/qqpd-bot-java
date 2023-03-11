@@ -5,6 +5,7 @@ import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
+import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.data.ListenerHost;
 import io.github.kloping.qqbot.api.data.MessagePacket;
@@ -52,6 +53,9 @@ public class Resource {
 
     @AutoStand
     public static DmsBase dmsBase;
+
+    @AutoStand
+    public static ContextManager contextManager;
 
     public static Future mainFuture;
 
