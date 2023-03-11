@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot;
 
+import com.google.gson.Gson;
 import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
@@ -27,6 +28,7 @@ public class Resource {
     public static final Integer CODE_4009 = 4009;
     public static final Integer CODE_4900 = 4900;
     public static final Integer CODE_4913 = 4913;
+    public static final Gson GSON = new Gson();
     public static final StarterObjectApplication APPLICATION = new StarterObjectApplication();
     public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();
 

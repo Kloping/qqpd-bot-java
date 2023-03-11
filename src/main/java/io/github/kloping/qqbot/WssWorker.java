@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static io.github.kloping.qqbot.Resource.GSON;
 import static io.github.kloping.qqbot.Starter.*;
 
 /**
@@ -53,7 +54,7 @@ public class WssWorker implements Runnable {
 
     private boolean isFirst = true;
     private boolean connected = false;
-    public long heartbeatInterval;
+    public Number heartbeatInterval;
     public int newstId = 1;
 
     private void init() {
@@ -89,8 +90,8 @@ public class WssWorker implements Runnable {
                         logger.info("鉴权");
                         webSocket.send(JSON.toJSONString(authPack));
                         isFirst = false;
-                        Pack pack = JSON.parseObject(s).toJavaObject(Pack.class);
-                        heartbeatInterval = pack.dAsJsonObject().getLong("heartbeat_interval");
+                        Pack pack = GSON.fromJson(s, Pack.class);
+                        heartbeatInterval = pack.dAsMapGet("heartbeat_interval", Long.class);
                         jumpPack.setOp(1);
                         if (scheduledFuture != null && !scheduledFuture.isCancelled()) scheduledFuture.cancel(true);
                         scheduledFuture = FrameUtils.SERVICE.scheduleAtFixedRate(() -> {
@@ -98,7 +99,7 @@ public class WssWorker implements Runnable {
                                 jumpPack.setD(newstId);
                             }
                             webSocket.send(JSON.toJSONString(jumpPack));
-                        }, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
+                        }, heartbeatInterval.longValue(), heartbeatInterval.longValue(), TimeUnit.MILLISECONDS);
                     } else {
                         Pack pack = JSON.parseObject(s, Pack.class);
                         logger.log("receive " + pack);
@@ -106,7 +107,7 @@ public class WssWorker implements Runnable {
                             newstId = pack.getS().intValue();
                         }
                         if (pack.getOp().equals(0)) {
-                            sessionId = pack.dAsJsonObject().getString("session_id");
+                            sessionId = pack.dAsMapGet("session_id", String.class);
                         }
                         if (pack.getOp().equals(7)) {
                             logger.info("服务端通知客户端重新连接");
@@ -169,7 +170,7 @@ public class WssWorker implements Runnable {
     private void onReceive(Pack pack) {
         String t = pack.getT();
         if (t == null) return;
-        JSONObject jo = pack.dAsJsonObject();
+        JSONObject jo = JSON.parseObject(JSON.toJSONString(pack.getD()));
         Public.EXECUTOR_SERVICE.submit(() -> EventManager.onEvent(t, jo));
         Message m = jo.toJavaObject(Message.class);
         switch (t) {
@@ -204,6 +205,7 @@ public class WssWorker implements Runnable {
                 break;
         }
     }
+
     public List<OnMessageListener> messageListeners = new ArrayList<>();
     public List<OnAtMessageListener> atMessageListeners = new ArrayList<>();
     public List<OnCloseListener> closeListeners = new ArrayList<>();
