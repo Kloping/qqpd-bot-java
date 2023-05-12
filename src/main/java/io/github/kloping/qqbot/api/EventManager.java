@@ -25,7 +25,6 @@ import static io.github.kloping.qqbot.Resource.APPLICATION;
  * @author github.kloping
  */
 public class EventManager {
-    private static final AutomaticWiringParams WIRING_PARAMS = new AutomaticWiringParamsH2Impl();
     private static final Map<Method, ListenerHost> M2L = new HashMap<>();
     private static final Set<String> IDS = new HashSet<>();
 

@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.data.ListenerHost;
 import io.github.kloping.qqbot.api.qqpd.Guild;

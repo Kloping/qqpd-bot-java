@@ -30,7 +30,7 @@ public class Resource {
     public static final Integer CODE_4900 = 4900;
     public static final Integer CODE_4913 = 4913;
     public static final Gson GSON = new Gson();
-    public static final StarterObjectApplication APPLICATION = new StarterObjectApplication();
+    public static final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
     public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();
 
     @AutoStand
