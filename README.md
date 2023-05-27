@@ -43,7 +43,7 @@ Maven
     });
 ```
 
-V1.4+ 注册监听器主机方式 [荐]
+### V1.4+ 注册监听器主机方式 [荐]
 
 ```java
      starter.registerListenerHost(new ListenerHost() {

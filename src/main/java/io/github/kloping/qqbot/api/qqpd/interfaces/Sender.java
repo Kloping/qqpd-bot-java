@@ -18,7 +18,7 @@ public interface Sender {
      * @param text
      * @return
      */
-    public MessageAudited send(String text);
+    MessageAudited send(String text);
 
     /**
      * 以JSON方式发送文本消息并引用指定消息
@@ -27,7 +27,7 @@ public interface Sender {
      * @param message
      * @return
      */
-    public MessageAudited send(String text, Message message);
+    MessageAudited send(String text, Message message);
 
     /**
      * 以自定义方式发送消息
@@ -35,7 +35,7 @@ public interface Sender {
      * @param packet
      * @return
      */
-    public MessageAudited send(MessagePacket packet);
+    MessageAudited send(MessagePacket packet);
 
     /**
      * 以header方式发送文本消息
@@ -45,7 +45,7 @@ public interface Sender {
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public default String send0(String text) {
+    default String send0(String text) {
         return null;
     }
 
@@ -55,5 +55,5 @@ public interface Sender {
      * @param msg
      * @return
      */
-    public MessageAudited send(PreMessage msg);
+    MessageAudited send(PreMessage msg);
 }
