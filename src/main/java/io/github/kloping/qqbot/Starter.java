@@ -87,7 +87,7 @@ public class Starter implements Runnable {
     }
 
     protected void wssWork() {
-        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> wssWorker.run());
+        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(wssWorker);
     }
 
     public void setOnPackReceive(OnPackReceive onPackReceive) {

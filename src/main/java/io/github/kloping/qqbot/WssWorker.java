@@ -79,6 +79,7 @@ public class WssWorker implements Runnable {
                 webSocket.close();
             }
             webSocket = new WebSocketClient(u) {
+
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     logger.info("wss opened");
@@ -140,7 +141,7 @@ public class WssWorker implements Runnable {
                         }
                     } finally {
                         if (getReconnect() && !connected) {
-                            reConnect();
+                            Public.EXECUTOR_SERVICE.submit(WssWorker.this::reConnect);
                         }
                     }
                 }
@@ -164,7 +165,7 @@ public class WssWorker implements Runnable {
         if (Resource.mainFuture != null && !Resource.mainFuture.isCancelled()) {
             Resource.mainFuture.cancel(true);
         }
-        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(() -> this.run());
+        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(this);
     }
 
     private void onReceive(Pack pack) {

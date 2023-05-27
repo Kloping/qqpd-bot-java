@@ -19,6 +19,7 @@ public class test_main {
 
     public static Starter factory() {
         Starter starter = new Starter("appid", "token");
+        starter.getWssWorker().setReconnect(true);
         return starter;
     }
 }
