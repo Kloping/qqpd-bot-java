@@ -33,6 +33,11 @@ import static io.github.kloping.qqbot.Starter.*;
 @Entity
 public class WssWorker implements Runnable {
     protected WebSocketClient webSocket;
+
+    public WebSocketClient getWebSocket() {
+        return webSocket;
+    }
+
     private Boolean isReconnect = true;
 
     @AutoStand
@@ -60,6 +65,12 @@ public class WssWorker implements Runnable {
     private void init() {
         authPack = new Pack();
         authPack.setOp(2);
+        jumpPack = new Pack();
+        sessionId = "";
+        isFirst = true;
+        connected = false;
+        heartbeatInterval = null;
+        newstId = 1;
         JSONObject jo = new JSONObject();
         jo.put(TOKEN_ID, contextManager.getContextEntity(String.class, AUTH_ID));
         jo.put(INTENTS_ID, contextManager.getContextEntity(String.class, INTENTS_ID));
@@ -75,9 +86,7 @@ public class WssWorker implements Runnable {
             init();
             URI u = new URI(botBase.gateway().getUrl());
             logger.log("ws url:" + u);
-            if (webSocket != null && !webSocket.isClosed()) {
-                webSocket.close();
-            }
+            if (webSocket != null && !webSocket.isClosed()) webSocket.close();
             webSocket = new WebSocketClient(u) {
 
                 @Override
@@ -112,7 +121,6 @@ public class WssWorker implements Runnable {
                         }
                         if (pack.getOp().equals(7)) {
                             logger.info("服务端通知客户端重新连接");
-                            connected = false;
                             return;
                         }
                         if (onPackReceive != null) {
@@ -134,15 +142,9 @@ public class WssWorker implements Runnable {
 
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    try {
-                        logger.waring("wss closed");
-                        for (OnCloseListener onCloseListener : closeListeners) {
-                            onCloseListener.onReceive(i, webSocket);
-                        }
-                    } finally {
-                        if (getReconnect() && !connected) {
-                            Public.EXECUTOR_SERVICE.submit(WssWorker.this::reConnect);
-                        }
+                    logger.waring("wss closed with code " + i + " " + s);
+                    for (OnCloseListener onCloseListener : closeListeners) {
+                        onCloseListener.onReceive(i, webSocket);
                     }
                 }
 
@@ -156,16 +158,6 @@ public class WssWorker implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    protected void reConnect() {
-        isFirst = true;
-        authPack = new Pack();
-        jumpPack = new Pack();
-        if (Resource.mainFuture != null && !Resource.mainFuture.isCancelled()) {
-            Resource.mainFuture.cancel(true);
-        }
-        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(this);
     }
 
     private void onReceive(Pack pack) {
@@ -194,7 +186,7 @@ public class WssWorker implements Runnable {
                 }
                 break;
             case "READY":
-                connected = true;
+                setConnected(true);
                 break;
             case "DIRECT_MESSAGE_CREATE":
                 break;
