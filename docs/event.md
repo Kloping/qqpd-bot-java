@@ -12,4 +12,6 @@
 
 - [MessageEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageEvent.java) 消息事件顶级接口
 - [MessageDeleteEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageDeleteEvent.java) 消息撤回事件
-- [MessageContainsAtEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageChannelReceiveEvent.java) 子频道消息接收事件
+- [MessageContainsAtEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageContainsAtEvent.java) 子频道存在AT事件
+- [MessageChannelReceiveEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageChannelReceiveEvent.java) 子频道消息接收事件
+- [MessageDirectReceiveEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageDirectReceiveEvent.java) 私信消息接收事件
