@@ -11,26 +11,26 @@
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
 
-    <url>https://github.com/Kloping/qqpd-bot-java</url>
+    <url>https://github.com/kloping/qqpd-bot-java</url>
 
     <description>bot-qqpd-java</description>
     <licenses>
         <license>
             <name>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</name>
-            <url>https://raw.githubusercontent.com/Kloping/qqpd-bot-java/master/LICENSE</url>
+            <url>https://raw.githubusercontent.com/kloping/qqpd-bot-java/master/LICENSE</url>
             <distribution>repo</distribution>
             <comments>--</comments>
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/Kloping/qqpd-bot-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com/Kloping/qqpd-bot-java</developerConnection>
-        <url>https://github.com/Kloping/qqpd-bot-java</url>
+        <connection>scm:git:git://github.com/kloping/qqpd-bot-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/kloping/qqpd-bot-java</developerConnection>
+        <url>https://github.com/kloping/qqpd-bot-java</url>
     </scm>
     <developers>
         <developer>
-            <name>Kloping</name>
-            <id>Kloping</id>
+            <name>kloping</name>
+            <id>kloping</id>
             <email>hrs3474006766@outlook.com</email>
             <roles>
                 <role>Developer</role>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -57,7 +57,7 @@
             <version>2.10.1</version>
         </dependency>
         <dependency>
-            <groupId>io.github.Kloping</groupId>
+            <groupId>io.github.kloping</groupId>
             <artifactId>SpringTool</artifactId>
             <version>0.5.9-M2</version>
         </dependency>
