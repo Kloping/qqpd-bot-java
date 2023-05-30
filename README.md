@@ -31,39 +31,38 @@ Maven
 
 ```java 
     Starter starter=new Starter("appid","token");
-        starter.run();
+    starter.run();
 ```
 
 消息监听及回复
 
 ```java
-    starter.addListener(new OnMessageListener(){
-@Override
-public void onMessage(Message message){
-        message.send("回复测试");
-        }
-        });
+     starter.addListener(new OnMessageListener(){
+         @Override
+         public void onMessage(Message message){
+             message.send("回复测试");
+         }
+     });
 ```
 
 #### V1.4+ 注册监听器主机方式 [荐]
 
 ```java
-     starter.registerListenerHost(new ListenerHost(){
-@Override
-public void handleException(Throwable e){
+starter.registerListenerHost(new ListenerHost(){
+    @Override
+    public void handleException(Throwable e){
+    }
 
-        }
-
-@EventReceiver
-public void onEvent(MessageChannelReceiveEvent event){
+    @EventReceiver
+    public void onEvent(MessageChannelReceiveEvent event){
         event.send("测试");
-        }
+    }
 
-@EventReceiver
-public void onEvent(MessageDirectReceiveEvent event){
+    @EventReceiver 
+    public void onEvent(MessageDirectReceiveEvent event){
         event.send("测试通过");
-        }
-        });
+    }
+});
 ```
 
 #### V1.4.6
