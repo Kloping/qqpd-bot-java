@@ -31,6 +31,7 @@ Maven
 
 ```java 
     Starter starter=new Starter("appid","token");
+    starter.setIntents(intents);
     starter.run();
 ```
 
@@ -82,7 +83,6 @@ public static final Intents PUBLIC_INTENTS=DEFAULT.and(PUBLIC_GUILD_MESSAGES);
  * 私域机器人订阅推荐
  */
 public static final Intents PRIVATE_INTENTS=DEFAULT.and(GUILD_MESSAGES).and(FORUMS_EVENT);
-
 
 ```
 

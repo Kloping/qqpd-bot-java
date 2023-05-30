@@ -17,6 +17,7 @@ import static io.github.kloping.qqbot.Resource.bot;
  * <h3>一般启动方式</h3>
  * <pre>{@code
  *   Starter starter = new Starter("appid", "token");
+ *   starter.setIntents(intents);
  *   starter.run();
  * }</pre>
  * <h3>注册监听器</h3>
@@ -30,12 +31,31 @@ import static io.github.kloping.qqbot.Resource.bot;
  * });
  * }
  * </pre>
- * <h3>目前存在过段时间wss断开连接的问题!</h3>
+ * <h3>V1.4+ 注册监听器主机方式 [荐]</h3>
+ * <pre>{@code
+ *
+ * starter.registerListenerHost(new ListenerHost(){
+ *      @Override
+ *      public void handleException(Throwable e){
+ *      }
+ *
+ *      @EventReceiver
+ *      public void onEvent(MessageChannelReceiveEvent event){
+ *          event.send("测试");
+ *      }
+ *
+ *      @EventReceiver
+ *      public void onEvent(MessageDirectReceiveEvent event){
+ *          event.send("测试通过");
+ *      }
+ * });
+ * }</pre>
+ *
  * 可通过
  * <pre>{@code
- * starter.getWssWorker().setReconnect(boolean);
+ *  starter.setReconnect(true);
  * }</pre>
- * 设置是否在断开时是否重连 默认false
+ * 设置是否在断开时是否重连 默认true
  * <br>
  * <br>
  * <hr>
