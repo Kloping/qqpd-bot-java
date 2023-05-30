@@ -23,12 +23,6 @@ import java.util.concurrent.Future;
  */
 @Entity
 public class Resource {
-    public static final Integer CODE_4006 = 4006;
-    public static final Integer CODE_4007 = 4007;
-    public static final Integer CODE_4008 = 4008;
-    public static final Integer CODE_4009 = 4009;
-    public static final Integer CODE_4900 = 4900;
-    public static final Integer CODE_4913 = 4913;
     public static final Gson GSON = new Gson();
     public static final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
     public static final Set<ListenerHost> LISTENER_HOSTS = new HashSet<>();

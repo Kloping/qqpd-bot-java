@@ -30,42 +30,62 @@ Maven
 启动方式
 
 ```java 
-    Starter starter = new Starter("appid","token");
-    starter.run();
+    Starter starter=new Starter("appid","token");
+        starter.run();
 ```
 
 消息监听及回复
 
 ```java
     starter.addListener(new OnMessageListener(){
-        @Override
-        public void onMessage(Message message){
-            message.send("回复测试");
+@Override
+public void onMessage(Message message){
+        message.send("回复测试");
         }
-    });
+        });
 ```
 
-### V1.4+ 注册监听器主机方式 [荐]
+#### V1.4+ 注册监听器主机方式 [荐]
 
 ```java
-     starter.registerListenerHost(new ListenerHost() {
-        @Override
-        public void handleException(Throwable e) {
+     starter.registerListenerHost(new ListenerHost(){
+@Override
+public void handleException(Throwable e){
 
         }
 
-        @EventReceiver
-        public void onEvent(MessageChannelReceiveEvent event) {
-            event.send("测试");
+@EventReceiver
+public void onEvent(MessageChannelReceiveEvent event){
+        event.send("测试");
         }
 
-        @EventReceiver
-        public void onEvent(MessageDirectReceiveEvent event) {
-            event.send("测试通过");
+@EventReceiver
+public void onEvent(MessageDirectReceiveEvent event){
+        event.send("测试通过");
         }
-     });
+        });
 ```
 
+#### V1.4.6
+
+事件订阅 默认的事件订阅 不会接收消息事件
+
+需要确定自己的机器人是公域还是私域
+
+来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 **[事件类型](src/main/java/io/github/kloping/qqbot/Intents.java)**
+
+```java
+/**
+ * 公域机器人订阅推荐
+ */
+public static final Intents PUBLIC_INTENTS=DEFAULT.and(PUBLIC_GUILD_MESSAGES);
+/**
+ * 私域机器人订阅推荐
+ */
+public static final Intents PRIVATE_INTENTS=DEFAULT.and(GUILD_MESSAGES).and(FORUMS_EVENT);
+
+
+```
 
 导入指引
 
@@ -78,7 +98,6 @@ import io.github.kloping.qqbot.api.interfaces.message.MessageEvent;
 import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
 ```
-
 
 使用方式参考查看 [test](./src/test/java)
 

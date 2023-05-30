@@ -57,6 +57,8 @@ public class Starter implements Runnable {
 
     private String appid;
     private String token;
+    private Intents intents = Intents.DEFAULT;
+    private Boolean reconnect = true;
 
     public Starter(String appid, String token) {
         this.appid = appid;
@@ -68,6 +70,7 @@ public class Starter implements Runnable {
 
     @Override
     public void run() {
+        APPLICATION.PRE_SCAN_RUNNABLE.add(() -> APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger));
         APPLICATION.run0(Start0.class);
         after();
     }
@@ -77,17 +80,29 @@ public class Starter implements Runnable {
         APPLICATION.INSTANCE.getContextManager().append(appid, APPID_ID);
         APPLICATION.INSTANCE.getContextManager().append(token, TOKEN_ID);
         //22.11.18 修改为默认监听所有事件 by kloping
-        APPLICATION.INSTANCE.getContextManager().append("2081166851", INTENTS_ID);
+        APPLICATION.INSTANCE.getContextManager().append(intents.getCode(), INTENTS_ID);
         APPLICATION.INSTANCE.getContextManager().append(new Integer[]{0, 1}, SHARD_ID);
         APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
-        APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
         Resource.contextManager = APPLICATION.INSTANCE.getContextManager();
         wssWorker = APPLICATION.INSTANCE.getContextManager().getContextEntity(WssWorker.class);
         wssWork();
     }
 
     protected void wssWork() {
+        wssWorker.setReconnect(reconnect);
         Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(wssWorker);
+    }
+
+    public Intents getIntents() {
+        return intents;
+    }
+
+    public void setIntents(Intents intents) {
+        this.intents = intents;
+    }
+
+    public void setReconnect(Boolean reconnect) {
+        this.reconnect = reconnect;
     }
 
     public void setOnPackReceive(OnPackReceive onPackReceive) {

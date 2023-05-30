@@ -73,7 +73,7 @@ public class WssWorker implements Runnable {
         newstId = 1;
         JSONObject jo = new JSONObject();
         jo.put(TOKEN_ID, contextManager.getContextEntity(String.class, AUTH_ID));
-        jo.put(INTENTS_ID, contextManager.getContextEntity(String.class, INTENTS_ID));
+        jo.put(INTENTS_ID, contextManager.getContextEntity(Integer.class, INTENTS_ID));
         jo.put(SHARD_ID, contextManager.getContextEntity(Integer[].class, SHARD_ID));
         jo.put(PROPERTIES_ID, new Object());
         authPack.setD(jo);
