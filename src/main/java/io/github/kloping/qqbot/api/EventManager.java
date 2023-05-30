@@ -1,8 +1,6 @@
 package io.github.kloping.qqbot.api;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.h1.impls.component.AutomaticWiringParamsH2Impl;
-import io.github.kloping.MySpringTool.interfaces.AutomaticWiringParams;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.data.ListenerHost;
@@ -19,7 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static io.github.kloping.qqbot.Resource.APPLICATION;
+import static io.github.kloping.qqbot.Resource.logger;
 
 /**
  * @author github.kloping
@@ -35,14 +33,14 @@ public class EventManager {
             if (msg != null) {
                 if (msg.getId() != null && !msg.getId().isEmpty()) {
                     if (IDS.contains(msg.getId())) {
-                        APPLICATION.logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
+                        logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
                         return;
                     } else {
                         (IDS).add(msg.getId());
                     }
                 }
             } else {
-                APPLICATION.logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
+                logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
                 return;
             }
             switch (t) {
@@ -77,12 +75,13 @@ public class EventManager {
                     }
                 }
             }
+            logger.info(String.format("%s pre", c0.getSimpleName()));
             Class<? extends Event> finalC = c0;
+            Object event = factory(msg, obj, finalC);
             M2L.forEach((m, l) -> {
                 try {
-                    Object o = factory(msg, obj, finalC);
-                    if (ObjectUtils.isSuperOrInterface(o.getClass(), m.getParameterTypes()[0]))
-                        m.invoke(l, o);
+                    if (ObjectUtils.isSuperOrInterface(event.getClass(), m.getParameterTypes()[0]))
+                        m.invoke(l, event);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (IllegalArgumentException e) {
@@ -92,6 +91,7 @@ public class EventManager {
                     l.handleException(e.getTargetException());
                 }
             });
+            logger.info(String.format("%s post(%s)", c0.getSimpleName(), event));
         } catch (Exception e) {
             e.printStackTrace();
         }

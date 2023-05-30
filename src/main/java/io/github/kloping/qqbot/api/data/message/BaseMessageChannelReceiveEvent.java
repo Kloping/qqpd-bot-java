@@ -13,7 +13,7 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
 
     public BaseMessageChannelReceiveEvent(Message message, JSONObject jo) {
         super(message, jo);
-        this.content = getMessage().getContent() == null ? "" : getMessage().getContent();
+        this.content = getMessage().getContent();
         this.channelId = getChannel().getId();
     }
 
@@ -28,5 +28,10 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
     @Override
     public String getChannelId() {
         return channelId;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[channel(%s)]member(%s)=>%s", getChannel().getName(), getSender().getNick(), getContent());
     }
 }

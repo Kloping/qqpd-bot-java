@@ -4,7 +4,6 @@ import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.data.MessagePacket;
 import io.github.kloping.qqbot.api.qqpd.Member;
 import io.github.kloping.qqbot.api.qqpd.interfaces.DeleteAble;
-import io.github.kloping.qqbot.api.qqpd.interfaces.DirectSender;
 import io.github.kloping.qqbot.api.qqpd.interfaces.Sender;
 import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
 import lombok.Data;
@@ -70,5 +69,14 @@ public class Message
     @Override
     public Object delete() {
         return Resource.messageBase.delete(this.channelId, this.id, false);
+    }
+
+    public String getContent() {
+        if (content == null) {
+            for (MessageAttachment attachment : attachments) {
+                if (attachment.getUrl().contains("pic")) content = "[图片]";
+            }
+        }
+        return content;
     }
 }

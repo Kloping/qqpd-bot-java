@@ -11,6 +11,8 @@ import io.github.kloping.qqbot.api.qqpd.message.Message;
 import io.github.kloping.qqbot.api.qqpd.message.PreMessage;
 import io.github.kloping.qqbot.api.qqpd.message.audited.MessageAudited;
 
+import static io.github.kloping.qqbot.Resource.GSON;
+
 /**
  * @author github.kloping
  */
@@ -75,5 +77,10 @@ public class BaseMessageEvent implements MessageEvent {
     @Override
     public MessageAudited send(PreMessage msg) {
         return getMessage().send(msg);
+    }
+
+    @Override
+    public String toString() {
+        return GSON.toJson(this);
     }
 }

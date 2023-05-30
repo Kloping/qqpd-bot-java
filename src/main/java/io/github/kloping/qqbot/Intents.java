@@ -84,6 +84,9 @@ public enum Intents {
     GUILD_MESSAGES(1 << 9),
     GUILD_MESSAGE_REACTIONS(1 << 10),
     DIRECT_MESSAGE(1 << 12),
+    /**
+     * 公域事件
+     */
     OPEN_FORUMS_EVENT(1 << 18),
     AUDIO_OR_LIVE_CHANNEL_MEMBER(1 << 19),
     INTERACTION(1 << 26),
@@ -103,7 +106,7 @@ public enum Intents {
      * 默认
      */
     public static final Intents DEFAULT = START.and(GUILDS).and(GUILD_MEMBERS).and(GUILD_MESSAGE_REACTIONS)
-            .and(DIRECT_MESSAGE).and(OPEN_FORUMS_EVENT).and(AUDIO_OR_LIVE_CHANNEL_MEMBER)
+            .and(DIRECT_MESSAGE).and(AUDIO_OR_LIVE_CHANNEL_MEMBER)
             .and(INTERACTION).and(MESSAGE_AUDIT).and(AUDIO_ACTION);
 
     /**
