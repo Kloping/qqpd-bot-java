@@ -7,7 +7,7 @@ import io.github.kloping.qqbot.api.qqpd.message.Message;
 /**
  * @author github.kloping
  */
-public class BaseMessageContainsAtEvent extends BaseMessageReceiveEvent implements MessageContainsAtEvent {
+public class BaseMessageContainsAtEvent extends BaseMessageChannelReceiveEvent implements MessageContainsAtEvent {
     public BaseMessageContainsAtEvent(Message message, JSONObject jo) {
         super(message, jo);
         ats = new String[message.getMentions().length];

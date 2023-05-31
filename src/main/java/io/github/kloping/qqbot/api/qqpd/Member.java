@@ -18,8 +18,8 @@ public class Member {
 	private String nick;
 	private String joinedAt;
 	private String[] roles;
-	private Boolean pending;
-	private Boolean deaf;
-	private Boolean mute;
+//	private Boolean pending;
+//	private Boolean deaf;
+//	private Boolean mute;
 	private User user;
 }

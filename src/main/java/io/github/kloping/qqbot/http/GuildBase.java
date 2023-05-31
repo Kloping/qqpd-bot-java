@@ -54,6 +54,16 @@ public interface GuildBase {
     Member[] getMembers(@PathValue("guild_id") String gid, @ParamName("limit") Integer num);
 
     /**
+     * get member
+     *
+     * @param gid
+     * @param userId
+     * @return
+     */
+    @GetPath("/guilds/{guild_id}/members/{user_id}")
+    Member getMember(@PathValue("guild_id") String gid, @PathValue("user_id") String userId);
+
+    /**
      * get roles
      *
      * @param gid

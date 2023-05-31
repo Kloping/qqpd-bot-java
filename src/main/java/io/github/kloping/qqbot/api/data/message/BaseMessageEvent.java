@@ -31,7 +31,7 @@ public class BaseMessageEvent implements MessageEvent {
         this.metadata = jo;
         this.guild = Resource.starter.getBot().getGuild(message.getGuildId());
         this.channel = getGuild().channelMap().get(message.getChannelId());
-        this.sender = getGuild().memberMap().get(message.getAuthor().getId());
+        this.sender = getGuild().getMember(message.getAuthor().getId());
     }
 
     @Override
@@ -77,10 +77,5 @@ public class BaseMessageEvent implements MessageEvent {
     @Override
     public MessageAudited send(PreMessage msg) {
         return getMessage().send(msg);
-    }
-
-    @Override
-    public String toString() {
-        return GSON.toJson(this);
     }
 }

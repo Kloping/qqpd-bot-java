@@ -15,14 +15,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @ToString
-@EqualsAndHashCode
-public class MemberWithGuildID {
-    private String nick;
+@EqualsAndHashCode(callSuper = false)
+public class MemberWithGuildID extends Member{
     private String guildId;
-    private String joinedAt;
-    private String[] roles;
-    private Boolean pending;
-    private Boolean deaf;
-    private Boolean mute;
-    private User user;
 }

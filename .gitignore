@@ -7,3 +7,4 @@ temp.http
 bot-qqpd-java.iml
 test_temp.java
 logs
+src/test/java/temp/*

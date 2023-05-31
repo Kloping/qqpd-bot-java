@@ -15,6 +15,7 @@ import io.github.kloping.qqbot.entitys.Bot;
 import io.github.kloping.qqbot.http.*;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -76,5 +77,11 @@ public class Resource {
         if (Judge.isNotEmpty(packet.getReplyId())) {
             msg.setMessageReference(new MessageReference(packet.getReplyId()));
         }
+    }
+
+    public static <T, K1, K2> T tryGet(Map<K1, Map<K2, T>> tmap, K1 k1, K2 k2) {
+        Map<K2, T> map = tmap.get(k1);
+        if (map == null) return null;
+        else return map.get(k2);
     }
 }

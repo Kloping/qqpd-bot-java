@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.qqpd;
 
+import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.qqpd.interfaces.SessionCreator;
 import lombok.Data;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static io.github.kloping.qqbot.Resource.tryGet;
 
 /**
  * <h3 id="guild"><a href="#guild" class="header-anchor">#</a> Guild</h3>
@@ -34,32 +37,29 @@ public class Guild implements SessionCreator {
     private Integer memberCount;
 
     /**
-     * 目前尚存在一些问题
-     *
      * @param uid
      * @return
      */
     @Override
     public Dms create(String uid) {
-        if (!memberMap().containsKey(uid)) return null;
+        if (this.getMember(uid) == null) return null;
         DmsRequest request = new DmsRequest();
         request.setSourceGuildId(Guild.this.id);
         request.setRecipientId(uid);
         return Resource.dmsBase.create(request, Channel.MAP);
     }
 
-    private synchronized void initTemp0() {
-        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
-            Map<String, Member> map = new HashMap<>();
-            Member[] members = Resource.guildBase.getMembers(id, 100);
-            for (Member member : members) {
-                map.put(member.getUser().getId(), member);
-            }
-            Common.GUILD_MEMBER_TEMP.put(id, map);
+    public Member getMember(String userId) {
+        Member member = null;
+        member = tryGet(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId);
+        if (member == null) {
+            member = Resource.guildBase.getMember(Guild.this.getId(), userId);
+            MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId, member);
         }
+        return member;
     }
 
-    private synchronized void initTemp1() {
+    private synchronized void channelInit() {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
             Map<String, Channel> map = new HashMap<>();
             Channel[] channels = Resource.guildBase.getChannels(id);
@@ -70,30 +70,16 @@ public class Guild implements SessionCreator {
         }
     }
 
-    public List<Member> members() {
-        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
-            initTemp0();
-        }
-        return new ArrayList<>(Common.GUILD_MEMBER_TEMP.get(id).values());
-    }
-
-    public Map<String, Member> memberMap() {
-        if (!Common.GUILD_MEMBER_TEMP.containsKey(id)) {
-            initTemp0();
-        }
-        return Common.GUILD_MEMBER_TEMP.get(id);
-    }
-
     public List<Channel> channels() {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
-            initTemp1();
+            channelInit();
         }
         return new ArrayList<>(Common.GUILD_CHANNEL_TEMP.get(id).values());
     }
 
     public Map<String, Channel> channelMap() {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
-            initTemp1();
+            channelInit();
         }
         return Common.GUILD_CHANNEL_TEMP.get(id);
     }
