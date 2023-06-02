@@ -2,8 +2,10 @@ package io.github.kloping.qqbot.entities.qqpd.message;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
+import io.github.kloping.qqbot.api.Reactive;
 import io.github.kloping.qqbot.api.Sender;
 import io.github.kloping.qqbot.entities.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
@@ -23,8 +25,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.MAP;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Message
-        implements Sender, DeleteAble {
+public class Message implements Sender, DeleteAble, Reactive {
     private String id;
     private String channelId;
     private String guildId;
@@ -78,5 +79,17 @@ public class Message
             }
         }
         return content;
+    }
+
+    @Override
+    public void addEmoji(Emoji emoji) {
+        System.out.println("start => " + System.currentTimeMillis());
+        Resource.channelBase.addEmoji(getChannelId(), getId(), emoji.getType(), emoji.getId());
+        System.out.println("end => " + System.currentTimeMillis());
+    }
+
+    @Override
+    public void removeEmoji(Emoji emoji) {
+        Resource.channelBase.removeEmoji(getChannelId(), getId(), emoji.getType(), emoji.getId());
     }
 }

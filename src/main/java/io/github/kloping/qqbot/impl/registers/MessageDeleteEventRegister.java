@@ -24,7 +24,7 @@ public class MessageDeleteEventRegister implements Events.EventRegister {
     Bot bot;
 
     @Override
-    public Event handle(JSONObject mateData, Message message) {
+    public Event handle(String t,JSONObject mateData, Message message) {
         Event event = null;
         event = new BaseMessageDeleteEvent(message, mateData, bot);
         return event;

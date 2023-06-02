@@ -4,8 +4,11 @@ import io.github.kloping.MySpringTool.annotations.PathValue;
 import io.github.kloping.MySpringTool.annotations.http.GetPath;
 import io.github.kloping.MySpringTool.annotations.http.Headers;
 import io.github.kloping.MySpringTool.annotations.http.HttpClient;
+import io.github.kloping.MySpringTool.annotations.http.RequestPath;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
+import io.github.kloping.qqbot.entities.qqpd.message.MessagePack;
+import org.jsoup.Connection;
 
 /**
  * @author github.kloping
@@ -19,6 +22,40 @@ public interface ChannelBase {
      * @param cid
      * @return
      */
-    @GetPath("/channels/{channels_id}")
-    Channel getChannel(@PathValue("channels_id") String cid);
+    @GetPath("/channels/{channel_id}")
+    Channel getChannel(@PathValue("channel_id") String cid);
+
+    /**
+     * 获取指定消息
+     *
+     * @param cid
+     * @param mid
+     * @return
+     */
+    @GetPath("/channels/{channel_id}/messages/{message_id}")
+    MessagePack getMessageById(@PathValue("channel_id") String cid, @PathValue("message_id") String mid);
+
+    /**
+     * 添加一个emoji
+     *
+     * @param cid
+     * @param mid
+     * @param type
+     * @param id
+     * @return
+     */
+    @RequestPath(method = Connection.Method.PUT, value = "/channels/{channel_id}/messages/{message_id}/reactions/{type}/{id}")
+    void addEmoji(@PathValue("channel_id") String cid, @PathValue("message_id") String mid, @PathValue("type") Integer type, @PathValue("id") String id);
+
+    /**
+     * 移除一个emoji
+     *
+     * @param cid
+     * @param mid
+     * @param type
+     * @param id
+     * @return
+     */
+    @RequestPath(method = Connection.Method.DELETE, value = "/channels/{channel_id}/messages/{message_id}/reactions/{type}/{id}")
+    void removeEmoji(@PathValue("channel_id") String cid, @PathValue("message_id") String mid, @PathValue("type") Integer type, @PathValue("id") String id);
 }

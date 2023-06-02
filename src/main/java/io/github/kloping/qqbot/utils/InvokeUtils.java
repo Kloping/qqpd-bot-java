@@ -12,7 +12,7 @@ import java.util.List;
  * @author github.kloping
  */
 public class InvokeUtils {
-    public static <T extends Event> Method[] getAllMethod(Class<T> cla, ListenerHost listenerHost) {
+    public static Method[] getAllMethod(ListenerHost listenerHost) {
         List<Method> methods = new LinkedList<>();
         for (Method declaredMethod : listenerHost.getClass().getDeclaredMethods()) {
             if (declaredMethod.getDeclaredAnnotation(EventReceiver.class) == null) continue;

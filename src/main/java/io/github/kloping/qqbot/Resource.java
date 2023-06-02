@@ -1,17 +1,10 @@
 package io.github.kloping.qqbot;
 
 import com.google.gson.Gson;
-import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.qqbot.http.*;
-import io.github.kloping.qqbot.impl.ListenerHost;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * @author github.kloping
@@ -25,6 +18,9 @@ public class Resource {
 
     @AutoStand
     public static BotBase botBase;
+
+    @AutoStand
+    public static ChannelBase channelBase;
 
     @AutoStand
     public static GuildBase guildBase;

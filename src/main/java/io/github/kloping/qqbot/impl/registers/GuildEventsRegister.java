@@ -24,7 +24,7 @@ public class GuildEventsRegister implements Events.EventRegister {
     Bot bot;
 
     @Override
-    public Event handle(JSONObject mateData, Message message) {
+    public Event handle(String t,JSONObject mateData, Message message) {
         Event event = null;
         event = new BaseGuildUpdateEvent(mateData, bot);
         return event;

@@ -10,7 +10,11 @@ import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.Event;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.impl.BaseConnectedEvent;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import org.java_websocket.client.WebSocketClient;
@@ -25,7 +29,7 @@ import static io.github.kloping.qqbot.Starter.*;
  * @author github.kloping
  */
 @Entity
-public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener {
+public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
     @AutoStand
     Logger logger;
 
@@ -123,8 +127,6 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener {
                 wssWorker.webSocket.send(JSON.toJSONString(jumpPack));
             }, heartbeatInterval.longValue(), heartbeatInterval.longValue(), TimeUnit.MILLISECONDS);
             return true;
-        } else if (pack.getT() != null && pack.getT().equals("READY")) {
-            sessionId = pack.dAsMapGet("session_id", String.class);
         } else if (pack.getOp() == 7) {
             logger.waring("服务端通知客户端重新连接");
         }
@@ -132,5 +134,20 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener {
             newstId = pack.getS().intValue();
         }
         return false;
+    }
+
+    @AutoStandAfter
+    private void r0(Events events) {
+        events.register("READY", this);
+    }
+
+    @AutoStand
+    Bot bot;
+
+    @Override
+    public Event handle(String t, JSONObject mateData, Message message) {
+        sessionId = mateData.getString("session_id");
+        logger.info("Started Successfully!");
+        return new BaseConnectedEvent(mateData, bot, sessionId);
     }
 }

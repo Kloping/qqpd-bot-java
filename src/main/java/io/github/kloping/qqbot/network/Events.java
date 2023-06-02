@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.common.Public;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Event;
@@ -39,65 +38,67 @@ public class Events implements OnPackReceive {
         String t = pack.getT();
         if (t == null) return false;
         JSONObject jo = JSON.parseObject(JSON.toJSONString(pack.getD()));
-        Public.EXECUTOR_SERVICE.submit(() -> onEvent(t, jo));
-        Message m = jo.toJavaObject(Message.class);
-
+        try {
+            onEvent(t, jo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @AutoStand
     Starter.Config config;
 
-    private final Map<Method, ListenerHost> M2L = new HashMap<>();
-    private final Set<String> IDS = new HashSet<>();
+    private final Set<String> ids = new HashSet<>();
 
-    private void onEvent(String t, JSONObject obj) {
-        try {
-            Class<? extends Event> c0 = null;
-            Message msg = obj.toJavaObject(Message.class);
-            if (msg != null) {
-                if (msg.getId() != null && !msg.getId().isEmpty()) {
-                    if (IDS.contains(msg.getId())) {
-                        logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
-                        return;
-                    } else {
-                        (IDS).add(msg.getId());
-                    }
-                }
-            } else {
-                logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
-                return;
+    private void onEvent(String t, JSONObject obj) throws Exception {
+        Class<? extends Event> c0 = null;
+        Message msg = obj.toJavaObject(Message.class);
+        if (msg != null) {
+            if (msg.getId() != null && !msg.getId().isEmpty()) {
+                if (ids.contains(msg.getId())) {
+                    logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
+                    return;
+                } else ids.add(msg.getId());
             }
-            EventRegister register = id2reg.get(t);
-            if (register == null) return;
-            Event event = register.handle(obj, msg);
-            if (event == null) return;
-            if (M2L.isEmpty()) {
-                synchronized (M2L) {
-                    for (ListenerHost listenerHost : config.getListenerHosts()) {
-                        for (Method method : InvokeUtils.getAllMethod(c0, listenerHost)) {
-                            M2L.put(method, listenerHost);
-                        }
-                    }
-                }
-            }
-            M2L.forEach((m, l) -> {
-                try {
-                    if (ObjectUtils.isSuperOrInterface(event.getClass(), m.getParameterTypes()[0]))
-                        m.invoke(l, event);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.getTargetException().printStackTrace();
-                    l.handleException(e.getTargetException());
-                }
-            });
-            logger.info(String.format("%s post(%s)", event.getClass().getSimpleName(), event));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
+            return;
         }
+        EventRegister register = id2reg.get(t);
+        if (register == null) {
+            logger.waring(String.format("%s yet not registered", t));
+            return;
+        }
+        Event event = register.handle(t, obj, msg);
+        if (event == null) return;
+        for (Method method : getM2L().keySet()) {
+            ListenerHost l = getM2L().get(method);
+            try {
+                if (ObjectUtils.isSuperOrInterface(event.getClass(), method.getParameterTypes()[0])) {
+                    method.invoke(l, event);
+                }
+            } catch (InvocationTargetException e) {
+                e.getTargetException().printStackTrace();
+                l.handleException(e.getTargetException());
+            }
+        }
+        logger.info(String.format("%s post(%s)", event.getClass().getSimpleName(), event));
+    }
+
+    private final Map<Method, ListenerHost> m2l = new HashMap<>();
+
+    private Map<Method, ListenerHost> getM2L() {
+        if (m2l.isEmpty()) {
+            synchronized (m2l) {
+                for (ListenerHost listenerHost : config.getListenerHosts()) {
+                    for (Method method : InvokeUtils.getAllMethod(listenerHost)) {
+                        m2l.put(method, listenerHost);
+                    }
+                }
+            }
+        }
+        return m2l;
     }
 
     public Map<String, EventRegister> id2reg = new HashMap<>();
@@ -107,6 +108,6 @@ public class Events implements OnPackReceive {
     }
 
     public interface EventRegister {
-        Event handle(JSONObject mateData, Message message);
+        Event handle(String t, JSONObject mateData, Message message);
     }
 }

@@ -24,7 +24,7 @@ public class MemberEventRegisters implements Events.EventRegister {
     Bot bot;
 
     @Override
-    public Event handle(JSONObject mateData, Message message) {
+    public Event handle(String t,JSONObject mateData, Message message) {
         Event event = new BaseMemberUpdateEvent(mateData, bot);
         return event;
     }
