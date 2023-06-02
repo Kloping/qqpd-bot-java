@@ -19,4 +19,5 @@
   私信消息接收事件
 - [MemberUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/MemberUpdateEvent.java) 成员信息 更新事件
 - [GuildUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/GuildUpdateEvent.java) 频道信息 更新事件
-- 
+- [MessageReactionEvent](../src/main/java/io/github/kloping/qqbot/api/message/MessageReactionEvent.java) 消息被 添加/移除
+  表情 事件
