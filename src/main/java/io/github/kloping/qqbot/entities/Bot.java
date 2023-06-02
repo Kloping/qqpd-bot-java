@@ -1,9 +1,9 @@
-package io.github.kloping.qqbot.entitys;
+package io.github.kloping.qqbot.entities;
 
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.qqbot.entitys.qqpd.Guild;
-import io.github.kloping.qqbot.entitys.qqpd.User;
+import io.github.kloping.qqbot.entities.qqpd.Guild;
+import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.GuildBase;
 import io.github.kloping.qqbot.http.UserBase;
 

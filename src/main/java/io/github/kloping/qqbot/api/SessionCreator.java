@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.api;
 
-import io.github.kloping.qqbot.entitys.qqpd.Dms;
+import io.github.kloping.qqbot.entities.qqpd.Dms;
 
 /**
  * 私信会话创建接口

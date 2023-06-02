@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.api;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.entitys.Bot;
+import io.github.kloping.qqbot.entities.Bot;
 
 /**
  * 所有事件的顶级接口

@@ -1,7 +1,7 @@
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entitys.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.Member;
 
 import java.util.Arrays;
 

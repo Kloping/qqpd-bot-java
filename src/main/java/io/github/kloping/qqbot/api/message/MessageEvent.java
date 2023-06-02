@@ -2,8 +2,8 @@ package io.github.kloping.qqbot.api.message;
 
 import io.github.kloping.qqbot.api.ChannelEvent;
 import io.github.kloping.qqbot.api.Sender;
-import io.github.kloping.qqbot.entitys.qqpd.Member;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
 
 /**
  * 消息事件接口

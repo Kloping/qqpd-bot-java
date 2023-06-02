@@ -10,7 +10,7 @@ import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entitys.Pack;
+import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import org.java_websocket.client.WebSocketClient;
@@ -32,12 +32,13 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener {
     @AutoStand
     ContextManager contextManager;
 
+    @AutoStand
     private WssWorker wssWorker;
 
     @AutoStandAfter
     private void r0(WssWorker wssWorker) {
-        this.wssWorker = wssWorker;
         wssWorker.getOnPackReceives().add(this);
+        wssWorker.getCloseListeners().add(this);
     }
 
     /**
@@ -61,7 +62,11 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener {
         }
     }
 
+    @AutoStand
+    Config config;
+
     private void identifyConnect(int code, WebSocketClient wss) {
+        if (!config.getReconnect()) return;
         Future future = contextManager.getContextEntity(Future.class, Starter.MAIN_FUTURE_ID);
         if (future != null && !future.isCancelled()) {
             future.cancel(true);

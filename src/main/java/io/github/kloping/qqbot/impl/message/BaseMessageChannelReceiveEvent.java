@@ -2,8 +2,8 @@ package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
-import io.github.kloping.qqbot.entitys.Bot;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
 
 /**
  * @author github.kloping

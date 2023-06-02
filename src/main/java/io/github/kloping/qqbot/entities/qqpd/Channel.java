@@ -1,11 +1,11 @@
-package io.github.kloping.qqbot.entitys.qqpd;
+package io.github.kloping.qqbot.entities.qqpd;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.Sender;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
-import io.github.kloping.qqbot.entitys.qqpd.message.MessageReference;
-import io.github.kloping.qqbot.entitys.qqpd.message.PreMessage;
-import io.github.kloping.qqbot.entitys.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
+import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;

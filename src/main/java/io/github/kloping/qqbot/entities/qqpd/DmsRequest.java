@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.entitys.qqpd;
+package io.github.kloping.qqbot.entities.qqpd;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

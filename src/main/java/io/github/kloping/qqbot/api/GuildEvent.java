@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.api;
 
-import io.github.kloping.qqbot.entitys.qqpd.Guild;
+import io.github.kloping.qqbot.entities.qqpd.Guild;
 
 /**
  * 频道事件

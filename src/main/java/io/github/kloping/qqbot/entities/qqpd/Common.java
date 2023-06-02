@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.entitys.qqpd;
+package io.github.kloping.qqbot.entities.qqpd;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

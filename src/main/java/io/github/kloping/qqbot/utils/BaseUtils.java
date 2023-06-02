@@ -1,8 +1,8 @@
 package io.github.kloping.qqbot.utils;
 
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.entitys.qqpd.message.MessageReference;
-import io.github.kloping.qqbot.entitys.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
+import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 import java.util.Map;

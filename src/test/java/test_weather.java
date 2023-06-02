@@ -5,7 +5,7 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.api.message.MessageEvent;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

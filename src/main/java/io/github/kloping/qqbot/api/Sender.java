@@ -1,8 +1,8 @@
 package io.github.kloping.qqbot.api;
 
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
-import io.github.kloping.qqbot.entitys.qqpd.message.PreMessage;
-import io.github.kloping.qqbot.entitys.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**

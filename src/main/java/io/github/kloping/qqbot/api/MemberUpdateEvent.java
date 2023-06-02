@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.api;
 
-import io.github.kloping.qqbot.entitys.qqpd.Member;
-import io.github.kloping.qqbot.entitys.qqpd.MemberWithGuildID;
+import io.github.kloping.qqbot.entities.qqpd.MemberWithGuildID;
 
 /**
  * 成员信息更新事件

@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.interfaces;
 
-import io.github.kloping.qqbot.entitys.Pack;
+import io.github.kloping.qqbot.entities.Pack;
 
 /**
  * @author github.kloping

@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.entitys.qqpd.message.audited;
+package io.github.kloping.qqbot.entities.qqpd.message.audited;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

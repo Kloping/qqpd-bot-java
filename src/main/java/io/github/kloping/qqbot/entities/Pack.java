@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.entitys;
+package io.github.kloping.qqbot.entities;
 
 import io.github.kloping.object.ObjectUtils;
 import lombok.Data;

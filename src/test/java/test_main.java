@@ -1,25 +1,21 @@
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.Intents;
 
 /**
- * <a href="https://bot.q.qq.com/wiki/develop/api/gateway/intents.html#%E4%BA%8B%E4%BB%B6%E8%AE%A2%E9%98%85-intents">
- * 事件订阅方式</a>
- *
  * @author github.kloping
  */
 public class test_main {
 
-    //0 1 9 10 12 18 19 26 27 28 29 30
     public static void main(String[] args) {
-        System.out.println(0 | 1 << 0
-                | 1 << 30 | 1 << 1 | 1 << 9
-                | 1 << 10 | 1 << 29
-                | 1 << 12 | 1 << 18 | 1 << 19
-                | 1 << 28 | 1 << 27 | 1 << 26
-        );
-        System.out.println(0 | 1 << 30 | 1 << 1);
-        System.out.println(1 << 30 | 1 << 1);
-        System.out.println(1 << 18 | 1 << 19 | 1 << 26 | 1 << 27);
-        System.out.println(0 | 1 << 18 | 1 << 19 | 1 << 26 | 1 << 27);
+        Starter starter = factory();
+        // 设置日志等级 一般情况无需设置
+        // starter.APPLICATION.logger.setLogLevel(0);
+        //事件订阅 私域机器人 推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
+        starter.getConfig().setIntents(Intents.PRIVATE_INTENTS);
+        //重连
+        starter.setReconnect(true);
+        starter.run();
+
     }
 
     public static Starter factory() {

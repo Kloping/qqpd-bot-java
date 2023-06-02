@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.entitys.qqpd;
+package io.github.kloping.qqbot.entities.qqpd;
 
 import com.sun.istack.internal.Nullable;
 import io.github.kloping.map.MapUtils;

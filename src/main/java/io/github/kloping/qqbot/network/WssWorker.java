@@ -4,7 +4,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
-import io.github.kloping.qqbot.entitys.Pack;
+import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.http.BotBase;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
@@ -35,7 +35,7 @@ public class WssWorker implements Runnable {
     @AutoStand
     private Logger logger;
 
-    protected WebSocketClient webSocket;
+    public WebSocketClient webSocket;
 
     protected Integer msgr = 0;
     protected Integer msgs = 0;
@@ -56,6 +56,7 @@ public class WssWorker implements Runnable {
                 @Override
                 public void onMessage(String s) {
                     Pack pack = GSON.fromJson(s, Pack.class);
+                    logger.log(String.format("receive %s", s));
                     if (pack == null) {
                         logger.error(String.format("message pack parse error (%s)", s));
                     } else {

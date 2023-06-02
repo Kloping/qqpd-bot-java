@@ -2,12 +2,12 @@ package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
-import io.github.kloping.qqbot.entitys.Bot;
-import io.github.kloping.qqbot.entitys.qqpd.Guild;
-import io.github.kloping.qqbot.entitys.qqpd.message.DirectMessage;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
-import io.github.kloping.qqbot.entitys.qqpd.message.PreMessage;
-import io.github.kloping.qqbot.entitys.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.qqpd.Guild;
+import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**

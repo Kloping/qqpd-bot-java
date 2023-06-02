@@ -3,8 +3,8 @@ import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageEvent;
-import io.github.kloping.qqbot.entitys.qqpd.message.Message;
-import io.github.kloping.qqbot.entitys.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 
 /**
  * @author github.kloping

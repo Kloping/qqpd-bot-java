@@ -3,10 +3,10 @@ package io.github.kloping.qqbot.http;
 import io.github.kloping.MySpringTool.annotations.PathValue;
 import io.github.kloping.MySpringTool.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entitys.qqpd.Dms;
-import io.github.kloping.qqbot.entitys.qqpd.DmsRequest;
-import io.github.kloping.qqbot.entitys.qqpd.message.PreMessage;
-import io.github.kloping.qqbot.entitys.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.entities.qqpd.Dms;
+import io.github.kloping.qqbot.entities.qqpd.DmsRequest;
+import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 
 import java.util.Map;
 

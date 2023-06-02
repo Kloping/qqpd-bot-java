@@ -4,7 +4,7 @@ import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.Intents;
-import io.github.kloping.qqbot.entitys.Bot;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.network.WssWorker;
 import lombok.Data;
@@ -97,6 +97,7 @@ public class Starter implements Runnable {
             APPLICATION.INSTANCE.getContextManager().append(APPLICATION.INSTANCE);
             APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
         });
+        APPLICATION.logger.setLogLevel(1);
         APPLICATION.run0(Start0.class);
         after();
     }
