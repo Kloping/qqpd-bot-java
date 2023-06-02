@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
-import com.sun.istack.internal.Nullable;
 import io.github.kloping.qqbot.api.OpAble;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +21,5 @@ public class Member implements OpAble {
     private String[] roles;
     private User user;
 
-    @Nullable
     private String opUserId;
 }

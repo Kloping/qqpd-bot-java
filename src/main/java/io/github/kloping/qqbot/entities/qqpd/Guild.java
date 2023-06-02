@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.sun.istack.internal.Nullable;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Resource;
@@ -37,7 +38,6 @@ public class Guild implements SessionCreator, OpAble {
     private String id;
     private Integer memberCount;
 
-    @Nullable
     private String opUserId;
 
     /**
