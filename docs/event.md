@@ -7,7 +7,7 @@
 <hr>
 以下事件可直接写入 ↓
 
-[ListenerHost](../src/main/java/io/github/kloping/qqbot/api/data/ListenerHost.java) 监听事件中.
+[ListenerHost](../src/main/java/io/github/kloping/qqbot/impl/ListenerHost.java) 监听事件中.
 详细实现 见 readme V1.4+ 注册监听器主机方式
 
 - [MessageEvent](../src/main/java/io/github/kloping/qqbot/api/interfaces/message/MessageEvent.java) 消息事件顶级接口

@@ -31,19 +31,8 @@ Maven
 
 ```java 
     Starter starter=new Starter("appid","token");
-    starter.setIntents(intents);
+    starter.getConfig().setIntents(intents);
     starter.run();
-```
-
-消息监听及回复
-
-```java
-     starter.addListener(new OnMessageListener(){
-         @Override
-         public void onMessage(Message message){
-             message.send("回复测试");
-         }
-     });
 ```
 
 #### V1.4+ 注册监听器主机方式 [荐]
@@ -90,12 +79,10 @@ public static final Intents PRIVATE_INTENTS=DEFAULT.and(GUILD_MESSAGES).and(FORU
 
 ```java
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.data.EventReceiver;
-import io.github.kloping.qqbot.api.data.ListenerHost;
-import io.github.kloping.qqbot.api.interfaces.message.MessageDirectReceiveEvent;
-import io.github.kloping.qqbot.api.interfaces.message.MessageEvent;
-import io.github.kloping.qqbot.api.qqpd.message.Message;
-import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
+import io.github.kloping.qqbot.api.GuildEvent;
+import io.github.kloping.qqbot.api.Intents;
+import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
+import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 ```
 
 使用方式参考查看 [test](./src/test/java)

@@ -1,7 +1,7 @@
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.qqpd.Roles;
+import io.github.kloping.qqbot.entitys.qqpd.Roles;
 
 /**
  * @author github.kloping

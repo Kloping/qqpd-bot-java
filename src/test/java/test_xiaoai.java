@@ -2,8 +2,10 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.qqpd.message.Message;
-import io.github.kloping.qqbot.interfaces.OnAtMessageListener;
+import io.github.kloping.qqbot.impl.EventReceiver;
+import io.github.kloping.qqbot.impl.ListenerHost;
+import io.github.kloping.qqbot.api.message.MessageEvent;
+import io.github.kloping.qqbot.entitys.qqpd.message.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -17,9 +19,15 @@ public class test_xiaoai {
         Starter starter = test_main.factory();
         starter.run();
         String w0 = String.format("<@!%s> /小爱", starter.getBot().getInfo().getId());
-        starter.addListener(new OnAtMessageListener() {
+        starter.registerListenerHost(new ListenerHost() {
             @Override
-            public void onMessage(Message message) {
+            public void handleException(Throwable e) {
+
+            }
+
+            @EventReceiver
+            private void event(MessageEvent event) {
+                Message message = event.getMessage();
                 String content = message.getContent();
                 if (content == null && content.isEmpty()) {
                     return;

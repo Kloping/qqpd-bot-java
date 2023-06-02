@@ -1,7 +1,7 @@
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.qqpd.Channel;
-import io.github.kloping.qqbot.api.qqpd.Guild;
+import io.github.kloping.qqbot.entitys.qqpd.Channel;
+import io.github.kloping.qqbot.entitys.qqpd.Guild;
 
 /**
  * @author github.kloping

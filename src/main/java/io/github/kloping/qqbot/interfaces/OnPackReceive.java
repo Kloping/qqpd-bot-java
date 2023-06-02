@@ -9,7 +9,8 @@ public interface OnPackReceive {
     /**
      * on wss receive a pack
      *
+     * @return If true is returned, interception continues
      * @param pack
      */
-    void onReceive(Pack pack);
+   boolean onReceive(Pack pack);
 }

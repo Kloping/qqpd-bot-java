@@ -1,6 +1,6 @@
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.qqpd.User;
+import io.github.kloping.qqbot.entitys.qqpd.User;
 
 /**
  * @author github.kloping

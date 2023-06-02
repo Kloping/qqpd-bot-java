@@ -6,10 +6,10 @@ import io.github.kloping.MySpringTool.annotations.http.Headers;
 import io.github.kloping.MySpringTool.annotations.http.HttpClient;
 import io.github.kloping.MySpringTool.annotations.http.ParamName;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.qqpd.Channel;
-import io.github.kloping.qqbot.api.qqpd.Guild;
-import io.github.kloping.qqbot.api.qqpd.Member;
-import io.github.kloping.qqbot.api.qqpd.Roles;
+import io.github.kloping.qqbot.entitys.qqpd.Channel;
+import io.github.kloping.qqbot.entitys.qqpd.Guild;
+import io.github.kloping.qqbot.entitys.qqpd.Member;
+import io.github.kloping.qqbot.entitys.qqpd.Roles;
 
 /**
  * @author github.kloping

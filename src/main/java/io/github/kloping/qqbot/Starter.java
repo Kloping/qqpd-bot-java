@@ -1,35 +1,25 @@
 package io.github.kloping.qqbot;
 
+import io.github.kloping.MySpringTool.StarterObjectApplication;
+import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
-import io.github.kloping.qqbot.api.data.ListenerHost;
-import io.github.kloping.qqbot.api.qqpd.Guild;
-import io.github.kloping.qqbot.api.qqpd.User;
+import io.github.kloping.qqbot.api.Intents;
 import io.github.kloping.qqbot.entitys.Bot;
-import io.github.kloping.qqbot.interfaces.*;
+import io.github.kloping.qqbot.impl.ListenerHost;
+import io.github.kloping.qqbot.network.WssWorker;
+import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static io.github.kloping.qqbot.Resource.APPLICATION;
-import static io.github.kloping.qqbot.Resource.bot;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * <h3>一般启动方式</h3>
  * <pre>{@code
  *   Starter starter = new Starter("appid", "token");
- *   starter.setIntents(intents);
+ *   starter.getConfig().setIntents(intents);
  *   starter.run();
  * }</pre>
- * <h3>注册监听器</h3>
- * <pre>{@code
- * starter.addListener(new OnAtMessageListener() {
- *      @Override
- *      public void onMessage(Message message) {
- *          //基于接收的At消息 发送消息
- *          message.send("消息内容");
- *      }
- * });
- * }
  * </pre>
  * <h3>V1.4+ 注册监听器主机方式 [荐]</h3>
  * <pre>{@code
@@ -46,14 +36,14 @@ import static io.github.kloping.qqbot.Resource.bot;
  *
  *      @EventReceiver
  *      public void onEvent(MessageDirectReceiveEvent event){
- *          event.send("测试通过");
+ *              event.send("测试通过");
  *      }
  * });
  * }</pre>
- *
+ * <p>
  * 可通过
  * <pre>{@code
- *  starter.setReconnect(true);
+ * starter.setReconnect(true);
  * }</pre>
  * 设置是否在断开时是否重连 默认true
  * <br>
@@ -74,88 +64,65 @@ public class Starter implements Runnable {
     public static final String INTENTS_ID = "intents";
     public static final String SHARD_ID = "shard";
     public static final String PROPERTIES_ID = "properties";
+    public static final String MAIN_FUTURE_ID = "main_future";
+    public static final String RECONNECT_K_ID = "is_reconnect";
+    public static final String CONFIG_ID = "config";
 
-    private String appid;
-    private String token;
-    private Intents intents = Intents.DEFAULT;
-    private Boolean reconnect = true;
+    public static final Integer CODE_4006 = 4006;
+    public static final Integer CODE_4007 = 4007;
+    public static final Integer CODE_4008 = 4008;
+    public static final Integer CODE_4009 = 4009;
+    public static final Integer CODE_4900 = 4900;
+    public static final Integer CODE_4913 = 4913;
+
+    private Config config = new Config();
 
     public Starter(String appid, String token) {
-        this.appid = appid;
-        this.token = token;
-        Resource.starter = this;
+        this.getConfig().setAppid(appid);
+        this.getConfig().setToken(token);
+    }
+
+    public Config getConfig() {
+        return config;
     }
 
     private WssWorker wssWorker;
+    public final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
+    private ContextManager contextManager;
 
     @Override
     public void run() {
-        APPLICATION.PRE_SCAN_RUNNABLE.add(() -> APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger));
+        APPLICATION.PRE_SCAN_RUNNABLE.add(() -> {
+            APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
+            APPLICATION.INSTANCE.getContextManager().append(APPLICATION.INSTANCE);
+            APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
+        });
         APPLICATION.run0(Start0.class);
         after();
     }
 
     protected void after() {
-        APPLICATION.INSTANCE.getContextManager().append(this);
-        APPLICATION.INSTANCE.getContextManager().append(appid, APPID_ID);
-        APPLICATION.INSTANCE.getContextManager().append(token, TOKEN_ID);
-        //22.11.18 修改为默认监听所有事件 by kloping
-        APPLICATION.INSTANCE.getContextManager().append(intents.getCode(), INTENTS_ID);
-        APPLICATION.INSTANCE.getContextManager().append(new Integer[]{0, 1}, SHARD_ID);
-        APPLICATION.INSTANCE.getContextManager().append("Bot " + appid + "." + token, AUTH_ID);
-        Resource.contextManager = APPLICATION.INSTANCE.getContextManager();
-        wssWorker = APPLICATION.INSTANCE.getContextManager().getContextEntity(WssWorker.class);
+        String appid = getConfig().getAppid();
+        String token = getConfig().getToken();
+        contextManager = APPLICATION.INSTANCE.getContextManager();
+        contextManager.append(this);
+        contextManager.append(appid, APPID_ID);
+        contextManager.append(token, TOKEN_ID);
+        contextManager.append(getConfig().getIntents().getCode(), INTENTS_ID);
+        contextManager.append(new Integer[]{0, 1}, SHARD_ID);
+        contextManager.append("Bot " + appid + "." + token, AUTH_ID);
+        contextManager.append(getConfig().getReconnect(), RECONNECT_K_ID);
+        wssWorker = contextManager.getContextEntity(WssWorker.class);
         wssWork();
     }
 
     protected void wssWork() {
-        wssWorker.setReconnect(reconnect);
-        Resource.mainFuture = Public.EXECUTOR_SERVICE.submit(wssWorker);
-    }
-
-    public Intents getIntents() {
-        return intents;
-    }
-
-    public void setIntents(Intents intents) {
-        this.intents = intents;
+        Future future = Public.EXECUTOR_SERVICE.submit(wssWorker);
+        APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
     }
 
     public void setReconnect(Boolean reconnect) {
-        this.reconnect = reconnect;
-    }
-
-    public void setOnPackReceive(OnPackReceive onPackReceive) {
-        wssWorker.setOnPackReceive(onPackReceive);
-    }
-
-    public void addListener(OnMessageListener listener) {
-        wssWorker.getMessageListeners().add(listener);
-    }
-
-    public void addListener(OnAtMessageListener listener) {
-        wssWorker.getAtMessageListeners().add(listener);
-    }
-
-    public void addListener(OnOtherEventListener listener) {
-        wssWorker.getOtherEventListeners().add(listener);
-    }
-
-    public void addListener(OnMessageDeleteListener listener) {
-        wssWorker.getMessageDeleteListeners().add(listener);
-    }
-
-    public Bot getBot() {
-        if (Resource.bot == null) {
-            User user = Resource.userBase.botInfo();
-            Map<String, Guild> guildMap = new HashMap<>();
-            for (Guild guild : Resource.guildBase.getGuilds()) {
-                guildMap.put(guild.getId(), guild);
-            }
-            return bot = new Bot(user, guildMap);
-        } else {
-            return bot;
-        }
+        getConfig().setReconnect(reconnect);
     }
 
     public WssWorker getWssWorker() {
@@ -163,6 +130,19 @@ public class Starter implements Runnable {
     }
 
     public void registerListenerHost(ListenerHost listenerHost) {
-        Resource.LISTENER_HOSTS.add(listenerHost);
+        getConfig().getListenerHosts().add(listenerHost);
+    }
+
+    @Data
+    public static class Config {
+        private String appid;
+        private String token;
+        private Intents intents = Intents.DEFAULT;
+        private Boolean reconnect = true;
+        private Set<ListenerHost> listenerHosts = new HashSet<>();
+    }
+
+    public Bot getBot() {
+        return contextManager.getContextEntity(Bot.class);
     }
 }

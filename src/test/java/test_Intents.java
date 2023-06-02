@@ -1,5 +1,5 @@
-import io.github.kloping.qqbot.Intents;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.Intents;
 
 /**
  * 事件订阅
@@ -20,7 +20,7 @@ public class test_Intents {
         // 私域机器人订阅推荐
         // starter.setIntents(Intents.PRIVATE_INTENTS);
 
-        starter.setIntents(intents);
+        starter.getConfig().setIntents(intents);
         starter.run();
     }
 }

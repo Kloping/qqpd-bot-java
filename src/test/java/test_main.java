@@ -16,6 +16,10 @@ public class test_main {
                 | 1 << 12 | 1 << 18 | 1 << 19
                 | 1 << 28 | 1 << 27 | 1 << 26
         );
+        System.out.println(0 | 1 << 30 | 1 << 1);
+        System.out.println(1 << 30 | 1 << 1);
+        System.out.println(1 << 18 | 1 << 19 | 1 << 26 | 1 << 27);
+        System.out.println(0 | 1 << 18 | 1 << 19 | 1 << 26 | 1 << 27);
     }
 
     public static Starter factory() {
