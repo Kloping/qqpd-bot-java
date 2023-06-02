@@ -63,6 +63,13 @@ public class Guild implements SessionCreator, OpAble {
         return member;
     }
 
+    public Member setMember(Member member) {
+        String uid = member.getUser().getId();
+        Member m0 = getMember(uid);
+        MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), uid, member);
+        return m0;
+    }
+
     private synchronized void channelInit() {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
             Map<String, Channel> map = new HashMap<>();

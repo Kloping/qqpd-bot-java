@@ -71,6 +71,7 @@ public class Events implements OnPackReceive {
             EventRegister register = id2reg.get(t);
             if (register == null) return;
             Event event = register.handle(obj, msg);
+            if (event == null) return;
             if (M2L.isEmpty()) {
                 synchronized (M2L) {
                     for (ListenerHost listenerHost : config.getListenerHosts()) {
@@ -82,7 +83,8 @@ public class Events implements OnPackReceive {
             }
             M2L.forEach((m, l) -> {
                 try {
-                    if (ObjectUtils.isSuperOrInterface(event.getClass(), m.getParameterTypes()[0])) m.invoke(l, event);
+                    if (ObjectUtils.isSuperOrInterface(event.getClass(), m.getParameterTypes()[0]))
+                        m.invoke(l, event);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (IllegalArgumentException e) {

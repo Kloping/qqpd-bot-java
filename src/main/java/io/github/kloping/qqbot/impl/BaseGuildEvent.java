@@ -13,7 +13,10 @@ public abstract class BaseGuildEvent implements GuildEvent {
     protected JSONObject metadata;
     protected Guild guild;
 
-    private Bot bot;
+    protected Bot bot;
+
+    public BaseGuildEvent() {
+    }
 
     public BaseGuildEvent(JSONObject jo, Bot bot) {
         this.metadata = jo;
