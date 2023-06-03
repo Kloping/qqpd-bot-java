@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
+import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.Message;
 import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
@@ -16,15 +17,20 @@ import io.github.kloping.qqbot.impl.MessagePacket;
 public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent implements MessageDirectReceiveEvent {
     public BaseMessageDirectReceiveEvent(Message message, JSONObject jo, Bot bot) {
         super();
-        this.message = message;
         this.bot = bot;
         this.directMessage = DirectMessage.messageAsDirectMessage(message);
+        this.message = this.directMessage;
         this.metadata = jo;
         this.srcGuildId = getMessage().getSrcGuildId();
         this.content = getMessage().getContent() == null ? "" : getMessage().getContent();
         this.srcGuild = getBot().getGuild(getSrcGuildId());
         this.guild = getBot().getGuild(getSrcGuildId());
         this.sender = getMessage().getMember();
+    }
+
+    @Override
+    public Member getSender() {
+        return super.getSender();
     }
 
     private String srcGuildId;

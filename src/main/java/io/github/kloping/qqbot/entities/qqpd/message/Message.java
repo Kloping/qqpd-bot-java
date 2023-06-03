@@ -5,6 +5,7 @@ import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.Reactive;
 import io.github.kloping.qqbot.api.Sender;
 import io.github.kloping.qqbot.entities.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;

@@ -4,6 +4,7 @@ import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.DirectSender;
 import io.github.kloping.qqbot.entities.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
@@ -50,6 +51,51 @@ public class DirectMessage extends Message
                 .setAuthor(message.getAuthor()).setAttachments(message.getAttachments()).setEmbed(message.getEmbed())
                 .setMentions(message.getMentions()).setMember(message.getMember()).setArk(message.getArk()).setSeq(message.getSeq())
                 .setSeqInChannel(message.getSeqInChannel()).setMessageReference(message.getMessageReference()).setSrcGuildId(message.getSrcGuildId());
+    }
+
+    /**
+     * 替换默认
+     *
+     * @param text
+     * @return
+     */
+    @Override
+    public MessageAudited send(String text) {
+        return sendDirect(text);
+    }
+
+    /**
+     * 替换默认
+     *
+     * @param text
+     * @param message
+     * @return
+     */
+    @Override
+    public MessageAudited send(String text, Message message) {
+        return sendDirect(text, message);
+    }
+
+    /**
+     * 替换默认
+     *
+     * @param packet
+     * @return
+     */
+    @Override
+    public MessageAudited send(MessagePacket packet) {
+        return sendDirect(packet);
+    }
+
+    /**
+     * 替换默认
+     *
+     * @param msg
+     * @return
+     */
+    @Override
+    public MessageAudited send(PreMessage msg) {
+        return sendDirect(msg);
     }
 
     @Override

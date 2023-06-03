@@ -34,6 +34,9 @@ public class MessageEventsRegister implements Events.EventRegister {
             event = new BaseMessageContainsAtEvent(msg, mateData, bot);
         } else if (msg.getSrcGuildId() != null && !msg.getSrcGuildId().isEmpty()) {
             event = new BaseMessageDirectReceiveEvent(msg, mateData, bot);
+            msg.getAuthor().setBot(false);
+            msg.getMember().setNick(msg.getAuthor().getUsername());
+            msg.getMember().setUser(msg.getAuthor());
         } else {
             event = new BaseMessageChannelReceiveEvent(msg, mateData, bot);
         }

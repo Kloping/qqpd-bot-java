@@ -20,6 +20,5 @@ public class Member implements OpAble {
     private String joinedAt;
     private String[] roles;
     private User user;
-
     private String opUserId;
 }

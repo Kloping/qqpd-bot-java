@@ -66,7 +66,7 @@ public class User {
 	private String id;
 	private String username;
 	private String avatar;
-	private boolean bot;
+	private Boolean bot;
 	private String unionOpenid;
 	private String unionUserAccount;
 }
