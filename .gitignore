@@ -1,4 +1,6 @@
 # Project exclude paths
+src/test/java/temp/gs/**
+out/**
 /target/
 .idea
 temp.log
