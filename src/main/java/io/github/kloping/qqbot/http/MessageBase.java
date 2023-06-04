@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.MySpringTool.annotations.PathValue;
 import io.github.kloping.MySpringTool.annotations.http.*;
+import io.github.kloping.MySpringTool.entity.KeyVals;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 
 import java.util.Map;
@@ -19,18 +19,6 @@ import static org.jsoup.Connection.Method.DELETE;
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface MessageBase {
     /**
-     * send
-     *
-     * @param cid
-     * @param data
-     * @return
-     */
-    @Deprecated
-    @SuppressWarnings("deprecation")
-    @PostPath("/channels/{channel_id}/messages")
-    String send(@PathValue("channel_id") String cid, @RequestData io.github.kloping.MySpringTool.entity.RequestData data);
-
-    /**
      * send a message
      *
      * @param cid
@@ -39,7 +27,33 @@ public interface MessageBase {
      * @return
      */
     @PostPath("/channels/{channel_id}/messages")
-    MessageAudited send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) PreMessage body, @Headers Map<String, String> headers);
+    MessageAudited send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) RawPreMessage body, @Headers Map<String, String> headers);
+
+    /**
+     * send a message
+     *
+     * @param cid
+     * @param headers
+     * @param bytes
+     * @param entry
+     * @return
+     */
+    @PostPath("/channels/{channel_id}/messages")
+    MessageAudited send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers, @FileParm(value = "file_image", name = "temp.jpg", type = "image/jpg") byte[] bytes, @RequestData Map.Entry<String, String> entry);
+
+    /**
+     * send a message
+     *
+     * @param cid
+     * @param headers
+     * @param bytes
+     * @param data
+     * @return
+     */
+    @PostPath("/channels/{channel_id}/messages")
+    MessageAudited send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers,
+                        @FileParm(value = "file_image", name = "temp.jpg", type = "image/jpg") byte[] bytes,
+                        @RequestData KeyVals data);
 
     /**
      * 撤回一条消息

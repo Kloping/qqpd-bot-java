@@ -2,7 +2,7 @@ package io.github.kloping.qqbot.utils;
 
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 import java.util.Map;
@@ -18,7 +18,7 @@ public class BaseUtils {
      * @param packet
      * @param msg
      */
-    public static void packet2pre(MessagePacket packet, PreMessage msg) {
+    public static void packet2pre(MessagePacket packet, RawPreMessage msg) {
         if (Judge.isNotEmpty(packet.getContent())) {
             msg.setContent(packet.getContent());
         }

@@ -1,6 +1,8 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import io.github.kloping.qqbot.api.AtAble;
 import io.github.kloping.qqbot.api.OpAble;
+import io.github.kloping.qqbot.entities.ex.At;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,10 +17,15 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Member implements OpAble {
+public class Member implements OpAble, AtAble {
     private String nick;
     private String joinedAt;
     private String[] roles;
     private User user;
     private String opUserId;
+
+    @Override
+    public At at() {
+        return new At("member", user.getId());
+    }
 }

@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.OpAble;
@@ -49,7 +48,7 @@ public class Guild implements SessionCreator, OpAble {
         DmsRequest request = new DmsRequest();
         request.setSourceGuildId(Guild.this.id);
         request.setRecipientId(uid);
-        return Resource.dmsBase.create(request, Channel.MAP);
+        return Resource.dmsBase.create(request, Channel.SEND_MESSAGE_HEADERS);
     }
 
     public Member getMember(String userId) {

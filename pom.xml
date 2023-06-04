@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.4.7-M2</version>
+    <version>1.4.7-M3</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -59,13 +59,18 @@
         <dependency>
             <groupId>io.github.kloping</groupId>
             <artifactId>SpringTool</artifactId>
-            <version>0.6.0-M3</version>
+            <version>0.6.0-M4</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.4</version>
         </dependency>
     </dependencies>
     <distributionManagement>

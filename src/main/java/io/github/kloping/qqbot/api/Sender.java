@@ -1,7 +1,8 @@
 package io.github.kloping.qqbot.api;
 
+import io.github.kloping.qqbot.entities.ex.MessagePre;
 import io.github.kloping.qqbot.entities.qqpd.message.Message;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
@@ -55,5 +56,13 @@ public interface Sender {
      * @param msg
      * @return
      */
-    MessageAudited send(PreMessage msg);
+    MessageAudited send(RawPreMessage msg);
+
+    /**
+     * 以各种方式 达到想要发送的效果
+     *
+     * @param msg
+     * @return
+     */
+    MessageAudited send(MessagePre msg);
 }

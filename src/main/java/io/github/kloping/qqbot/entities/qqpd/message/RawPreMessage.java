@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -10,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class PreMessage {
+public class RawPreMessage {
     private String content;
     private Object embed;
     private Object ark;
@@ -19,14 +20,15 @@ public class PreMessage {
      * 这里上传图片的网址必须是经过备案的域名下的文件 <br/> 否则将报错500 <br/>
      */
     private String image;
+    @JSONField(name = "msg_id")
     private String msgId;
     private String eventId;
     private Object markdown;
 
-    public PreMessage(String content) {
+    public RawPreMessage(String content) {
         this.content = content;
     }
 
-    public PreMessage() {
+    public RawPreMessage() {
     }
 }

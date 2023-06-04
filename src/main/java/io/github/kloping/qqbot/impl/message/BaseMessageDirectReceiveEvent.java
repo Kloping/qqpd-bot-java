@@ -7,7 +7,7 @@ import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.Message;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
@@ -93,7 +93,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(PreMessage msg) {
+    public MessageAudited send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
@@ -113,7 +113,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
     }
 
     @Override
-    public MessageAudited sendDirect(PreMessage msg) {
+    public MessageAudited sendDirect(RawPreMessage msg) {
         return getDirectMessage().sendDirect(msg);
     }
 

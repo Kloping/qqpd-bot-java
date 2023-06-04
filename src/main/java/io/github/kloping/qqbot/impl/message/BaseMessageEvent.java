@@ -3,11 +3,12 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.ex.MessagePre;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.Message;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
@@ -76,7 +77,7 @@ public class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public MessageAudited send(PreMessage msg) {
+    public MessageAudited send(RawPreMessage msg) {
         return getMessage().send(msg);
     }
 
@@ -85,4 +86,8 @@ public class BaseMessageEvent implements MessageEvent {
         return bot;
     }
 
+    @Override
+    public MessageAudited send(MessagePre msg) {
+        return getMessage().send(msg);
+    }
 }

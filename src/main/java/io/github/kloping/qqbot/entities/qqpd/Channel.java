@@ -1,10 +1,13 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
 import io.github.kloping.qqbot.Resource;
+import io.github.kloping.qqbot.api.AtAble;
 import io.github.kloping.qqbot.api.Sender;
+import io.github.kloping.qqbot.entities.ex.At;
+import io.github.kloping.qqbot.entities.ex.MessagePre;
 import io.github.kloping.qqbot.entities.qqpd.message.Message;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
-import io.github.kloping.qqbot.entities.qqpd.message.PreMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
@@ -27,7 +30,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Channel implements Sender {
+public class Channel implements Sender, AtAble {
     private Number speakPermission;
     private Number subType;
     private String ownerId;
@@ -38,11 +41,11 @@ public class Channel implements Sender {
     private Number type;
     private Number privateType;
     private String applicationId;
-    public static final Map<String, String> MAP = new HashMap<>();
+    public static final Map<String, String> SEND_MESSAGE_HEADERS = new HashMap<>();
 
     static {
-        MAP.put("Content-Type", "application/json");
-        MAP.put("Accept-Encoding", "*");
+        SEND_MESSAGE_HEADERS.put("Content-Type", "application/json");
+        SEND_MESSAGE_HEADERS.put("Accept-Encoding", "*/*");
     }
 
     /**
@@ -54,9 +57,9 @@ public class Channel implements Sender {
      */
     @Override
     public MessageAudited send(String text, Message message) {
-        PreMessage msg = new PreMessage(text);
+        RawPreMessage msg = new RawPreMessage(text);
         msg.setMessageReference(new MessageReference(message.getId()));
-        return Resource.messageBase.send(Channel.this.id, msg, MAP);
+        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -67,7 +70,7 @@ public class Channel implements Sender {
      */
     @Override
     public MessageAudited send(String text) {
-        return Resource.messageBase.send(Channel.this.id, new PreMessage(text), MAP);
+        return Resource.messageBase.send(Channel.this.id, new RawPreMessage(text), SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -78,9 +81,9 @@ public class Channel implements Sender {
      */
     @Override
     public MessageAudited send(MessagePacket packet) {
-        PreMessage msg = new PreMessage();
+        RawPreMessage msg = new RawPreMessage();
         BaseUtils.packet2pre(packet, msg);
-        return Resource.messageBase.send(Channel.this.id, msg, MAP);
+        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -90,7 +93,17 @@ public class Channel implements Sender {
      * @return
      */
     @Override
-    public MessageAudited send(PreMessage msg) {
-        return Resource.messageBase.send(Channel.this.id, msg, MAP);
+    public MessageAudited send(RawPreMessage msg) {
+        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
+    }
+
+    @Override
+    public At at() {
+        return new At("channel", getId());
+    }
+
+    @Override
+    public MessageAudited send(MessagePre msg) {
+        return null;
     }
 }
