@@ -3,14 +3,14 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageDeleteEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * @author github.kloping
  */
 public class BaseMessageDeleteEvent extends BaseMessageReceiveEvent implements MessageDeleteEvent {
-    public BaseMessageDeleteEvent(Message message, JSONObject jo, Bot bot) {
-        super(jo.getJSONObject("message").toJavaObject(Message.class), jo, bot);
+    public BaseMessageDeleteEvent(RawMessage message, JSONObject jo, Bot bot) {
+        super(jo.getJSONObject("message").toJavaObject(RawMessage.class), jo, bot);
         opUserId = getMetadata().getJSONObject("op_user").getString("id");
     }
 
@@ -19,7 +19,7 @@ public class BaseMessageDeleteEvent extends BaseMessageReceiveEvent implements M
 
     @Override
     public String getAuthorId() {
-        return getMessage().getAuthor().getId();
+        return getRawMessage().getAuthor().getId();
     }
 
     @Override

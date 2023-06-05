@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.api.message;
 import io.github.kloping.qqbot.api.DirectSender;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -54,7 +54,7 @@ public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSe
      * @return
      */
     @Override
-    default MessageAudited send(String text, Message message) {
+    default MessageAudited send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 

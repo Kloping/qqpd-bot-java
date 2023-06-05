@@ -6,7 +6,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.message.BaseMessageChannelReceiveEvent;
 import io.github.kloping.qqbot.impl.message.BaseMessageContainsAtEvent;
 import io.github.kloping.qqbot.impl.message.BaseMessageDirectReceiveEvent;
@@ -28,7 +28,7 @@ public class MessageEventsRegister implements Events.EventRegister {
     Bot bot;
 
     @Override
-    public Event handle(String t,JSONObject mateData, Message msg) {
+    public Event handle(String t,JSONObject mateData, RawMessage msg) {
         Event event = null;
         if (msg.getMentions() != null && msg.getMentions().length > 0) {
             event = new BaseMessageContainsAtEvent(msg, mateData, bot);

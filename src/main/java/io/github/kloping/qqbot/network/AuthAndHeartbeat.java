@@ -13,7 +13,7 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseConnectedEvent;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
@@ -145,7 +145,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     Bot bot;
 
     @Override
-    public Event handle(String t, JSONObject mateData, Message message) {
+    public Event handle(String t, JSONObject mateData, RawMessage message) {
         sessionId = mateData.getString("session_id");
         logger.info("Started Successfully!");
         return new BaseConnectedEvent(mateData, bot, sessionId);

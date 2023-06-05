@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageReactionEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReaction;
 
 /**
  * @author github.kloping
  */
 public class BaseMessageReactionEvent extends BaseMessageEvent implements MessageReactionEvent {
-    public BaseMessageReactionEvent(Message message, JSONObject jo, Bot bot, MessageReaction reaction) {
+    public BaseMessageReactionEvent(RawMessage message, JSONObject jo, Bot bot, MessageReaction reaction) {
         super(message, jo, bot);
         this.reaction = reaction;
     }

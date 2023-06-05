@@ -3,15 +3,15 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * @author github.kloping
  */
 public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements MessageChannelReceiveEvent {
-    public BaseMessageChannelReceiveEvent(Message message, JSONObject jo, Bot bot) {
+    public BaseMessageChannelReceiveEvent(RawMessage message, JSONObject jo, Bot bot) {
         super(message, jo,bot);
-        this.content = getMessage().getContent();
+        this.content = getRawMessage().getContent();
         this.channelId = getChannel().getId();
     }
 
@@ -32,4 +32,5 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
     public String toString() {
         return String.format("[channel(%s)]member(%s)=>%s", getChannel().getName(), getSender().getNick(), getContent());
     }
+
 }

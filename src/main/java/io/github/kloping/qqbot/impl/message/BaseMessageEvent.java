@@ -3,11 +3,11 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.ex.MessagePre;
+import io.github.kloping.qqbot.entities.ex.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -15,8 +15,8 @@ import io.github.kloping.qqbot.impl.MessagePacket;
 /**
  * @author github.kloping
  */
-public class BaseMessageEvent implements MessageEvent {
-    protected Message message;
+public abstract class BaseMessageEvent implements MessageEvent {
+    protected RawMessage message;
     protected JSONObject metadata;
     protected Guild guild;
     protected Member sender;
@@ -27,7 +27,7 @@ public class BaseMessageEvent implements MessageEvent {
     public BaseMessageEvent() {
     }
 
-    public BaseMessageEvent(Message message, JSONObject jo, Bot bot) {
+    public BaseMessageEvent(RawMessage message, JSONObject jo, Bot bot) {
         this.message = message;
         this.metadata = jo;
         this.bot = bot;
@@ -37,7 +37,7 @@ public class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public Message getMessage() {
+    public RawMessage getRawMessage() {
         return message;
     }
 
@@ -63,22 +63,22 @@ public class BaseMessageEvent implements MessageEvent {
 
     @Override
     public MessageAudited send(String text) {
-        return getMessage().send(text);
+        return getRawMessage().send(text);
     }
 
     @Override
-    public MessageAudited send(String text, Message message) {
-        return getMessage().send(text, message);
+    public MessageAudited send(String text, RawMessage message) {
+        return getRawMessage().send(text, message);
     }
 
     @Override
     public MessageAudited send(MessagePacket packet) {
-        return getMessage().send(packet);
+        return getRawMessage().send(packet);
     }
 
     @Override
     public MessageAudited send(RawPreMessage msg) {
-        return getMessage().send(msg);
+        return getRawMessage().send(msg);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public MessageAudited send(MessagePre msg) {
-        return getMessage().send(msg);
+    public MessageAudited send(SendAble msg) {
+        return getRawMessage().send(msg);
     }
 }

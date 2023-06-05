@@ -6,7 +6,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseMemberUpdateEvent;
 import io.github.kloping.qqbot.network.Events;
 
@@ -24,7 +24,7 @@ public class MemberEventRegisters implements Events.EventRegister {
     Bot bot;
 
     @Override
-    public Event handle(String t,JSONObject mateData, Message message) {
+    public Event handle(String t,JSONObject mateData, RawMessage message) {
         Event event = new BaseMemberUpdateEvent(mateData, bot);
         return event;
     }

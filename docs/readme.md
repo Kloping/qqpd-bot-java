@@ -43,6 +43,6 @@ starter.registerListenerHost(new ListenerHost(){
 
 分为板块
 
-- [消息](message.md)
-- [事件](event.md)
-- ...
+- [消息 message](message.md)
+- [事件 event](event.md)
+- [动作 action](action.md)

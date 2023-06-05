@@ -8,7 +8,7 @@ import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessagePack;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReaction;
 import io.github.kloping.qqbot.impl.message.BaseMessageReactionEvent;
@@ -30,7 +30,7 @@ public class MessageReactionEventRegister implements Events.EventRegister {
     }
 
     @Override
-    public Event handle(String t, JSONObject mateData, Message message) {
+    public Event handle(String t, JSONObject mateData, RawMessage message) {
         BaseMessageReactionEvent event = null;
         MessageReaction reaction = mateData.toJavaObject(MessageReaction.class);
         JSONObject jo = mateData.getJSONObject("emoji");

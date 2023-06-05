@@ -9,7 +9,7 @@ import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.entities.Pack;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import io.github.kloping.qqbot.utils.InvokeUtils;
@@ -53,7 +53,7 @@ public class Events implements OnPackReceive {
 
     private void onEvent(String t, JSONObject obj) throws Exception {
         Class<? extends Event> c0 = null;
-        Message msg = obj.toJavaObject(Message.class);
+        RawMessage msg = obj.toJavaObject(RawMessage.class);
         if (msg != null) {
             if (msg.getId() != null && !msg.getId().isEmpty()) {
                 if (ids.contains(msg.getId())) {
@@ -108,6 +108,6 @@ public class Events implements OnPackReceive {
     }
 
     public interface EventRegister {
-        Event handle(String t, JSONObject mateData, Message message);
+        Event handle(String t, JSONObject mateData, RawMessage message);
     }
 }

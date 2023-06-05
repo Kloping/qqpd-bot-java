@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.api.message;
 import io.github.kloping.qqbot.api.ChannelEvent;
 import io.github.kloping.qqbot.api.Sender;
 import io.github.kloping.qqbot.entities.qqpd.Member;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * 消息事件接口
@@ -16,7 +16,7 @@ public interface MessageEvent extends ChannelEvent, Sender {
      *
      * @return
      */
-    Message getMessage();
+    RawMessage getRawMessage();
 
     /**
      * 消息事件发送者

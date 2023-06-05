@@ -24,7 +24,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class DirectMessage extends Message
+public class DirectMessage extends RawMessage
         implements DirectSender, DeleteAble {
     private String id;
     private String channelId;
@@ -44,7 +44,7 @@ public class DirectMessage extends Message
     private MessageReference messageReference;
     private String srcGuildId;
 
-    public static DirectMessage messageAsDirectMessage(Message message) {
+    public static DirectMessage messageAsDirectMessage(RawMessage message) {
         return new DirectMessage().setId(message.getId()).setChannelId(message.getChannelId())
                 .setGuildId(message.getGuildId()).setContent(message.getContent()).setTimestamp(message.getTimestamp())
                 .setEditedTimestamp(message.getEditedTimestamp()).setMentionEveryone(message.getMentionEveryone())
@@ -72,7 +72,7 @@ public class DirectMessage extends Message
      * @return
      */
     @Override
-    public MessageAudited send(String text, Message message) {
+    public MessageAudited send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -104,7 +104,7 @@ public class DirectMessage extends Message
     }
 
     @Override
-    public MessageAudited sendDirect(String text, Message message) {
+    public MessageAudited sendDirect(String text, RawMessage message) {
         return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
     }
 

@@ -6,7 +6,7 @@ import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -15,17 +15,17 @@ import io.github.kloping.qqbot.impl.MessagePacket;
  * @author github.kloping
  */
 public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent implements MessageDirectReceiveEvent {
-    public BaseMessageDirectReceiveEvent(Message message, JSONObject jo, Bot bot) {
+    public BaseMessageDirectReceiveEvent(RawMessage message, JSONObject jo, Bot bot) {
         super();
         this.bot = bot;
         this.directMessage = DirectMessage.messageAsDirectMessage(message);
         this.message = this.directMessage;
         this.metadata = jo;
-        this.srcGuildId = getMessage().getSrcGuildId();
-        this.content = getMessage().getContent() == null ? "" : getMessage().getContent();
+        this.srcGuildId = getRawMessage().getSrcGuildId();
+        this.content = getRawMessage().getContent() == null ? "" : getRawMessage().getContent();
         this.srcGuild = getBot().getGuild(getSrcGuildId());
         this.guild = getBot().getGuild(getSrcGuildId());
-        this.sender = getMessage().getMember();
+        this.sender = getRawMessage().getMember();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(String text, Message message) {
+    public MessageAudited send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -103,7 +103,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
     }
 
     @Override
-    public MessageAudited sendDirect(String text, Message message) {
+    public MessageAudited sendDirect(String text, RawMessage message) {
         return getDirectMessage().sendDirect(text, message);
     }
 

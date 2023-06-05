@@ -2,10 +2,10 @@ package io.github.kloping.qqbot.entities.qqpd;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.AtAble;
-import io.github.kloping.qqbot.api.Sender;
+import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.ex.At;
-import io.github.kloping.qqbot.entities.ex.MessagePre;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.ex.SendAble;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
@@ -30,7 +30,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Channel implements Sender, AtAble {
+public class Channel implements SenderAndCidMidGetter, AtAble {
     private Number speakPermission;
     private Number subType;
     private String ownerId;
@@ -48,6 +48,13 @@ public class Channel implements Sender, AtAble {
         SEND_MESSAGE_HEADERS.put("Accept-Encoding", "*/*");
     }
 
+    public static final Map<String, String> SEND_FORM_DATA_HEADERS = new HashMap<>();
+
+    static {
+        SEND_FORM_DATA_HEADERS.put("Content-Type", "multipart/form-data");
+        SEND_FORM_DATA_HEADERS.put("Accept-Encoding", "*/*");
+    }
+
     /**
      * 此方式发送的消息 为主动消息 会受到次数限制
      *
@@ -56,7 +63,7 @@ public class Channel implements Sender, AtAble {
      * @return
      */
     @Override
-    public MessageAudited send(String text, Message message) {
+    public MessageAudited send(String text, RawMessage message) {
         RawPreMessage msg = new RawPreMessage(text);
         msg.setMessageReference(new MessageReference(message.getId()));
         return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
@@ -103,7 +110,12 @@ public class Channel implements Sender, AtAble {
     }
 
     @Override
-    public MessageAudited send(MessagePre msg) {
-        return null;
+    public MessageAudited send(SendAble msg) {
+        return msg.send(this);
+    }
+
+    @Override
+    public String getCid() {
+        return getId();
     }
 }

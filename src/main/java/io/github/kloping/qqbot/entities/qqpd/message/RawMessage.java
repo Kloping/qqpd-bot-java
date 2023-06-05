@@ -3,8 +3,8 @@ package io.github.kloping.qqbot.entities.qqpd.message;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.Reactive;
-import io.github.kloping.qqbot.api.Sender;
-import io.github.kloping.qqbot.entities.ex.MessagePre;
+import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.entities.ex.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
@@ -15,9 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
 
@@ -30,7 +27,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Message implements Sender, DeleteAble, Reactive {
+public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
     private String id;
     private String channelId;
     private String guildId;
@@ -50,7 +47,7 @@ public class Message implements Sender, DeleteAble, Reactive {
     private String srcGuildId;
 
     @Override
-    public MessageAudited send(String text, Message message) {
+    public MessageAudited send(String text, RawMessage message) {
         return send(new MessagePacket().setContent(text).setReplyId(message.id));
     }
 
@@ -62,14 +59,14 @@ public class Message implements Sender, DeleteAble, Reactive {
     @Override
     public MessageAudited send(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
-        msg.setMsgId(Message.this.id);
+        msg.setMsgId(RawMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return Resource.messageBase.send(Message.this.channelId, msg, SEND_MESSAGE_HEADERS);
+        return Resource.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public MessageAudited send(RawPreMessage msg) {
-        return Resource.messageBase.send(Message.this.channelId, msg, SEND_MESSAGE_HEADERS);
+        return Resource.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
@@ -96,15 +93,19 @@ public class Message implements Sender, DeleteAble, Reactive {
         Resource.channelBase.removeEmoji(getChannelId(), getId(), emoji.getType(), emoji.getId());
     }
 
-    public static final Map<String, String> SEND_FORM_DATA_HEADERS = new HashMap<>();
 
-    static {
-        SEND_FORM_DATA_HEADERS.put("Content-Type", "multipart/form-data");
-        SEND_FORM_DATA_HEADERS.put("Accept-Encoding", "*/*");
+    @Override
+    public MessageAudited send(SendAble msg) {
+        return msg.send(this);
     }
 
     @Override
-    public MessageAudited send(MessagePre msg) {
-        return msg.send(this);
+    public String getCid() {
+        return getChannelId();
+    }
+
+    @Override
+    public String getMid() {
+        return getId();
     }
 }

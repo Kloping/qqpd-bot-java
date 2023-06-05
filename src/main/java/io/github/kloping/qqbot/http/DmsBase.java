@@ -38,7 +38,6 @@ public interface DmsBase {
     @PostPath("/users/@me/dms")
     Dms create(@RequestBody(type = RequestBody.type.json) DmsRequest request, @Headers Map<String, String> header0);
 
-
     /**
      * 撤回一条消息
      *

@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.entities.ex;
 
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * @author github.kloping
@@ -28,7 +28,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder reply(Message message) {
+    public MessageBuilder reply(RawMessage message) {
         pre.setReplyId(message.getId());
         return this;
     }

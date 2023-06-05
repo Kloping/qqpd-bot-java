@@ -2,7 +2,7 @@ package io.github.kloping.qqbot.entities.qqpd;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DirectSender;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -41,7 +41,7 @@ public class Dms implements DirectSender {
      * @return
      */
     @Override
-    public MessageAudited sendDirect(String text, Message message) {
+    public MessageAudited sendDirect(String text, RawMessage message) {
         return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
     }
 

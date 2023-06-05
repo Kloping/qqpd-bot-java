@@ -7,5 +7,5 @@ import lombok.Data;
  */
 @Data
 public class MessagePack {
-    private Message message;
+    private RawMessage message;
 }

@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageReceiveEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.message.Message;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * @author github.kloping
@@ -12,9 +12,9 @@ public class BaseMessageReceiveEvent extends BaseMessageEvent implements Message
     public BaseMessageReceiveEvent() {
     }
 
-    public BaseMessageReceiveEvent(Message message, JSONObject jo, Bot bot) {
+    public BaseMessageReceiveEvent(RawMessage message, JSONObject jo, Bot bot) {
         super(message, jo,bot);
-        this.content = getMessage().getContent() == null ? "" : getMessage().getContent();
+        this.content = getRawMessage().getContent() == null ? "" : getRawMessage().getContent();
     }
 
     protected String content;
