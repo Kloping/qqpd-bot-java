@@ -2,7 +2,7 @@ package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -18,7 +18,7 @@ public interface DirectSender {
      * @param text
      * @return
      */
-    MessageAudited sendDirect(String text);
+    ActionResult sendDirect(String text);
 
     /**
      * 以JSON方式发送文本消息并引用指定消息
@@ -27,7 +27,7 @@ public interface DirectSender {
      * @param message
      * @return
      */
-    MessageAudited sendDirect(String text, RawMessage message);
+    ActionResult sendDirect(String text, RawMessage message);
 
     /**
      * 以自定义方式发送消息
@@ -35,7 +35,7 @@ public interface DirectSender {
      * @param packet
      * @return
      */
-    MessageAudited sendDirect(MessagePacket packet);
+    ActionResult sendDirect(MessagePacket packet);
 
     /**
      * 自定义消息
@@ -43,5 +43,5 @@ public interface DirectSender {
      * @param msg
      * @return
      */
-    MessageAudited sendDirect(RawPreMessage msg);
+    ActionResult sendDirect(RawPreMessage msg);
 }

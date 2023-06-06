@@ -1,7 +1,7 @@
-package io.github.kloping.qqbot.entities.ex;
+package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 
 /**
  * @author github.kloping
@@ -13,5 +13,5 @@ public interface SendAble {
      * @param er
      * @return
      */
-    MessageAudited send(SenderAndCidMidGetter er);
+    ActionResult send(SenderAndCidMidGetter er);
 }

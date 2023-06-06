@@ -2,13 +2,11 @@ package io.github.kloping.qqbot.entities.qqpd.message;
 
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
-import io.github.kloping.qqbot.api.Reactive;
+import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
-import io.github.kloping.qqbot.entities.ex.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
-import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
@@ -27,7 +25,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
+public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
     private String id;
     private String channelId;
     private String guildId;
@@ -47,17 +45,17 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
     private String srcGuildId;
 
     @Override
-    public MessageAudited send(String text, RawMessage message) {
+    public ActionResult send(String text, RawMessage message) {
         return send(new MessagePacket().setContent(text).setReplyId(message.id));
     }
 
     @Override
-    public MessageAudited send(String text) {
+    public ActionResult send(String text) {
         return send(new MessagePacket().setContent(text));
     }
 
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public ActionResult send(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(RawMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
@@ -65,7 +63,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
     }
 
     @Override
-    public MessageAudited send(RawPreMessage msg) {
+    public ActionResult send(RawPreMessage msg) {
         return Resource.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
     }
 
@@ -75,27 +73,18 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
     }
 
     public String getContent() {
-        if (content == null) {
+        if (attachments != null)
             for (MessageAttachment attachment : attachments) {
-                if (attachment.getUrl().contains("pic")) content = "[图片]";
+                if (attachment.getUrl().contains("pic")) {
+                    if (content == null) content = "";
+                    content = content + "[图片]";
+                }
             }
-        }
         return content;
     }
 
     @Override
-    public void addEmoji(Emoji emoji) {
-        Resource.channelBase.addEmoji(getChannelId(), getId(), emoji.getType(), emoji.getId());
-    }
-
-    @Override
-    public void removeEmoji(Emoji emoji) {
-        Resource.channelBase.removeEmoji(getChannelId(), getId(), emoji.getType(), emoji.getId());
-    }
-
-
-    @Override
-    public MessageAudited send(SendAble msg) {
+    public ActionResult send(SendAble msg) {
         return msg.send(this);
     }
 

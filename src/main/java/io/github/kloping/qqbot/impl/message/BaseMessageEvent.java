@@ -3,14 +3,16 @@ package io.github.kloping.qqbot.impl.message;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.ex.SendAble;
+import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
+import io.github.kloping.qqbot.utils.BaseUtils;
 
 /**
  * @author github.kloping
@@ -62,22 +64,22 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public MessageAudited send(String text) {
+    public ActionResult send(String text) {
         return getRawMessage().send(text);
     }
 
     @Override
-    public MessageAudited send(String text, RawMessage message) {
+    public ActionResult send(String text, RawMessage message) {
         return getRawMessage().send(text, message);
     }
 
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public ActionResult send(MessagePacket packet) {
         return getRawMessage().send(packet);
     }
 
     @Override
-    public MessageAudited send(RawPreMessage msg) {
+    public ActionResult send(RawPreMessage msg) {
         return getRawMessage().send(msg);
     }
 
@@ -87,7 +89,12 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public MessageAudited send(SendAble msg) {
+    public ActionResult send(SendAble msg) {
         return getRawMessage().send(msg);
+    }
+
+    @Override
+    public MessageChain getMessage() {
+        return BaseUtils.parseToMessageChain(getRawMessage());
     }
 }

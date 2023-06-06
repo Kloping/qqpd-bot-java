@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.common.Public;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Event;
@@ -38,11 +39,13 @@ public class Events implements OnPackReceive {
         String t = pack.getT();
         if (t == null) return false;
         JSONObject jo = JSON.parseObject(JSON.toJSONString(pack.getD()));
-        try {
-            onEvent(t, jo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Public.EXECUTOR_SERVICE.submit(() -> {
+            try {
+                onEvent(t, jo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         return false;
     }
 

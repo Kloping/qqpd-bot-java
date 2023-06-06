@@ -4,7 +4,7 @@ import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DirectSender;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class Dms implements DirectSender {
      * @return
      */
     @Override
-    public MessageAudited sendDirect(String text) {
+    public ActionResult sendDirect(String text) {
         return sendDirect(new MessagePacket().setContent(text));
     }
 
@@ -41,7 +41,7 @@ public class Dms implements DirectSender {
      * @return
      */
     @Override
-    public MessageAudited sendDirect(String text, RawMessage message) {
+    public ActionResult sendDirect(String text, RawMessage message) {
         return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
     }
 
@@ -52,14 +52,14 @@ public class Dms implements DirectSender {
      * @return
      */
     @Override
-    public MessageAudited sendDirect(MessagePacket packet) {
+    public ActionResult sendDirect(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         BaseUtils.packet2pre(packet, msg);
         return Resource.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
-    public MessageAudited sendDirect(RawPreMessage msg) {
+    public ActionResult sendDirect(RawPreMessage msg) {
         return Resource.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 }

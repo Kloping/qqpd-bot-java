@@ -4,11 +4,11 @@ import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.AtAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.ex.At;
-import io.github.kloping.qqbot.entities.ex.SendAble;
+import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
@@ -63,7 +63,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      * @return
      */
     @Override
-    public MessageAudited send(String text, RawMessage message) {
+    public ActionResult send(String text, RawMessage message) {
         RawPreMessage msg = new RawPreMessage(text);
         msg.setMessageReference(new MessageReference(message.getId()));
         return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
@@ -76,7 +76,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      * @return
      */
     @Override
-    public MessageAudited send(String text) {
+    public ActionResult send(String text) {
         return Resource.messageBase.send(Channel.this.id, new RawPreMessage(text), SEND_MESSAGE_HEADERS);
     }
 
@@ -87,7 +87,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      * @return
      */
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public ActionResult send(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         BaseUtils.packet2pre(packet, msg);
         return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
@@ -100,7 +100,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      * @return
      */
     @Override
-    public MessageAudited send(RawPreMessage msg) {
+    public ActionResult send(RawPreMessage msg) {
         return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
@@ -110,7 +110,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     }
 
     @Override
-    public MessageAudited send(SendAble msg) {
+    public ActionResult send(SendAble msg) {
         return msg.send(this);
     }
 

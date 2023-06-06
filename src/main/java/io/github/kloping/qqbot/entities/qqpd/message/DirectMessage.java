@@ -5,7 +5,7 @@ import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.DirectSender;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
@@ -60,7 +60,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public MessageAudited send(String text) {
+    public ActionResult send(String text) {
         return sendDirect(text);
     }
 
@@ -72,7 +72,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public MessageAudited send(String text, RawMessage message) {
+    public ActionResult send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -83,7 +83,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public ActionResult send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
@@ -94,22 +94,22 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public MessageAudited send(RawPreMessage msg) {
+    public ActionResult send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
     @Override
-    public MessageAudited sendDirect(String text) {
+    public ActionResult sendDirect(String text) {
         return sendDirect(new MessagePacket().setContent(text));
     }
 
     @Override
-    public MessageAudited sendDirect(String text, RawMessage message) {
+    public ActionResult sendDirect(String text, RawMessage message) {
         return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
     }
 
     @Override
-    public MessageAudited sendDirect(MessagePacket packet) {
+    public ActionResult sendDirect(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(DirectMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
@@ -117,8 +117,12 @@ public class DirectMessage extends RawMessage
     }
 
     @Override
-    public MessageAudited sendDirect(RawPreMessage msg) {
+    public ActionResult sendDirect(RawPreMessage msg) {
         return Resource.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override

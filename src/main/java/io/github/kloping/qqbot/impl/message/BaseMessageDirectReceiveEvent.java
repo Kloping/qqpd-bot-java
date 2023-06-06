@@ -8,7 +8,7 @@ import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -59,7 +59,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(String text) {
+    public ActionResult send(String text) {
         return sendDirect(text);
     }
 
@@ -71,7 +71,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(String text, RawMessage message) {
+    public ActionResult send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -82,7 +82,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(MessagePacket packet) {
+    public ActionResult send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
@@ -93,27 +93,27 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public MessageAudited send(RawPreMessage msg) {
+    public ActionResult send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
     @Override
-    public MessageAudited sendDirect(String text) {
+    public ActionResult sendDirect(String text) {
         return getDirectMessage().sendDirect(text);
     }
 
     @Override
-    public MessageAudited sendDirect(String text, RawMessage message) {
+    public ActionResult sendDirect(String text, RawMessage message) {
         return getDirectMessage().sendDirect(text, message);
     }
 
     @Override
-    public MessageAudited sendDirect(MessagePacket packet) {
+    public ActionResult sendDirect(MessagePacket packet) {
         return getDirectMessage().sendDirect(packet);
     }
 
     @Override
-    public MessageAudited sendDirect(RawPreMessage msg) {
+    public ActionResult sendDirect(RawPreMessage msg) {
         return getDirectMessage().sendDirect(msg);
     }
 

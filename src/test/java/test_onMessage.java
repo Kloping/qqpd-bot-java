@@ -1,10 +1,9 @@
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.impl.EventReceiver;
-import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.impl.EventReceiver;
+import io.github.kloping.qqbot.impl.ListenerHost;
 
 /**
  * @author github.kloping
@@ -22,8 +21,7 @@ public class test_onMessage {
             @EventReceiver
             private void event(MessageEvent event) {
                 RawMessage message = event.getRawMessage();
-                MessageAudited audited = message.send("回复测试");
-                System.out.println(audited);
+                message.send("回复测试");
             }
         });
         starter.registerListenerHost(new ListenerHost() {

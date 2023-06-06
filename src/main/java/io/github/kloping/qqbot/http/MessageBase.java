@@ -4,7 +4,7 @@ import io.github.kloping.MySpringTool.annotations.http.*;
 import io.github.kloping.MySpringTool.entity.KeyVals;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 
 import java.util.Map;
 
@@ -27,19 +27,8 @@ public interface MessageBase {
      * @return
      */
     @PostPath("/channels/{channel_id}/messages")
-    MessageAudited send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) RawPreMessage body, @Headers Map<String, String> headers);
-
-    /**
-     * send a message
-     *
-     * @param cid
-     * @param headers
-     * @param bytes
-     * @param entry
-     * @return
-     */
-    @PostPath("/channels/{channel_id}/messages")
-    MessageAudited send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers, @FileParm(value = "file_image", name = "temp.jpg", type = "image/jpg") byte[] bytes, @RequestData Map.Entry<String, String> entry);
+    @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
+    ActionResult send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) RawPreMessage body, @Headers Map<String, String> headers);
 
     /**
      * send a message
@@ -51,9 +40,23 @@ public interface MessageBase {
      * @return
      */
     @PostPath("/channels/{channel_id}/messages")
-    MessageAudited send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers,
-                        @FileParm(value = "file_image", name = "temp.jpg", type = "image/jpg") byte[] bytes,
-                        @RequestData KeyVals data);
+    @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
+    ActionResult send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers,
+                      @FileParm(value = "file_image", name = "temp.jpg", type = "image/jpg") byte[] bytes,
+                      @RequestData KeyVals data);
+
+    /**
+     * send a message
+     *
+     * @param cid
+     * @param headers
+     * @param data
+     * @return
+     */
+    @PostPath("/channels/{channel_id}/messages")
+    @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
+    ActionResult send(@PathValue("channel_id") String cid, @Headers Map<String, String> headers, @RequestData KeyVals data);
+
 
     /**
      * 撤回一条消息

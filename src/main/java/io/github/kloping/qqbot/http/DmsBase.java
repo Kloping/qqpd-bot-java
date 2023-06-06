@@ -5,7 +5,7 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Dms;
 import io.github.kloping.qqbot.entities.qqpd.DmsRequest;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
+import io.github.kloping.qqbot.http.data.ActionResult;
 
 import java.util.Map;
 
@@ -26,7 +26,9 @@ public interface DmsBase {
      * @return
      */
     @PostPath("/dms/{guild_id}/messages")
-    MessageAudited send(@PathValue("guild_id") String gid, @RequestBody(type = RequestBody.type.json) RawPreMessage body, @Headers Map<String, String> headers);
+    @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
+    ActionResult send(@PathValue("guild_id") String gid, @RequestBody(type = RequestBody.type.json) RawPreMessage body,
+                      @Headers Map<String, String> headers);
 
     /**
      * create The session

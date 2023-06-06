@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.api.message;
 
 import io.github.kloping.qqbot.api.ChannelEvent;
 import io.github.kloping.qqbot.api.Sender;
+import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
@@ -24,4 +25,11 @@ public interface MessageEvent extends ChannelEvent, Sender {
      * @return
      */
     Member getSender();
+
+    /**
+     * 将消息转为 MessageChain
+     *
+     * @return
+     */
+    MessageChain getMessage();
 }
