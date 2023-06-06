@@ -1,6 +1,6 @@
 ### 消息文档
 
-- [Message](../src/main/java/io/github/kloping/qqbot/entities/qqpd/message/Message.java) 所有消息顶级父类
+- [RawMessage](../src/main/java/io/github/kloping/qqbot/entities/qqpd/message/RawMessage.java) 所有消息顶级父类
   - [可发送消息](../src/main/java/io/github/kloping/qqbot/api/Sender.java)
   - [可撤回](../src/main/java/io/github/kloping/qqbot/api/DeleteAble.java)
   - [可被添加表情](../src/main/java/io/github/kloping/qqbot/api/Reactive.java)

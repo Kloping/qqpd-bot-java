@@ -36,7 +36,7 @@ public class MessageReactionEventRegister implements Events.EventRegister {
         JSONObject jo = mateData.getJSONObject("emoji");
         Integer type = jo.getInteger("type");
         String id = jo.getString("id");
-        reaction.setEmoji(Emoji.valueOf(type, id));
+        reaction.setEmoji(Emoji.valueOf(type, Integer.valueOf(id)));
         MessagePack pack = Resource.channelBase.getMessageById(reaction.getChannelId(), reaction.getTarget().getId());
         message = pack.getMessage();
         event = new BaseMessageReactionEvent(message, mateData, bot, reaction);

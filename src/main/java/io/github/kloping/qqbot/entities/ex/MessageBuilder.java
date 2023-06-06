@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.entities.ex;
 
+import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
@@ -19,12 +20,17 @@ public class MessageBuilder {
     }
 
     public MessageBuilder append(At at) {
-        pre.setContent(pre.getContent() + at.toString());
+        pre.setContent(pre.getContent() + at);
         return this;
     }
 
     public MessageBuilder append(AtAll at) {
         pre.setContent(pre.getContent() + "@everyone");
+        return this;
+    }
+
+    public MessageBuilder append(Emoji emoji) {
+        pre.setContent(pre.getContent() + emoji);
         return this;
     }
 
