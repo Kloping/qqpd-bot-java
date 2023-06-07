@@ -64,15 +64,17 @@ starter.registerListenerHost(new ListenerHost(){
 来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 **[事件类型](src/main/java/io/github/kloping/qqbot/api/Intents.java)**
 
 ```java
-/**
- * 公域机器人订阅推荐
- */
-public static final Intents PUBLIC_INTENTS=DEFAULT.and(PUBLIC_GUILD_MESSAGES);
-/**
- * 私域机器人订阅推荐
- */
-public static final Intents PRIVATE_INTENTS=DEFAULT.and(GUILD_MESSAGES).and(FORUMS_EVENT);
+//单事件订阅方式
+starter.getConfig().setCode(Intents.GUILD_MESSAGES.getCode());
 
+//多事件订阅方式
+starter.getConfig().setCode(Intents.START.and(Intents.GUILD_MESSAGES,Intents.DIRECT_MESSAGE));
+
+// 公域机器人订阅推荐
+starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
+
+// 私域机器人订阅推荐
+starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 ```
 
 导入指引

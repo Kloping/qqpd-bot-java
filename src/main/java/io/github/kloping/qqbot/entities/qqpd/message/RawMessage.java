@@ -1,9 +1,11 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -59,17 +61,17 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(RawMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return Resource.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public ActionResult send(RawPreMessage msg) {
-        return Resource.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public Object delete() {
-        return Resource.messageBase.delete(this.channelId, this.id, false);
+        return bot.messageBase.delete(this.channelId, this.id, false);
     }
 
     public String getContent() {
@@ -96,5 +98,17 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
     @Override
     public String getMid() {
         return getId();
+    }
+
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
     }
 }

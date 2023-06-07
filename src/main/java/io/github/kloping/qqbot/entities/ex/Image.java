@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.entities.ex;
 
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -36,7 +35,7 @@ public class Image implements SendAble {
                 v0.contentType("text/plain");
                 keyVals.add(v0);
             }
-            return Resource.messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, getBytes(), keyVals);
+            return er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, getBytes(), keyVals);
         }
         MessagePacket packet = new MessagePacket();
         if (Judge.isNotEmpty(getUrl())) packet.setImage(getUrl());

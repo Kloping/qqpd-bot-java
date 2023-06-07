@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.common.Public;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
@@ -19,8 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static io.github.kloping.qqbot.Resource.logger;
 
 /**
  * @author github.kloping
@@ -49,6 +48,9 @@ public class Events implements OnPackReceive {
 
     @AutoStand
     Starter.Config config;
+
+    @AutoStand
+    Logger logger;
 
     private void onEvent(String t, JSONObject obj) throws Exception {
         Class<? extends Event> c0 = null;

@@ -4,8 +4,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
-import io.github.kloping.qqbot.http.GuildBase;
-import io.github.kloping.qqbot.http.UserBase;
+import io.github.kloping.qqbot.http.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,10 +16,19 @@ import java.util.Map;
 @Entity
 public class Bot {
     @AutoStand
-    GuildBase guildBase;
+    public GuildBase guildBase;
 
     @AutoStand
-    UserBase userBase;
+    public UserBase userBase;
+
+    @AutoStand
+    public ChannelBase channelBase;
+
+    @AutoStand
+    public DmsBase dmsBase;
+
+    @AutoStand
+    public MessageBase messageBase;
 
     private User user;
 

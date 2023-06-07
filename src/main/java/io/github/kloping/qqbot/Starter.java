@@ -76,6 +76,9 @@ public class Starter implements Runnable {
     public static final Integer CODE_4913 = 4913;
 
     private Config config = new Config();
+    private WssWorker wssWorker;
+    public final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
+    private ContextManager contextManager;
 
     public Starter(String appid, String token) {
         this.getConfig().setAppid(appid);
@@ -85,10 +88,6 @@ public class Starter implements Runnable {
     public Config getConfig() {
         return config;
     }
-
-    private WssWorker wssWorker;
-    public final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
-    private ContextManager contextManager;
 
     @Override
     public void run() {
@@ -109,7 +108,7 @@ public class Starter implements Runnable {
         contextManager.append(this);
         contextManager.append(appid, APPID_ID);
         contextManager.append(token, TOKEN_ID);
-        contextManager.append(getConfig().getIntents().getCode(), INTENTS_ID);
+        contextManager.append(getConfig().getCode(), INTENTS_ID);
         contextManager.append(new Integer[]{0, 1}, SHARD_ID);
         contextManager.append("Bot " + appid + "." + token, AUTH_ID);
         contextManager.append(getConfig().getReconnect(), RECONNECT_K_ID);
@@ -138,7 +137,10 @@ public class Starter implements Runnable {
     public static class Config {
         private String appid;
         private String token;
-        private Intents intents = Intents.DEFAULT;
+        /**
+         * code 从 {@link io.github.kloping.qqbot.api.Intents#getCode }
+         */
+        private Integer code;
         private Boolean reconnect = true;
         private Set<ListenerHost> listenerHosts = new HashSet<>();
     }

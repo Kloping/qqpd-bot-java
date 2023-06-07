@@ -19,19 +19,23 @@ import io.github.kloping.qqbot.network.Events;
 public class MessageEventsRegister implements Events.EventRegister {
     @AutoStandAfter
     public void r2(Events events) {
-        events.register("MESSAGE_CREATE", this);
+        events.register(MESSAGE_CREATE, this);
         events.register(AT_MESSAGE_CREATE, this);
         events.register("DIRECT_MESSAGE_CREATE", this);
     }
 
     public static final String AT_MESSAGE_CREATE = "AT_MESSAGE_CREATE";
+    public static final String MESSAGE_CREATE = "MESSAGE_CREATE";
 
     @AutoStand
     Bot bot;
 
+    private String msgId = null;
+
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage msg) {
-        if (AT_MESSAGE_CREATE.equals(t)) return null;
+        if (msg.getId().equals(msgId)) return null;
+        else msgId = msg.getId();
         Event event = null;
         if (msg.getMentions() != null && msg.getMentions().length > 0) {
             event = new BaseMessageContainsAtEvent(msg, mateData, bot);

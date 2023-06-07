@@ -35,7 +35,7 @@ public class MessagePre implements SendAble {
                     v1.contentType("text/plain");
                     keyVals.add(v1);
                 }
-                return Resource.messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, image.getBytes(), keyVals);
+                return er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, image.getBytes(), keyVals);
             }
         }
         MessagePacket packet = new MessagePacket();

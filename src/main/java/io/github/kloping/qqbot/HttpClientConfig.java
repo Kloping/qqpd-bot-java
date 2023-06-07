@@ -6,6 +6,7 @@ import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.h1.impl.component.HttpStatusReceiver;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.HttpClientManager;
+import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -46,6 +47,20 @@ public class HttpClientConfig implements HttpStatusReceiver {
                             bot.getInfo().getUsername(),
                             bot.getGuild(rawMessage.getGuildId()).channelMap().get(rawMessage.getChannelId()).getName(),
                             rawMessage.getContent()));
+                }
+            }
+        } else if (o instanceof BotContent) {
+            BotContent content = (BotContent) o;
+            content.setBot(bot);
+        }
+
+
+        if (o.getClass().isArray()) {
+            Object[] obs = (Object[]) o;
+            for (Object ob : obs) {
+                if (ob instanceof BotContent) {
+                    BotContent content = (BotContent) ob;
+                    content.setBot(bot);
                 }
             }
         }

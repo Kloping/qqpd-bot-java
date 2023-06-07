@@ -1,7 +1,11 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DirectSender;
+import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -17,7 +21,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
  * @author github.kloping
  */
 @Data
-public class Dms implements DirectSender {
+public class Dms implements DirectSender, SenderAndCidMidGetter {
     private String guildId;
     private String channelId;
     private String createTime;
@@ -55,11 +59,33 @@ public class Dms implements DirectSender {
     public ActionResult sendDirect(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         BaseUtils.packet2pre(packet, msg);
-        return Resource.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return bot.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public ActionResult sendDirect(RawPreMessage msg) {
-        return Resource.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return bot.dmsBase.send(this.guildId, msg, SEND_MESSAGE_HEADERS);
+    }
+
+    @Override
+    public ActionResult send(SendAble msg) {
+        return msg.send(this);
+    }
+
+    @Override
+    public String getCid() {
+        return channelId;
+    }
+
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
     }
 }

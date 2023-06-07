@@ -39,12 +39,12 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
 
     @Override
     public void addEmoji(Emoji emoji) {
-        Resource.channelBase.addEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
+        bot.channelBase.addEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
     }
 
     @Override
     public void removeEmoji(Emoji emoji) {
-        Resource.channelBase.removeEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
+        bot.channelBase.removeEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
     }
 
 }

@@ -1,9 +1,12 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Resource;
+import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +28,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Guild implements SessionCreator, OpAble {
+public class Guild implements SessionCreator, OpAble, BotContent {
     private Boolean owner;
     private String joinedAt;
     private String ownerId;
@@ -48,14 +51,14 @@ public class Guild implements SessionCreator, OpAble {
         DmsRequest request = new DmsRequest();
         request.setSourceGuildId(Guild.this.id);
         request.setRecipientId(uid);
-        return Resource.dmsBase.create(request, Channel.SEND_MESSAGE_HEADERS);
+        return bot.dmsBase.create(request, Channel.SEND_MESSAGE_HEADERS);
     }
 
     public Member getMember(String userId) {
         Member member = null;
         member = BaseUtils.tryGet(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId);
         if (member == null) {
-            member = Resource.guildBase.getMember(Guild.this.getId(), userId);
+            member = bot.guildBase.getMember(Guild.this.getId(), userId);
             MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId, member);
         }
         return member;
@@ -71,7 +74,7 @@ public class Guild implements SessionCreator, OpAble {
     private synchronized void channelInit() {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
             Map<String, Channel> map = new HashMap<>();
-            Channel[] channels = Resource.guildBase.getChannels(id);
+            Channel[] channels = bot.guildBase.getChannels(id);
             for (Channel channel : channels) {
                 map.put(channel.getId(), channel);
             }
@@ -91,5 +94,16 @@ public class Guild implements SessionCreator, OpAble {
             channelInit();
         }
         return Common.GUILD_CHANNEL_TEMP.get(id);
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
     }
 }

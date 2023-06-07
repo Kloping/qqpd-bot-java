@@ -9,18 +9,16 @@ import io.github.kloping.qqbot.api.Intents;
 public class test_Intents {
     public static void main(String[] args) {
         Starter starter = test_main.factory();
-        Intents intents;
         //单事件订阅方式
-        intents = Intents.START.and(Intents.GUILDS);
+        starter.getConfig().setCode(Intents.GUILD_MESSAGES.getCode());
+
         //多事件订阅方式
-        //Intents.START.and(Intents.GUILDS).and(Intents.GUILD_MEMBERS).and(Intents.GUILD_MESSAGES);
+        starter.getConfig().setCode(Intents.START.and(Intents.GUILD_MESSAGES, Intents.DIRECT_MESSAGE));
 
         // 公域机器人订阅推荐
-        // starter.setIntents(Intents.PUBLIC_INTENTS);
+        starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
         // 私域机器人订阅推荐
-        // starter.setIntents(Intents.PRIVATE_INTENTS);
-
-        starter.getConfig().setIntents(intents);
+        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
         starter.run();
     }
 }

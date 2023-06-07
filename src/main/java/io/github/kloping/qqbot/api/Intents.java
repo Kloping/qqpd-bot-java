@@ -99,34 +99,34 @@ public enum Intents {
     /**
      * 公域消息事件
      */
-    PUBLIC_GUILD_MESSAGES(1 << 30);
-
+    PUBLIC_GUILD_MESSAGES(1 << 30),
     /**
      * Intents 事件订阅方式
      * 默认
      */
-    public static final Intents DEFAULT = START.and(GUILDS).and(GUILD_MEMBERS).and(GUILD_MESSAGE_REACTIONS)
-            .and(DIRECT_MESSAGE).and(AUDIO_OR_LIVE_CHANNEL_MEMBER)
-            .and(INTERACTION).and(MESSAGE_AUDIT).and(AUDIO_ACTION);
-
+    DEFAULT(738726915),
     /**
      * 公域机器人订阅推荐
      */
-    public static final Intents PUBLIC_INTENTS = DEFAULT.and(PUBLIC_GUILD_MESSAGES);
+    PUBLIC_INTENTS(1812468739),
     /**
      * 私域机器人订阅推荐
      */
-    public static final Intents PRIVATE_INTENTS = DEFAULT.and(GUILD_MESSAGES).and(FORUMS_EVENT);
+    PRIVATE_INTENTS(1007162883)
+    ;
 
-    private Integer code;
+    private final Integer code;
 
     private Intents(Integer code) {
         this.code = code;
     }
 
-    public Intents and(Intents intents) {
-        code = code | intents.getCode();
-        return this;
+    public Integer and(Intents... intents) {
+        Integer code0 = code;
+        for (Intents intent : intents) {
+            code0 = code0 | intent.code;
+        }
+        return code0;
     }
 
     public Integer getCode() {

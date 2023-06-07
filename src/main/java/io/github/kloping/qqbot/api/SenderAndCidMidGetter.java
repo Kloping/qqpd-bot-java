@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.api;
 /**
  * @author github.kloping
  */
-public interface SenderAndCidMidGetter extends Sender {
+public interface SenderAndCidMidGetter extends Sender, BotContent {
     /**
      * 获取 channel id
      *

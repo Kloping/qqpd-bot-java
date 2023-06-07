@@ -10,7 +10,26 @@ import io.github.kloping.qqbot.impl.MessagePacket;
  *
  * @author github.kloping
  */
-public interface DirectSender {
+public interface DirectSender extends Sender {
+    @Override
+    default ActionResult send(String text) {
+        return sendDirect(text);
+    }
+
+    @Override
+    default ActionResult send(String text, RawMessage message) {
+        return sendDirect(text, message);
+    }
+
+    @Override
+    default ActionResult send(MessagePacket packet) {
+        return sendDirect(packet);
+    }
+
+    @Override
+    default ActionResult send(RawPreMessage msg) {
+        return sendDirect(msg);
+    }
 
     /**
      * 以JSON方式发送文本消息

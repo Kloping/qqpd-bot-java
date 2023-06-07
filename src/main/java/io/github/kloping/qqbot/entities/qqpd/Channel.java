@@ -1,8 +1,10 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.AtAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.At;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
@@ -66,7 +68,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     public ActionResult send(String text, RawMessage message) {
         RawPreMessage msg = new RawPreMessage(text);
         msg.setMessageReference(new MessageReference(message.getId()));
-        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -77,7 +79,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      */
     @Override
     public ActionResult send(String text) {
-        return Resource.messageBase.send(Channel.this.id, new RawPreMessage(text), SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(Channel.this.id, new RawPreMessage(text), SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -90,7 +92,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     public ActionResult send(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         BaseUtils.packet2pre(packet, msg);
-        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
     /**
@@ -101,7 +103,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
      */
     @Override
     public ActionResult send(RawPreMessage msg) {
-        return Resource.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
+        return bot.messageBase.send(Channel.this.id, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
@@ -117,5 +119,17 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     @Override
     public String getCid() {
         return getId();
+    }
+
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
     }
 }

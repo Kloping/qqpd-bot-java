@@ -1,8 +1,11 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.DirectSender;
+import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -113,12 +116,12 @@ public class DirectMessage extends RawMessage
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(DirectMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return Resource.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return bot.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public ActionResult sendDirect(RawPreMessage msg) {
-        return Resource.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return bot.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     public String getContent() {
@@ -127,6 +130,18 @@ public class DirectMessage extends RawMessage
 
     @Override
     public Object delete() {
-        return Resource.dmsBase.delete(this.guildId, this.id, false);
+        return bot.dmsBase.delete(this.guildId, this.id, false);
+    }
+
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
     }
 }
