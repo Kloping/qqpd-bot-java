@@ -20,15 +20,18 @@ public class MessageEventsRegister implements Events.EventRegister {
     @AutoStandAfter
     public void r2(Events events) {
         events.register("MESSAGE_CREATE", this);
-        events.register("AT_MESSAGE_CREATE", this);
+        events.register(AT_MESSAGE_CREATE, this);
         events.register("DIRECT_MESSAGE_CREATE", this);
     }
+
+    public static final String AT_MESSAGE_CREATE = "AT_MESSAGE_CREATE";
 
     @AutoStand
     Bot bot;
 
     @Override
-    public Event handle(String t,JSONObject mateData, RawMessage msg) {
+    public Event handle(String t, JSONObject mateData, RawMessage msg) {
+        if (AT_MESSAGE_CREATE.equals(t)) return null;
         Event event = null;
         if (msg.getMentions() != null && msg.getMentions().length > 0) {
             event = new BaseMessageContainsAtEvent(msg, mateData, bot);

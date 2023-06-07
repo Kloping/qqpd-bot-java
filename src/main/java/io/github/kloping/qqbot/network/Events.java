@@ -18,9 +18,7 @@ import io.github.kloping.qqbot.utils.InvokeUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static io.github.kloping.qqbot.Resource.logger;
 
@@ -52,19 +50,10 @@ public class Events implements OnPackReceive {
     @AutoStand
     Starter.Config config;
 
-    private final Set<String> ids = new HashSet<>();
-
     private void onEvent(String t, JSONObject obj) throws Exception {
         Class<? extends Event> c0 = null;
         RawMessage msg = obj.toJavaObject(RawMessage.class);
-        if (msg != null) {
-            if (msg.getId() != null && !msg.getId().isEmpty()) {
-                if (ids.contains(msg.getId())) {
-                    logger.waring(String.format("Filtering Duplicate messages(%s)", msg.getId()));
-                    return;
-                } else ids.add(msg.getId());
-            }
-        } else {
+        if (msg == null) {
             logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
             return;
         }
@@ -77,14 +66,20 @@ public class Events implements OnPackReceive {
         if (event == null) return;
         for (Method method : getM2L().keySet()) {
             ListenerHost l = getM2L().get(method);
-            try {
                 if (ObjectUtils.isSuperOrInterface(event.getClass(), method.getParameterTypes()[0])) {
-                    method.invoke(l, event);
+                    Public.EXECUTOR_SERVICE.submit(() -> {
+                        try {
+                            method.invoke(l, event);
+                        } catch (IllegalAccessException e) {
+                            logger.error("EventReceiver The method parameter is set incorrectly");
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.getTargetException().printStackTrace();
+                            l.handleException(e.getTargetException());
+                        }
+                    });
                 }
-            } catch (InvocationTargetException e) {
-                e.getTargetException().printStackTrace();
-                l.handleException(e.getTargetException());
-            }
+
         }
         logger.info(String.format("%s post(%s)", event.getClass().getSimpleName(), event));
     }
