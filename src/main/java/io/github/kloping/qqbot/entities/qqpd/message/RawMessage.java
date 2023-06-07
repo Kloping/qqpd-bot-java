@@ -100,7 +100,6 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
         return getId();
     }
 
-
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
 

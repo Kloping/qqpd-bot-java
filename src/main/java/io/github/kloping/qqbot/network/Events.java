@@ -10,6 +10,7 @@ import io.github.kloping.common.Public;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Event;
+import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.ListenerHost;
@@ -52,6 +53,9 @@ public class Events implements OnPackReceive {
     @AutoStand
     Logger logger;
 
+    @AutoStand
+    Bot bot;
+
     private void onEvent(String t, JSONObject obj) throws Exception {
         Class<? extends Event> c0 = null;
         RawMessage msg = obj.toJavaObject(RawMessage.class);
@@ -64,6 +68,7 @@ public class Events implements OnPackReceive {
             logger.waring(String.format("%s yet not registered", t));
             return;
         }
+        msg.setBot(bot);
         Event event = register.handle(t, obj, msg);
         if (event == null) return;
         for (Method method : getM2L().keySet()) {
