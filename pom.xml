@@ -59,7 +59,7 @@
         <dependency>
             <groupId>io.github.kloping</groupId>
             <artifactId>SpringTool</artifactId>
-            <version>0.6.0-M7</version>
+            <version>0.6.0</version>
         </dependency>
         <dependency>
             <groupId>io.github.Kloping</groupId>

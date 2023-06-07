@@ -38,6 +38,7 @@ public class Bot {
         if (guildMap.isEmpty()) {
             user = userBase.botInfo();
             for (Guild guild : guildBase.getGuilds()) {
+                guild.setBot(this);
                 guildMap.put(guild.getId(), guild);
             }
         }

@@ -59,12 +59,12 @@ public class HttpClientConfig implements HttpStatusReceiver {
                     if (url.contains("dms")) {
                         logger.info(String.format("Bot(%s): %s <= %s",
                                 bot.getInfo().getUsername(),
-                                rawMessage.getChannelId() + "(私信)", rawMessage.getContent()));
+                                rawMessage.getChannelId() + "(私信)", rawMessage.getContent().trim()));
                     } else {
                         logger.info(String.format("Bot(%s): %s <= %s",
                                 bot.getInfo().getUsername(),
                                 bot.getGuild(rawMessage.getGuildId()).channelMap().get(rawMessage.getChannelId()).getName(),
-                                rawMessage.getContent()));
+                                rawMessage.getContent().trim()));
                     }
                 }
             }
