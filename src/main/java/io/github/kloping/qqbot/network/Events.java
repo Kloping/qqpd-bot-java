@@ -88,7 +88,8 @@ public class Events implements OnPackReceive {
                 }
 
         }
-        logger.info(String.format("%s post(%s)", event.getClass().getSimpleName(), event));
+        logger.info(String.format("Bot(%s) %s post(%s)", bot.getInfo().getUsername(),
+                event.getClass().getSimpleName(), event));
     }
 
     private final Map<Method, ListenerHost> m2l = new HashMap<>();
