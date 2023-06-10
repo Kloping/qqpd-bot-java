@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.qqbot.Resource;
-import io.github.kloping.qqbot.api.Event;
+import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
-import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
+import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
 import io.github.kloping.qqbot.entities.qqpd.message.MessagePack;
-import io.github.kloping.qqbot.entities.qqpd.message.MessageReaction;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.message.BaseMessageReactionEvent;
 import io.github.kloping.qqbot.network.Events;
 
@@ -32,7 +31,8 @@ public class MessageReactionEventRegister implements Events.EventRegister {
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage message) {
         BaseMessageReactionEvent event = null;
-        MessageReaction reaction = mateData.toJavaObject(MessageReaction.class);
+        EmojiReaction reaction = mateData.toJavaObject(EmojiReaction.class);
+        if (reaction.getTarget().getType() != 0) return event;
         JSONObject jo = mateData.getJSONObject("emoji");
         Integer type = jo.getInteger("type");
         String id = jo.getString("id");
