@@ -2,8 +2,7 @@ package io.github.kloping.qqbot.entities.qqpd;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
-import io.github.kloping.qqbot.Resource;
-import io.github.kloping.qqbot.api.BotContent;
+import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
 import io.github.kloping.qqbot.entities.Bot;

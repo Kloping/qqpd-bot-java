@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.api.ConnectedEvent;
+import io.github.kloping.qqbot.api.event.ConnectedEvent;
 import io.github.kloping.qqbot.entities.Bot;
 
 /**

@@ -5,26 +5,27 @@ import io.github.kloping.qqbot.api.message.MessageReactionEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
-import io.github.kloping.qqbot.entities.qqpd.message.MessageReaction;
+import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
 
 /**
  * @author github.kloping
  */
 public class BaseMessageReactionEvent extends BaseMessageEvent implements MessageReactionEvent {
-    public BaseMessageReactionEvent(RawMessage message, JSONObject jo, Bot bot, MessageReaction reaction) {
+    public BaseMessageReactionEvent(RawMessage message, JSONObject jo,
+                                    Bot bot, EmojiReaction reaction) {
         super(message, jo, bot);
         this.reaction = reaction;
     }
 
-    private MessageReaction reaction;
+    private EmojiReaction reaction;
 
     private Boolean isAdd;
 
-    public MessageReaction getReaction() {
+    public EmojiReaction getReaction() {
         return reaction;
     }
 
-    public void setReaction(MessageReaction reaction) {
+    public void setReaction(EmojiReaction reaction) {
         this.reaction = reaction;
     }
 
@@ -37,7 +38,7 @@ public class BaseMessageReactionEvent extends BaseMessageEvent implements Messag
     }
 
     @Override
-    public MessageReaction getMessageReaction() {
+    public EmojiReaction getMessageReaction() {
         return reaction;
     }
 

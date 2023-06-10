@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.api;
+package io.github.kloping.qqbot.api.event;
 
 /**
  * @author github.kloping

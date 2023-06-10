@@ -9,7 +9,7 @@ import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.common.Public;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.Event;
+import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;

@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.api.message;
 
-import io.github.kloping.qqbot.api.ChannelEvent;
+import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.api.Sender;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.Member;

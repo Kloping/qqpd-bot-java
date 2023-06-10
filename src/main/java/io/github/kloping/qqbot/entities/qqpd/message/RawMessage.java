@@ -1,13 +1,14 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.DeleteAble;
+import io.github.kloping.qqbot.api.Reactive;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
+import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
@@ -27,7 +28,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
+public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
     private String id;
     private String channelId;
     private String guildId;
@@ -98,6 +99,16 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble {
     @Override
     public String getMid() {
         return getId();
+    }
+
+    @Override
+    public void addEmoji(Emoji emoji) {
+        bot.channelBase.addEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
+    }
+
+    @Override
+    public void removeEmoji(Emoji emoji) {
+        bot.channelBase.removeEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
     }
 
     @JSONField(serialize = false, deserialize = false)

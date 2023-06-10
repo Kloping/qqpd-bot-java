@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
@@ -39,12 +38,11 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
 
     @Override
     public void addEmoji(Emoji emoji) {
-        bot.channelBase.addEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
+       getRawMessage().addEmoji(emoji);
     }
 
     @Override
     public void removeEmoji(Emoji emoji) {
-        bot.channelBase.removeEmoji(getChannelId(), getRawMessage().getId(), emoji.getType(), emoji.getId().toString());
+        getRawMessage().addEmoji(emoji);
     }
-
 }

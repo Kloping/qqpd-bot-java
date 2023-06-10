@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.utils;
 
-import io.github.kloping.qqbot.api.Event;
 import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 

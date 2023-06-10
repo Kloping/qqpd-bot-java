@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.api.MemberUpdateEvent;
+import io.github.kloping.qqbot.api.event.MemberUpdateEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.MemberWithGuildID;
 

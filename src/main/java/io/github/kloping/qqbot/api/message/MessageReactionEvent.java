@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.api.message;
 
-import io.github.kloping.qqbot.entities.qqpd.message.MessageReaction;
+import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
 
 /**
  * 消息表情表态事件接口
@@ -14,5 +14,5 @@ public interface MessageReactionEvent extends MessageEvent {
      *
      * @return
      */
-    MessageReaction getMessageReaction();
+    EmojiReaction getMessageReaction();
 }

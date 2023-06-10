@@ -11,12 +11,12 @@ import lombok.Data;
  * @author github.kloping
  */
 @Data
-public class MessageReaction {
+public class EmojiReaction {
     private String userId;
     private String guildId;
     private String channelId;
     private ReactionTarget target;
-    @JSONField(serialize = false,deserialize = false)
+    @JSONField(serialize = false, deserialize = false)
     private Emoji emoji;
 
     /**

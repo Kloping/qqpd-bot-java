@@ -80,11 +80,7 @@ starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 导入指引
 
 ```java
-import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.api.GuildEvent;
-import io.github.kloping.qqbot.api.Intents;
-import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
-import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
+
 ```
 
 使用方式参考查看 [test](./src/test/java)
