@@ -41,6 +41,9 @@ public class Bot {
                 guild.setBot(this);
                 guildMap.put(guild.getId(), guild);
             }
+        } else if (!guildMap.containsKey(id)) {
+            Guild guild = guildBase.getGuild(id);
+            if (guild != null) setGuild(guild);
         }
         return guildMap.get(id);
     }

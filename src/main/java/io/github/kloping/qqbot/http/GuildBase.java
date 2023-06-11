@@ -27,7 +27,7 @@ public interface GuildBase {
      * @param gid
      * @return
      */
-    @GetPath("/guilds/")
+    @GetPath("/guilds/{gid}")
     Guild getGuild(@PathValue String gid);
 
     /**
