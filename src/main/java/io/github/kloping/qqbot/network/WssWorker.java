@@ -88,6 +88,8 @@ public class WssWorker implements Runnable {
                     e.printStackTrace();
                 }
             };
+            //两次心跳的事件
+            webSocket.setConnectionLostTimeout(120);
             webSocket.run();
         } catch (Exception e) {
             logger.error("在WebSocketClient启动时失败");

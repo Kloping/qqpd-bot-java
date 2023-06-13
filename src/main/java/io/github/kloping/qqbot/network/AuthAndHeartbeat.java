@@ -60,10 +60,18 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
             case 4014:
                 logger.error("无权限订阅事件");
                 break;
+            case 1006:
+                // wss closed with code 1006 The connection was closed
+                // because the other endpoint did not respond with a pong in time.
+                // For more information check:
+                // https://github.com/TooTallNate/Java-WebSocket/wiki/Lost-connection-detection
+                identifyConnect(code, wss);
+                break;
             default:
                 logger.error(String.format("暂未处理的异常code(%s)", code));
                 break;
         }
+
     }
 
     @AutoStand
