@@ -15,13 +15,13 @@ Maven
 </dependency>
 ```
 
-#### TIPS: 目前仅支持单bot运行
+~~#### TIPS: 目前仅支持单bot运行~~
 
 ### 使用前提
 
 1. 到https://q.qq.com/ 申请机器人 获得BotAppID（开发者ID） 和 机器人令牌（token）
 
-2. 发布审核
+~~2. 发布审核~~
 
 ### [临时文档](./docs)
 
