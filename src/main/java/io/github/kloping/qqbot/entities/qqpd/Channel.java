@@ -33,15 +33,15 @@ import java.util.Map;
 @ToString
 @EqualsAndHashCode
 public class Channel implements SenderAndCidMidGetter, AtAble {
-    private Number speakPermission;
-    private Number subType;
+    private Integer speakPermission;
+    private Integer subType;
     private String ownerId;
     private String guildId;
     private String name;
     private String id;
-    private Number position;
-    private Number type;
-    private Number privateType;
+    private Integer position;
+    private Integer type;
+    private Integer privateType;
     private String applicationId;
     public static final Map<String, String> SEND_MESSAGE_HEADERS = new HashMap<>();
 
@@ -120,7 +120,6 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     public String getCid() {
         return getId();
     }
-
 
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;

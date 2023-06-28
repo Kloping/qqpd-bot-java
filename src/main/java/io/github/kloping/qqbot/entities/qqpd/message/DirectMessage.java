@@ -28,7 +28,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class DirectMessage extends RawMessage
-        implements DirectSender, DeleteAble {
+        implements DirectSender {
     private String id;
     private String channelId;
     private String guildId;
@@ -116,12 +116,12 @@ public class DirectMessage extends RawMessage
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(DirectMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return bot.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     @Override
     public ActionResult sendDirect(RawPreMessage msg) {
-        return bot.dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
     }
 
     public String getContent() {
@@ -130,18 +130,7 @@ public class DirectMessage extends RawMessage
 
     @Override
     public Object delete() {
-        return bot.dmsBase.delete(this.guildId, this.id, false);
+        return getBot().dmsBase.delete(this.guildId, this.id, false);
     }
 
-
-    @JSONField(serialize = false, deserialize = false)
-    private Bot bot;
-
-    public Bot getBot() {
-        return bot;
-    }
-
-    public void setBot(Bot bot) {
-        this.bot = bot;
-    }
 }

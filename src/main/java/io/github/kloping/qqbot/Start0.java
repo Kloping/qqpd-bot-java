@@ -21,6 +21,7 @@ public class Start0 {
     public Map<String, String> getHeaders() {
         if (headers.isEmpty()) {
             headers.put("Authorization", contextManager.getContextEntity(String.class, Starter.AUTH_ID));
+            headers.put("Accept-Encoding", "application/json");
         }
         return headers;
     }

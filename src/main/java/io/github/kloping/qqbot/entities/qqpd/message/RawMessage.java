@@ -5,8 +5,10 @@ import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.Reactive;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.message.Pinsble;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
+import io.github.kloping.qqbot.entities.qqpd.PinsMessage;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.http.data.ActionResult;
@@ -28,7 +30,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
+public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, Pinsble {
     private String id;
     private String channelId;
     private String guildId;
@@ -86,6 +88,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
         return content;
     }
 
+    //==
     @Override
     public ActionResult send(SendAble msg) {
         return msg.send(this);
@@ -101,6 +104,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
         return getId();
     }
 
+    //==
     @Override
     public void addEmoji(Emoji emoji) {
         bot.channelBase.addEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
@@ -111,6 +115,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
         bot.channelBase.removeEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
     }
 
+    //==
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
 
@@ -120,5 +125,39 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive {
 
     public void setBot(Bot bot) {
         this.bot = bot;
+    }
+
+    //==
+    @Override
+    public PinsMessage addPins() {
+        PinsMessage pm = new PinsMessage();
+        String p0 = getBot().channelBase.addPins(getChannelId(), getMid());
+        for (String s : p0.split("&")) {
+            String[] kv = s.split("=");
+            String key = kv[0];
+            String value = kv[1];
+            switch (key) {
+                case "channel_id":
+                    pm.setChannel_id(value);
+                    break;
+                case "guild_id":
+                    pm.setGuild_id(value);
+                    break;
+                case "message_ids":
+                    pm.getMessage_ids().add(value);
+                    break;
+            }
+        }
+        return pm;
+    }
+
+    @Override
+    public void deletePins() {
+        getBot().channelBase.deletePins(getChannelId(), getMid());
+    }
+
+    @Override
+    public PinsMessage getPins() {
+        return getBot().channelBase.getPins(getChannelId());
     }
 }
