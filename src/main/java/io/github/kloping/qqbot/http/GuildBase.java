@@ -28,7 +28,7 @@ public interface GuildBase {
      * @return
      */
     @GetPath("/guilds/{gid}")
-    Guild getGuild(@PathValue String gid);
+    Guild getGuild(@PathValue("gid") String gid);
 
     /**
      * get channels

@@ -42,6 +42,10 @@ public class MessagePre implements SendAble {
                 return er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals);
             }
         }
+        return getActionResult(er, image, content, replyId);
+    }
+
+    public static ActionResult getActionResult(SenderAndCidMidGetter er, Image image, String content, String replyId) {
         MessagePacket packet = new MessagePacket();
         if (Judge.isNotEmpty(replyId)) packet.setReplyId(replyId);
         if (Judge.isNotEmpty(content)) packet.setContent(content);

@@ -9,6 +9,7 @@ import lombok.Data;
 import org.jsoup.helper.HttpConnection;
 
 import java.io.ByteArrayInputStream;
+import java.util.UUID;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADERS;
 
@@ -20,7 +21,7 @@ public class Image implements SendAble {
     private String url;
     private byte[] bytes;
     private String type = "image/jpeg";
-    private String name = "temp.jpg";
+    private String name = UUID.randomUUID() + ".jpg";
 
     public Image(byte[] bytes) {
         this.bytes = bytes;

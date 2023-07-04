@@ -2,9 +2,9 @@ package io.github.kloping.qqbot.entities.qqpd;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
-import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
+import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
@@ -58,6 +58,7 @@ public class Guild implements SessionCreator, OpAble, BotContent {
         member = BaseUtils.tryGet(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId);
         if (member == null) {
             member = bot.guildBase.getMember(Guild.this.getId(), userId);
+            if (member.getNick() == null || member.getRoles() == null || member.getUser() == null) return null;
             MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId, member);
         }
         return member;
