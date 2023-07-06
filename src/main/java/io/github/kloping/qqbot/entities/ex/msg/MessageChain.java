@@ -20,7 +20,7 @@ public class MessageChain implements SendAble {
 
     @Override
     public ActionResult send(SenderAndCidMidGetter er) {
-        MessageBuilder builder = new MessageBuilder();
+        MessagePreBuilder builder = new MessagePreBuilder();
         for (SendAble sendAble : list) append(sendAble, builder);
         return builder.build().send(er);
     }
@@ -37,7 +37,7 @@ public class MessageChain implements SendAble {
         return this;
     }
 
-    private void append(SendAble sendAble, MessageBuilder builder) {
+    private void append(SendAble sendAble, MessagePreBuilder builder) {
         if (sendAble instanceof At) {
             builder.append((At) sendAble);
         } else if (sendAble instanceof AtAll) {
