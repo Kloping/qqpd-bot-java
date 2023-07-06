@@ -1,3 +1,9 @@
+![ComWeChatBotClient](https://socialify.git.ci/Kloping/qqpd-bot-java/image?description=1&font=Inter&name=1&pattern=Circuit%20Board&theme=Auto)
+<p align="center">
+    <a href="https://github.com/Kloping/qqpd-bot-java/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kloping/qqpd-bot-java" alt="License"></a>
+    <a href="https://github.com/Kloping/qqpd-bot-java/releases"><img src="https://img.shields.io/github/v/release/Kloping/qqpd-bot-java?color=blueviolet&include_prereleases" alt="release"></a>
+</p>
+
 ## QQ频道机器人 Java SDK 非官方
 
 JAVA SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
