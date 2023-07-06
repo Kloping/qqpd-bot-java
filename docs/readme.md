@@ -21,8 +21,8 @@
 ```java
 //启动类新建
 Starter starter = new Starter("appid", "token");
-//事件订阅
-starter.getConfig().setIntents(intents);
+// 推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
+starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 //启动
 starter.run();
 ```

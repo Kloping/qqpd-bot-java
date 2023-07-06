@@ -8,7 +8,13 @@
   - 从  [MessageDirectReceiveEvent](../src/main/java/io/github/kloping/qqbot/api/message/MessageDirectReceiveEvent.java)
     私信消息接收事件中获取
   - [可发送私信](../src/main/java/io/github/kloping/qqbot/api/DirectSender.java)
+- [MessageChain](../src/main/java/io/github/kloping/qqbot/entities/ex/msg/MessageChain.java)
+  - MessageEvent 获取的默认消息类型
 
+消息构造: 
+
+  - [MessagePreBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessagePreBuilder.java) 默认的消息构造器 可用于发送大部分简单常用消息
+  - [MessageAsyncBuilder.java](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器 用于发送部分多图消息
 
 <hr>
 
