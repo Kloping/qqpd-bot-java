@@ -12,6 +12,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,13 +41,20 @@ public class WssWorker implements Runnable {
     protected Integer msgr = 0;
     protected Integer msgs = 0;
 
+    protected URI uri;
+
     @Override
     public void run() {
         try {
-            URI u = new URI(botBase.gateway().getUrl());
-            logger.log("ws url:" + u);
+            try {
+                if (uri == null)
+                    uri = new URI(botBase.gateway().getUrl());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            logger.log("ws url:" + uri);
             if (webSocket != null && !webSocket.isClosed()) webSocket.close();
-            webSocket = new WebSocketClient(u) {
+            webSocket = new WebSocketClient(uri) {
 
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
