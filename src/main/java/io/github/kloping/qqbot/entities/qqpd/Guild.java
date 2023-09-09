@@ -1,5 +1,7 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.api.OpAble;
@@ -51,6 +53,15 @@ public class Guild implements SessionCreator, OpAble, BotContent {
         request.setSourceGuildId(Guild.this.id);
         request.setRecipientId(uid);
         return bot.dmsBase.create(request, Channel.SEND_MESSAGE_HEADERS);
+    }
+
+    public MemberWithGuildID getMemberWithGuildId(String userId) {
+        Member member = getMember(userId);
+        JSONObject jo = JSON.parseObject(JSON.toJSONString(member));
+        jo.put("guildId", getId());
+        MemberWithGuildID w = jo.toJavaObject(MemberWithGuildID.class);
+        w.setBot(getBot());
+        return w;
     }
 
     public Member getMember(String userId) {

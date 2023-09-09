@@ -30,6 +30,9 @@ public class Bot {
     @AutoStand
     public MessageBase messageBase;
 
+    @AutoStand
+    public MemberBase memberBase;
+
     private User user;
 
     private Map<String, Guild> guildMap = new HashMap<>();

@@ -1,5 +1,9 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.qqbot.api.event.BotContent;
+import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.http.data.MutePack;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,6 +20,39 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class MemberWithGuildID extends Member{
+public class MemberWithGuildID extends Member implements BotContent {
     private String guildId;
+
+    /**
+     * 禁言秒数
+     *
+     * @param seconds
+     */
+    public void mute(int seconds) {
+        MutePack mutePack = new MutePack();
+        mutePack.setMuteSeconds(seconds);
+        bot.memberBase.muteOne(guildId, getUser().getId(), mutePack);
+    }
+
+    /**
+     * 禁言到指定时间戳 单位:秒
+     *
+     * @param timestamp
+     */
+    public void mute(long timestamp) {
+        MutePack mutePack = new MutePack();
+        mutePack.setMuteEndTimestamp(timestamp);
+        bot.memberBase.muteOne(guildId, getUser().getId(), mutePack);
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    private Bot bot;
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public void setBot(Bot bot) {
+        this.bot = bot;
+    }
 }

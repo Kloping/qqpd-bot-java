@@ -6,6 +6,8 @@ import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.Roles;
+import io.github.kloping.qqbot.http.data.MutePack;
+import org.jsoup.Connection;
 
 /**
  * @author github.kloping

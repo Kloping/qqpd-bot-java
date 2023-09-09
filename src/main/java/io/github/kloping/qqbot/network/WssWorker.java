@@ -4,6 +4,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.http.BotBase;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
@@ -17,6 +18,7 @@ import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static io.github.kloping.qqbot.Resource.GSON;
 import static io.github.kloping.qqbot.Starter.RECONNECT_K_ID;
@@ -47,8 +49,7 @@ public class WssWorker implements Runnable {
     public void run() {
         try {
             try {
-                if (uri == null)
-                    uri = new URI(botBase.gateway().getUrl());
+                if (uri == null) uri = new URI(botBase.gateway().getUrl());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -102,8 +103,18 @@ public class WssWorker implements Runnable {
         } catch (Exception e) {
             logger.error("在WebSocketClient启动时失败");
             e.printStackTrace();
+            if (!config.getReconnect()) return;
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException ex) {
+                e.printStackTrace();
+            }
+            run();
         }
     }
+
+    @AutoStand
+    Starter.Config config;
 
     public List<OnCloseListener> closeListeners = new ArrayList<>();
     public List<OnPackReceive> onPackReceives = new LinkedList<>();
