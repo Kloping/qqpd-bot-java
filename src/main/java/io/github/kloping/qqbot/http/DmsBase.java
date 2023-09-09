@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.http;
 
 import io.github.kloping.MySpringTool.annotations.http.*;
+import io.github.kloping.MySpringTool.entity.KeyVals;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Dms;
 import io.github.kloping.qqbot.entities.qqpd.DmsRequest;
@@ -29,6 +30,10 @@ public interface DmsBase {
     @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
     ActionResult send(@PathValue("guild_id") String gid, @RequestBody(type = RequestBody.type.json) RawPreMessage body,
                       @Headers Map<String, String> headers);
+
+    @PostPath("/dms/{guild_id}/messages")
+    @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
+    ActionResult send(@PathValue("guild_id") String gid, @Headers Map<String, String> headers, @RequestData KeyVals data);
 
     /**
      * create The session

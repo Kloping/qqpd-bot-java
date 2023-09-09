@@ -31,7 +31,6 @@ public abstract class BaseMessageEvent implements MessageEvent {
 
     public BaseMessageEvent(RawMessage message, JSONObject jo, Bot bot) {
         this.message = message;
-        this.message.setBot(getBot());
         this.metadata = jo;
         this.bot = bot;
         this.guild = getBot().getGuild(message.getGuildId());
