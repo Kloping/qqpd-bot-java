@@ -78,13 +78,6 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     }
 
     public String getContent() {
-        if (attachments != null)
-            for (MessageAttachment attachment : attachments) {
-                if (attachment.getUrl().contains("pic")) {
-                    if (content == null) content = "";
-                    content = content + "[图片]";
-                }
-            }
         return content;
     }
 
