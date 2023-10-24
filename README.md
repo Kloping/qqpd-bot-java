@@ -37,7 +37,7 @@ Maven
 
 ```java 
     Starter starter=new Starter("appid","token");
-    starter.getConfig().setIntents(intents);
+    starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
     starter.run();
 ```
 
