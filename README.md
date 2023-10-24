@@ -17,7 +17,7 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.4.8</version>
+    <version>1.4.9</version>
 </dependency>
 ```
 
@@ -86,7 +86,12 @@ starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 导入指引
 
 ```java
-
+import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.Intents;
+import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
+import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
+import io.github.kloping.qqbot.impl.EventReceiver;
+import io.github.kloping.qqbot.impl.ListenerHost;
 ```
 
 使用方式参考查看 [test](./src/test/java)
