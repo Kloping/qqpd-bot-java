@@ -14,7 +14,7 @@
 消息构造: 
 
   - [MessagePreBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessagePreBuilder.java) 默认的消息构造器 可用于发送大部分简单常用消息
-  - [MessageAsyncBuilder.java](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器 用于发送部分多图消息
+  - [MessageAsyncBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器 用于发送部分多图消息
 
 <hr>
 

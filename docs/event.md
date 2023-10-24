@@ -1,8 +1,10 @@
 ## 事件文档
 
-- [Event](../src/main/java/io/github/kloping/qqbot/api/Event.java) 所有事件顶级接口
-- [ChannelEvent](../src/main/java/io/github/kloping/qqbot/api/Event.java) 子频道事件
-- [GuildEvent](../src/main/java/io/github/kloping/qqbot/api/Event.java) 频道事件
+**_待完善.._**
+
+- [Event](../src/main/java/io/github/kloping/qqbot/api/event/Event.java) 所有事件顶级接口
+- [ChannelEvent](../src/main/java/io/github/kloping/qqbot/api/event/ChannelEvent.java) 子频道事件
+- [GuildEvent](../src/main/java/io/github/kloping/qqbot/api/event/GuildEvent.java) 频道事件
 
 <hr>
 以下事件可直接写入 ↓
@@ -17,7 +19,7 @@
   子频道消息接收事件
 - [MessageDirectReceiveEvent](../src/main/java/io/github/kloping/qqbot/api/message/MessageDirectReceiveEvent.java)
   私信消息接收事件
-- [MemberUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/MemberUpdateEvent.java) 成员信息 更新事件
-- [GuildUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/GuildUpdateEvent.java) 频道信息 更新事件
+- [MemberUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/event/MemberUpdateEvent.java) 成员信息 更新事件
+- [GuildUpdateEvent](../src/main/java/io/github/kloping/qqbot/api/event/GuildUpdateEvent.java) 频道信息 更新事件
 - [MessageReactionEvent](../src/main/java/io/github/kloping/qqbot/api/message/MessageReactionEvent.java) 消息被 添加/移除
   表情 事件
