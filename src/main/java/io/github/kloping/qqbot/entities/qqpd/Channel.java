@@ -1,14 +1,14 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.AtAble;
+import io.github.kloping.qqbot.api.DeleteAble;
+import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.At;
-import io.github.kloping.qqbot.api.SendAble;
-import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -32,7 +32,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Channel implements SenderAndCidMidGetter, AtAble {
+public class Channel implements SenderAndCidMidGetter, AtAble, DeleteAble {
     private Integer speakPermission;
     private Integer subType;
     private String ownerId;
@@ -40,6 +40,7 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     private String name;
     private String id;
     private Integer position;
+    private String parentId;
     private Integer type;
     private Integer privateType;
     private String applicationId;
@@ -114,6 +115,12 @@ public class Channel implements SenderAndCidMidGetter, AtAble {
     @Override
     public ActionResult send(SendAble msg) {
         return msg.send(this);
+    }
+
+    @Override
+    public Object delete() {
+        getBot().channelBase.delete(Channel.this.getId());
+        return null;
     }
 
     @Override

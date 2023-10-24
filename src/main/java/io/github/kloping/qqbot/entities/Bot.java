@@ -37,14 +37,19 @@ public class Bot {
 
     private Map<String, Guild> guildMap = new HashMap<>();
 
-    public synchronized Guild getGuild(String id) {
+    private void tryLoadGuilds() {
         if (guildMap.isEmpty()) {
             user = userBase.botInfo();
             for (Guild guild : guildBase.getGuilds()) {
                 guild.setBot(this);
                 guildMap.put(guild.getId(), guild);
             }
-        } else if (!guildMap.containsKey(id)) {
+        }
+    }
+
+    public synchronized Guild getGuild(String id) {
+        tryLoadGuilds();
+        if (!guildMap.containsKey(id)) {
             Guild guild = guildBase.getGuild(id);
             if (guild != null) setGuild(guild);
         }
@@ -57,6 +62,7 @@ public class Bot {
     }
 
     public Collection<Guild> guilds() {
+        tryLoadGuilds();
         return guildMap.values();
     }
 

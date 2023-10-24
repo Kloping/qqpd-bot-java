@@ -86,4 +86,13 @@ public interface ChannelBase {
      */
     @GetPath("/channels/{channel_id}/pins")
     PinsMessage getPins(@PathValue("channel_id") String cid);
+
+
+    /**
+     * 删除
+     *
+     * @param cid
+     */
+    @RequestPath(value = "/channels/{channel_id}", method = Connection.Method.DELETE)
+    void delete(@PathValue("channel_id") String cid);
 }

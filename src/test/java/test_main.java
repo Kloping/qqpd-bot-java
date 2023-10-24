@@ -20,7 +20,7 @@ public class test_main {
 
     public static Starter factory() {
         Starter starter = new Starter("appid", "token");
-        starter.setReconnect(true);
+        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
         return starter;
     }
 }

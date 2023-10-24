@@ -2,12 +2,14 @@ package io.github.kloping.qqbot.http;
 
 import io.github.kloping.MySpringTool.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.entities.ex.ChannelData;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.Roles;
-import io.github.kloping.qqbot.http.data.MutePack;
 import org.jsoup.Connection;
+
+import java.util.Map;
 
 /**
  * @author github.kloping
@@ -69,4 +71,15 @@ public interface GuildBase {
      */
     @GetPath("/guilds/{guild_id}/roles")
     Roles getRoles(@PathValue("guild_id") String gid);
+
+    /**
+     * 创建一个子频道
+     *
+     * @param headers
+     * @param gid
+     * @param data
+     * @return
+     */
+    @PostPath("/guilds/{guild_id}/channels")
+    Channel create(@Headers Map<String, String> headers, @PathValue("guild_id") String gid, @RequestBody ChannelData data);
 }

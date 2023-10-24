@@ -3,11 +3,13 @@ package io.github.kloping.qqbot.entities.qqpd;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.MySpringTool.h1.impl.component.HttpClientManagerImpl;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
 import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.ex.ChannelData;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -116,5 +118,15 @@ public class Guild implements SessionCreator, OpAble, BotContent {
 
     public void setBot(Bot bot) {
         this.bot = bot;
+    }
+
+    /**
+     * 创建一个子频道 ## 仅私域
+     *
+     * @param data
+     */
+    public Channel create(ChannelData data) {
+        Channel channel = getBot().guildBase.create(Channel.SEND_MESSAGE_HEADERS, Guild.this.getId(), data);
+        return channel;
     }
 }

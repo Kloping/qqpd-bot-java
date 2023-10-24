@@ -6,6 +6,7 @@ import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.qqpd.Common;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseChannelUpdateEvent;
 import io.github.kloping.qqbot.network.Events;
@@ -15,9 +16,15 @@ import io.github.kloping.qqbot.network.Events;
  */
 @Entity
 public class ChannelEventsRegister implements Events.EventRegister {
+
+    public static final String CHANNEL_CREATE = "CHANNEL_CREATE";
+    public static final String CHANNEL_DELETE = "CHANNEL_DELETE";
+
     @AutoStandAfter
     private void r8(Events events) {
         events.register("CHANNEL_UPDATE", this);
+        events.register(CHANNEL_CREATE, this);
+        events.register(CHANNEL_DELETE, this);
     }
 
     @AutoStand
@@ -25,7 +32,12 @@ public class ChannelEventsRegister implements Events.EventRegister {
 
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage message) {
-        Event event = new BaseChannelUpdateEvent(mateData, bot);
+        BaseChannelUpdateEvent event = new BaseChannelUpdateEvent(mateData, bot);
+        if (CHANNEL_CREATE.equals(t)) {
+            Common.GUILD_CHANNEL_TEMP.get(event.getChannel().getGuildId()).put(event.getChannel().getId(), event.getChannel());
+        } else if (CHANNEL_DELETE.equals(t)) {
+            Common.GUILD_CHANNEL_TEMP.get(event.getChannel().getGuildId()).remove(event.getChannel().getId());
+        }
         return event;
     }
 }
