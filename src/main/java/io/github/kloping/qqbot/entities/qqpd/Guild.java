@@ -3,7 +3,6 @@ package io.github.kloping.qqbot.entities.qqpd;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.MySpringTool.h1.impl.component.HttpClientManagerImpl;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
@@ -88,6 +87,8 @@ public class Guild implements SessionCreator, OpAble, BotContent {
         if (!Common.GUILD_CHANNEL_TEMP.containsKey(id)) {
             Map<String, Channel> map = new HashMap<>();
             Channel[] channels = bot.guildBase.getChannels(id);
+            if (channels == null || channels.length == 0)
+                throw new RuntimeException(String.format("Guild(%s) channels list Initialization failed", getName()));
             for (Channel channel : channels) {
                 map.put(channel.getId(), channel);
             }

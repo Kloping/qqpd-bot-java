@@ -36,6 +36,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
     public void receive(String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
 
+        if (o == null) return;
         fillAll(cla, o);
 
         Public.EXECUTOR_SERVICE.submit(() -> {
