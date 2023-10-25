@@ -22,6 +22,7 @@ public abstract class BaseGuildEvent implements GuildEvent {
         this.bot = bot;
         this.guild = jo.toJavaObject(Guild.class);
         getBot().setGuild(guild);
+        if (this.guild != null) guild.setBot(getBot());
     }
 
     @Override

@@ -36,20 +36,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
     public void receive(String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
 
-        if (o instanceof BotContent) {
-            BotContent content = (BotContent) o;
-            content.setBot(bot);
-        }
-
-        if (cla.isArray()) {
-            Object[] obs = (Object[]) o;
-            for (Object ob : obs) {
-                if (ob instanceof BotContent) {
-                    BotContent content = (BotContent) ob;
-                    content.setBot(bot);
-                }
-            }
-        }
+        fillAll(cla, o);
 
         Public.EXECUTOR_SERVICE.submit(() -> {
             if (o instanceof ActionResult) {
@@ -69,5 +56,22 @@ public class HttpClientConfig implements HttpStatusReceiver {
                 }
             }
         });
+    }
+
+    public void fillAll(Class<?> cla, Object o) {
+        if (o instanceof BotContent) {
+            BotContent content = (BotContent) o;
+            content.setBot(bot);
+        }
+
+        if (cla.isArray()) {
+            Object[] obs = (Object[]) o;
+            for (Object ob : obs) {
+                if (ob instanceof BotContent) {
+                    BotContent content = (BotContent) ob;
+                    content.setBot(bot);
+                }
+            }
+        }
     }
 }

@@ -131,4 +131,7 @@ public class WssWorker implements Runnable {
     public List<OnPackReceive> getOnPackReceives() {
         return onPackReceives;
     }
+
+    public void close() {
+    }
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
  * <h3>一般启动方式</h3>
  * <pre>{@code
  *   Starter starter = new Starter("appid", "token");
- *   starter.getConfig().setIntents(intents);
+ *   starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
  *   starter.run();
  * }</pre>
  * </pre>
@@ -36,7 +36,7 @@ import java.util.concurrent.Future;
  *
  *      @EventReceiver
  *      public void onEvent(MessageDirectReceiveEvent event){
- *              event.send("测试通过");
+ *          event.send("测试通过");
  *      }
  * });
  * }</pre>

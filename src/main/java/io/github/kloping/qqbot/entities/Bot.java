@@ -61,6 +61,11 @@ public class Bot {
         return guildMap.get(guild.getId());
     }
 
+    public Guild delGuild(Guild guild) {
+        guildMap.remove(guild.getId());
+        return guild;
+    }
+
     public Collection<Guild> guilds() {
         tryLoadGuilds();
         return guildMap.values();
