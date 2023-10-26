@@ -8,16 +8,15 @@ import io.github.kloping.qqbot.entities.qqpd.MemberWithGuildID;
 /**
  * @author github.kloping
  */
-public class BaseMemberUpdateEvent extends BaseGuildEvent implements MemberUpdateEvent {
+public class BaseMemberRemoveEvent extends BaseGuildEvent implements MemberUpdateEvent {
 
-    public BaseMemberUpdateEvent(JSONObject jo, Bot bot) {
+    public BaseMemberRemoveEvent(JSONObject jo, Bot bot) {
         super();
         this.metadata = jo;
         this.bot = bot;
         this.member = jo.toJavaObject(MemberWithGuildID.class);
         if (member != null) member.setBot(bot);
         this.guild = getBot().getGuild(member.getGuildId());
-        getGuild().setMember(member);
     }
 
     protected MemberWithGuildID member;
@@ -29,6 +28,6 @@ public class BaseMemberUpdateEvent extends BaseGuildEvent implements MemberUpdat
 
     @Override
     public String toString() {
-        return String.format("member(%s) in %s info change", member.getNick(), guild.getName());
+        return String.format("member(%s) remove from %s", member.getNick(), guild.getName());
     }
 }

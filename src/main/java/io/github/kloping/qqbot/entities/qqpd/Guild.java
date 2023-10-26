@@ -79,6 +79,7 @@ public class Guild implements SessionCreator, OpAble, BotContent {
     public Member setMember(Member member) {
         String uid = member.getUser().getId();
         Member m0 = getMember(uid);
+        if (m0 == null) m0 = member;
         MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), uid, member);
         return m0;
     }

@@ -36,6 +36,11 @@ public class HttpClientConfig implements HttpStatusReceiver {
     public void receive(String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
 
+        logger.log(String.format("Use the (%s) method through the (%s) interface to request " +
+                        "the data obtained by the response code of the (%s) URL is (%s), " +
+                        "and (%s) may be converted to (%s) type Will be processed and filtered"
+                , reqMethod.name(), interface0.getSimpleName(), url, code, o, cla.getSimpleName()
+        ));
         if (o == null) return;
         fillAll(cla, o);
 

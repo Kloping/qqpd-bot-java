@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-L1</version>
+    <version>1.5.0-L2</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -47,6 +47,16 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>io.github.Kloping</groupId>
+            <artifactId>SpringTool</artifactId>
+            <version>0.6.2-R3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.Kloping</groupId>
+            <artifactId>JvUtils</artifactId>
+            <version>0.4.9-R3</version>
+        </dependency>
+        <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.3</version>
@@ -55,16 +65,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.Kloping</groupId>
-            <artifactId>SpringTool</artifactId>
-            <version>0.6.2-R1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.Kloping</groupId>
-            <artifactId>JvUtils</artifactId>
-            <version>0.4.9-R3</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

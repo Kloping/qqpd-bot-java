@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,4 +16,6 @@ public class Common {
      */
     public static final Map<String, Map<String, Member>> GUILD_MEMBER_TEMP = new ConcurrentHashMap<>();
     public static final Map<String, Map<String, Channel>> GUILD_CHANNEL_TEMP = new ConcurrentHashMap<>();
+    public static final Map<String, Member> EMPTY_MEMBER_MAP = new HashMap<>();
+    public static final Map<String, Channel> EMPTY_CHANNEL_MAP = new HashMap<>();
 }

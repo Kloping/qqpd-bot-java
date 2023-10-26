@@ -13,7 +13,8 @@ public class BaseMessageReceiveEvent extends BaseMessageEvent implements Message
     }
 
     public BaseMessageReceiveEvent(RawMessage message, JSONObject jo, Bot bot) {
-        super(message, jo,bot);
+        super(message, jo, bot);
+        message.setBot(bot);
         this.content = getRawMessage().getContent() == null ? "" : getRawMessage().getContent();
     }
 
