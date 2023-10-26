@@ -56,7 +56,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
                     } else {
                         logger.info(String.format("Bot(%s): %s <= %s",
                                 bot.getInfo().getUsername(),
-                                bot.getGuild(rawMessage.getGuildId()).channelMap().get(rawMessage.getChannelId()).getName(),
+                                bot.getGuild(rawMessage.getGuildId()).getChannel(rawMessage.getChannelId()).getName(),
                                 rawMessage.getContent().trim()));
                     }
                 }

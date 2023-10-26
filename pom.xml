@@ -6,7 +6,8 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-L2</version>
+    <!--BotConnectEvent-->
+    <version>1.5.0-L3</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>

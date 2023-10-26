@@ -111,6 +111,14 @@ public class Guild implements SessionCreator, OpAble, BotContent {
         return Common.GUILD_CHANNEL_TEMP.get(id);
     }
 
+    public Channel getChannel(String cid) {
+        Map<String, Channel> cm = null;
+        if ((cm = Common.GUILD_CHANNEL_TEMP.getOrDefault(id, Common.EMPTY_CHANNEL_MAP)).containsKey(cid)) return cm.get(cid);
+        Channel channel = getBot().channelBase.getChannel(cid);
+        MapUtils.append(Common.GUILD_CHANNEL_TEMP, Guild.this.getId(), cid, channel, HashMap.class);
+        return channel;
+    }
+
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
 

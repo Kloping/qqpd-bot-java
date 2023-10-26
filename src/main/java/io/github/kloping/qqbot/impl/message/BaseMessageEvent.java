@@ -34,7 +34,7 @@ public abstract class BaseMessageEvent implements MessageEvent {
         this.metadata = jo;
         this.bot = bot;
         this.guild = getBot().getGuild(message.getGuildId());
-        this.channel = getGuild().channelMap().get(message.getChannelId());
+        this.channel = getGuild().getChannel(message.getChannelId());
         this.sender = getGuild().getMember(message.getAuthor().getId());
     }
 
