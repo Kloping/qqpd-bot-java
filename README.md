@@ -62,8 +62,7 @@ starter.registerListenerHost(new ListenerHost(){
 > #### V1.4.6
 > 事件订阅 默认的事件订阅 不会接收消息事件 <br>
 > 需要确定自己的机器人是公域还是私域 <br>
-> 来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 *
-*[事件类型](src/main/java/io/github/kloping/qqbot/api/Intents.java)**
+> 来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 **[事件类型](src/main/java/io/github/kloping/qqbot/api/Intents.java)**
 ```java
 //单事件订阅方式
 starter.getConfig().setCode(Intents.GUILD_MESSAGES.getCode());
