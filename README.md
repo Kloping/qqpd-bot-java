@@ -27,9 +27,9 @@ Maven
 
 1. 到https://q.qq.com/ 申请机器人 获得BotAppID（开发者ID） 和 机器人令牌（token）
 
-~~2. 发布审核~~
+~~2. 发布审核 发布后为公域~~
 
-### [临时文档](./docs)
+### [开发文档](./docs)
 
 ### 使用示例
 
@@ -94,6 +94,6 @@ import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 ```
 
-使用方式参考查看 [test](./src/test/java)
+更多使用方式参考查看 [test](./src/test/java)
 
-该sdk尚在编写中..
+SDK尚在完善中...

@@ -16,12 +16,16 @@ _**待完善..**_
 
 <hr>
 
-### 启动方式
+在配置好项目依赖后 即可使用
+
+[maven仓库](https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/)
+
+#### 启动方式
 
 ```java
 //启动类新建
 Starter starter = new Starter("appid", "token");
-// 推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
+// 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 //启动
 starter.run();
@@ -34,6 +38,7 @@ starter.registerListenerHost(new ListenerHost(){
     public void handleException(Throwable e){
     }
     
+    //必须要有该注解 否则将不注册
     @EventReceiver
     public void onEvent(MessageChannelReceiveEvent event){
         event.send("Hello World!");
@@ -43,6 +48,6 @@ starter.registerListenerHost(new ListenerHost(){
 
 分为板块
 
-- [消息 message](message.md)
 - [事件 event](event.md)
+- [消息 message](message.md)
 - [动作 action](action.md)

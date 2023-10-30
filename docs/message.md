@@ -11,10 +11,21 @@
 - [MessageChain](../src/main/java/io/github/kloping/qqbot/entities/ex/msg/MessageChain.java)
   - MessageEvent 获取的默认消息类型
 
-消息构造: 
+消息构造:
 
-  - [MessagePreBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessagePreBuilder.java) 默认的消息构造器 可用于发送大部分简单常用消息
-  - [MessageAsyncBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器 用于发送部分多图消息
+- [MessagePreBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessagePreBuilder.java) 默认的消息构造器
+  可用于发送大部分简单常用消息
+- [MessageAsyncBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器
+  用于发送部分多图消息
+
+      // 示例
+         MessageAsyncBuilder builder = new MessageAsyncBuilder()
+                .append(new PlainText("你好"))
+                .append(new Image("url"))
+                .append(new Image(new byte[1]))
+                .append(Emoji.emm)
+                .append(new At(At.MEMBER_TYPE, "1"));
+        event.send(builder.build());
 
 <hr>
 
