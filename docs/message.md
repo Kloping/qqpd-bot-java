@@ -1,15 +1,48 @@
 ### 消息文档
 
 - [RawMessage](../src/main/java/io/github/kloping/qqbot/entities/qqpd/message/RawMessage.java) 所有消息顶级父类
-  - [可发送消息](../src/main/java/io/github/kloping/qqbot/api/Sender.java)
-  - [可撤回](../src/main/java/io/github/kloping/qqbot/api/DeleteAble.java)
-  - [可被添加表情](../src/main/java/io/github/kloping/qqbot/api/Reactive.java)
 - [DirectMessage](../src/main/java/io/github/kloping/qqbot/entities/qqpd/message/DirectMessage.java) 私信消息
   - 从  [MessageDirectReceiveEvent](../src/main/java/io/github/kloping/qqbot/api/message/MessageDirectReceiveEvent.java)
     私信消息接收事件中获取
   - [可发送私信](../src/main/java/io/github/kloping/qqbot/api/DirectSender.java)
+
+
 - [MessageChain](../src/main/java/io/github/kloping/qqbot/entities/ex/msg/MessageChain.java)
   - MessageEvent 获取的默认消息类型
+
+| 方法      |                         参数 |    作用     |
+|:--------|---------------------------:|:---------:|
+| forEach | Consumer<? super SendAble> |   遍历消息    |
+| get     |                        int | 获取指定索引的消息 |
+| size    |                            |  获取消息数量   |
+
+- 可被发送的 SendAble
+  - At
+  - AtAll
+  - Emoji
+  - Image
+  - MessageChain
+  - MessagePre
+  - PlainText
+- 消息发送者 Sender
+  - BaseMessageChannelReceiveEvent
+  - BaseMessageContainsAtEvent
+  - BaseMessageDeleteEvent
+  - BaseMessageDirectReceiveEvent
+  - BaseMessageEvent
+  - BaseMessageReactionEvent
+  - BaseMessageReceiveEvent
+  - Channel
+  - DirectMessage
+  - DirectSender
+  - Dms
+  - MessageChannelReceiveEvent
+  - MessageContainsAtEvent
+  - MessageDeleteEvent
+  - MessageDirectReceiveEvent
+  - MessageReceiveEvent
+  - RawMessage
+  - SenderAndCidMidGetter
 
 消息构造:
 

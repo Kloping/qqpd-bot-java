@@ -4,11 +4,11 @@
     <a href="https://github.com/Kloping/qqpd-bot-java/releases"><img src="https://img.shields.io/github/v/release/Kloping/qqpd-bot-java?color=blueviolet&include_prereleases" alt="release"></a>
 </p>
 
-## QQ频道机器人 Java SDK 非官方
+## QQ频道机器人 Java SDK
 
-JAVA SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
+> 非官方 可用于 Java 8+
 
-可用于 Java 8+
+Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
 
 Maven
 
@@ -21,11 +21,9 @@ Maven
 </dependency>
 ```
 
-~~#### TIPS: 目前仅支持单bot运行~~
-
 ### 使用前提
 
-1. 到https://q.qq.com/ 申请机器人 获得BotAppID（开发者ID） 和 机器人令牌（token）
+1. 到https://q.qq.com/ 申请机器人 获得Bot 开发者ID(appid) 和 机器人令牌(token)
 
 ~~2. 发布审核 发布后为公域~~
 
@@ -41,7 +39,7 @@ Maven
     starter.run();
 ```
 
-#### V1.4+ 注册监听器主机方式 [荐]
+> #### V1.4+ 注册监听器主机方式 [荐]
 
 ```java
 starter.registerListenerHost(new ListenerHost(){
@@ -61,14 +59,11 @@ starter.registerListenerHost(new ListenerHost(){
 });
 ```
 
-#### V1.4.6
-
-事件订阅 默认的事件订阅 不会接收消息事件
-
-需要确定自己的机器人是公域还是私域
-
-来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 **[事件类型](src/main/java/io/github/kloping/qqbot/api/Intents.java)**
-
+> #### V1.4.6
+> 事件订阅 默认的事件订阅 不会接收消息事件 <br>
+> 需要确定自己的机器人是公域还是私域 <br>
+> 来确定 需要 **[设置订阅](src/test/java/test_Intents.java)** 的 *
+*[事件类型](src/main/java/io/github/kloping/qqbot/api/Intents.java)**
 ```java
 //单事件订阅方式
 starter.getConfig().setCode(Intents.GUILD_MESSAGES.getCode());
@@ -83,7 +78,7 @@ starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 ```
 
-导入指引
+#### 导入指引
 
 ```java
 import io.github.kloping.qqbot.Starter;
