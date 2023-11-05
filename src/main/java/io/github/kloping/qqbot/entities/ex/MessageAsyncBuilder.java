@@ -45,7 +45,7 @@ public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
                             flag0 = true;
                         } else {
                             er.send(builder.build());
-                            builder = new MessagePreBuilder();
+                            builder.clear();
                             builder.append((Image) sendAble);
                         }
                     } else if (sendAble instanceof At) {

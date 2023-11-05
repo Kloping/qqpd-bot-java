@@ -96,7 +96,6 @@ public class BaseUtils {
                 return Emoji.valueOf(Integer.valueOf(NumberUtils.findNumberFromString(s)));
             }
         });
-        //============
         DE_SERIALIZER.add(ArrDeSerializer.EMPTY_PATTERN, new ArrDeSerializer.Rule0<PlainText>() {
             @Override
             public PlainText deserializer(String s) {
@@ -106,7 +105,9 @@ public class BaseUtils {
     }
 
     private static void dispose(String content, MessageChain chain) {
+        if (Judge.isEmpty(content)) return;
         List<SendAble> sendAbles = DE_SERIALIZER.deserializer(content);
+        if (sendAbles == null || sendAbles.isEmpty()) return;
         for (SendAble sendAble : sendAbles) {
             chain.append(sendAble);
         }

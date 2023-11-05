@@ -30,7 +30,7 @@ public class MessagePreBuilder {
     }
 
     public MessagePreBuilder append(Emoji emoji) {
-        pre.setContent(pre.getContent() + emoji);
+        pre.setContent(pre.getContent() + emoji.toString0());
         return this;
     }
 
@@ -41,5 +41,9 @@ public class MessagePreBuilder {
 
     public MessagePre build() {
         return pre;
+    }
+
+    public void clear() {
+        pre.setContent("");
     }
 }

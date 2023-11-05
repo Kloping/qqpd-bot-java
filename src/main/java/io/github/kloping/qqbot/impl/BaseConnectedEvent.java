@@ -35,6 +35,6 @@ public class BaseConnectedEvent implements ConnectedEvent {
 
     @Override
     public String toString() {
-        return String.format("Bot(%s) Started! By author kloping of bot-qqpd-java for version 1.5.0-R2", bot.getInfo().getUsername());
+        return String.format("Bot(%s) Started! By author kloping of bot-qqpd-java for version 1.5.0-L4", bot.getInfo().getUsername());
     }
 }

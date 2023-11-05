@@ -1,3 +1,4 @@
+temp*
 # Project exclude paths
 src/test/java/temp/gs/**
 out/**

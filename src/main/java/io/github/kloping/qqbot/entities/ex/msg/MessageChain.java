@@ -47,6 +47,7 @@ public class MessageChain implements SendAble {
         } else if (sendAble instanceof PlainText) {
             builder.append(((PlainText) sendAble).getText());
         } else if (sendAble instanceof Emoji) {
+            builder.append((Emoji) sendAble);
         }
     }
 
