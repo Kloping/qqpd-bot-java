@@ -17,7 +17,7 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-R2</version>
+    <version>1.5.0-R3</version>
 </dependency>
 ```
 
@@ -30,6 +30,8 @@ Maven
 ### [开发文档](./docs)
 
 ### 使用示例
+
+> - [q群使用说明]()
 
 启动方式
 

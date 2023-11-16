@@ -1,14 +1,9 @@
 package io.github.kloping.qqbot.entities.ex;
 
 import io.github.kloping.qqbot.api.SendAble;
-import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.api.message.Builder;
-import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
+import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
-import io.github.kloping.qqbot.http.data.ActionResult;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 异步 消息 发送 <br>
@@ -21,44 +16,20 @@ public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
 
     @Override
     public MessageAsyncBuilder append(SendAble sendAble) {
-        list.add(sendAble);
+        chain.append(sendAble);
         return this;
     }
 
-    private List<SendAble> list = new LinkedList<>();
+    public MessageAsyncBuilder append(String text) {
+        chain.append(new PlainText(text));
+        return this;
+    }
 
+    private MessageChain chain = new MessageChain();
 
     @Override
     public SendAble build() {
-        return new SendAble() {
-            @Override
-            public ActionResult send(SenderAndCidMidGetter er) {
-                MessagePreBuilder builder = new MessagePreBuilder();
-                if (message != null) builder.reply(message);
-                boolean flag0 = false;
-                for (SendAble sendAble : list) {
-                    if (sendAble instanceof PlainText) {
-                        builder.append(sendAble.toString());
-                    } else if (sendAble instanceof Image) {
-                        if (!flag0) {
-                            builder.append((Image) sendAble);
-                            flag0 = true;
-                        } else {
-                            er.send(builder.build());
-                            builder.clear();
-                            builder.append((Image) sendAble);
-                        }
-                    } else if (sendAble instanceof At) {
-                        builder.append((At) sendAble);
-                    } else if (sendAble instanceof AtAll) {
-                        builder.append((AtAll) sendAble);
-                    } else if (sendAble instanceof Emoji) {
-                        builder.append((Emoji) sendAble);
-                    }
-                }
-                return er.send(builder.build());
-            }
-        };
+        return chain;
     }
 
     private RawMessage message;

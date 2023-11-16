@@ -21,8 +21,28 @@ public class MessageChain implements SendAble {
     @Override
     public ActionResult send(SenderAndCidMidGetter er) {
         MessagePreBuilder builder = new MessagePreBuilder();
-        for (SendAble sendAble : list) append(sendAble, builder);
-        return builder.build().send(er);
+        boolean flag0 = false;
+        for (SendAble sendAble : list) {
+            if (sendAble instanceof PlainText) {
+                builder.append(sendAble.toString());
+            } else if (sendAble instanceof Image) {
+                if (!flag0) {
+                    builder.append((Image) sendAble);
+                    flag0 = true;
+                } else {
+                    er.send(builder.build());
+                    builder.clear();
+                    builder.append((Image) sendAble);
+                }
+            } else if (sendAble instanceof At) {
+                builder.append((At) sendAble);
+            } else if (sendAble instanceof AtAll) {
+                builder.append((AtAll) sendAble);
+            } else if (sendAble instanceof Emoji) {
+                builder.append((Emoji) sendAble);
+            }
+        }
+        return er.send(builder.build());
     }
 
     public void forEach(Consumer<? super SendAble> consumer) {

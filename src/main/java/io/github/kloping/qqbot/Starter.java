@@ -3,11 +3,12 @@ package io.github.kloping.qqbot;
 import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
-import io.github.kloping.qqbot.api.Intents;
+import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.network.WssWorker;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class Starter implements Runnable {
     public static final String NET_MAIN = "https://api.sgroup.qq.com/";
     public static final String APPID_ID = "appid";
     public static final String TOKEN_ID = "token";
+    public static final String SECRET_ID = "secret";
     public static final String AUTH_ID = "appid-token";
     public static final String INTENTS_ID = "intents";
     public static final String SHARD_ID = "shard";
@@ -75,9 +77,13 @@ public class Starter implements Runnable {
     public static final Integer CODE_4900 = 4900;
     public static final Integer CODE_4913 = 4913;
 
+    @Getter
     private Config config = new Config();
+    @Getter
     private WssWorker wssWorker;
+
     public final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
+
     private ContextManager contextManager;
 
     public Starter(String appid, String token) {
@@ -85,8 +91,17 @@ public class Starter implements Runnable {
         this.getConfig().setToken(token);
     }
 
-    public Config getConfig() {
-        return config;
+    /**
+     * qq群使用必要构建方式
+     *
+     * @param appid
+     * @param token
+     * @param secret
+     */
+    public Starter(String appid, String token, String secret) {
+        this.getConfig().setAppid(appid);
+        this.getConfig().setToken(token);
+        this.getConfig().setSecret(secret);
     }
 
     @Override
@@ -104,10 +119,13 @@ public class Starter implements Runnable {
     protected void after() {
         String appid = getConfig().getAppid();
         String token = getConfig().getToken();
+        String secret = getConfig().getSecret();
         contextManager = APPLICATION.INSTANCE.getContextManager();
         contextManager.append(this);
         contextManager.append(appid, APPID_ID);
         contextManager.append(token, TOKEN_ID);
+        if (Judge.isNotEmpty(config.getSecret()))
+            contextManager.append(secret, SECRET_ID);
         contextManager.append(getConfig().getCode(), INTENTS_ID);
         contextManager.append(new Integer[]{0, 1}, SHARD_ID);
         contextManager.append("Bot " + appid + "." + token, AUTH_ID);
@@ -125,10 +143,6 @@ public class Starter implements Runnable {
         getConfig().setReconnect(reconnect);
     }
 
-    public WssWorker getWssWorker() {
-        return wssWorker;
-    }
-
     public void registerListenerHost(ListenerHost listenerHost) {
         getConfig().getListenerHosts().add(listenerHost);
     }
@@ -137,6 +151,10 @@ public class Starter implements Runnable {
     public static class Config {
         private String appid;
         private String token;
+        /**
+         * 不使用v2群聊时可不设置
+         */
+        private String secret;
         /**
          * code 从 {@link io.github.kloping.qqbot.api.Intents#getCode }
          */

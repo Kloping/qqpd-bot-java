@@ -14,6 +14,10 @@ import java.util.UUID;
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADERS;
 
 /**
+ *
+ * 发送到q群时必须使用url构造参数
+ * <br>
+ * 发送到频道时url必须备案(少数情况不需要
  * @author github.kloping
  */
 @Data

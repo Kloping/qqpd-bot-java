@@ -33,6 +33,13 @@ public class Bot {
     @AutoStand
     public MemberBase memberBase;
 
+    @AutoStand
+    public GroupV2Base groupV2Base;
+
+    @AutoStand
+    public AuthV2Base authV2Base;
+
+
     private User user;
 
     private Map<String, Guild> guildMap = new HashMap<>();
