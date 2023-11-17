@@ -6,6 +6,7 @@ import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
+import io.github.kloping.qqbot.interfaces.ImageUploadInterceptor;
 import io.github.kloping.qqbot.network.WssWorker;
 import lombok.Data;
 import lombok.Getter;
@@ -161,6 +162,7 @@ public class Starter implements Runnable {
         private Integer code;
         private Boolean reconnect = true;
         private Set<ListenerHost> listenerHosts = new HashSet<>();
+        private ImageUploadInterceptor interceptor0;
     }
 
     public Bot getBot() {

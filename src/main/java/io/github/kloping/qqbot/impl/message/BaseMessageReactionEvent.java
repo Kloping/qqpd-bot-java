@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
+import lombok.Getter;
 
 /**
  * @author github.kloping
@@ -17,13 +18,10 @@ public class BaseMessageReactionEvent extends BaseMessageEvent implements Messag
         this.reaction = reaction;
     }
 
+    @Getter
     private EmojiReaction reaction;
 
     private Boolean isAdd;
-
-    public EmojiReaction getReaction() {
-        return reaction;
-    }
 
     public void setReaction(EmojiReaction reaction) {
         this.reaction = reaction;
@@ -44,7 +42,8 @@ public class BaseMessageReactionEvent extends BaseMessageEvent implements Messag
 
     @Override
     public String toString() {
-        Member member = getGuild().getMember(reaction.getUserId());
+        Member member =
+                getGuild().getMember(reaction.getUserId());
         return String.format("%s'%s'表情(%s)", member.getNick(), isAdd ? "添加" : "移除", reaction.getEmoji().getText());
     }
 }

@@ -27,12 +27,23 @@ public class Image implements SendAble {
     private String type = "image/jpeg";
     private String name = UUID.randomUUID() + ".jpg";
 
+    /**
+     * 仅用于qq群发送
+     * <td> 媒体类型：1 图片，2 视频，3 语音，4 文件（暂不开放）<br>资源格式要求<br>图片：png/jpg，视频：mp4，语音：silk</td>
+     */
+    private Integer file_type = 1;
+
     public Image(byte[] bytes) {
         this.bytes = bytes;
     }
 
     public Image(String url) {
         this.url = url;
+    }
+
+    public Image(String url, Integer file_type) {
+        this.url = url;
+        this.file_type = file_type;
     }
 
     public Image(byte[] bytes, String type) {

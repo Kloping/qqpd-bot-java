@@ -1,6 +1,8 @@
 package io.github.kloping.qqbot.impl.message.v2;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.v2.GroupMessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
@@ -13,7 +15,7 @@ import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 import io.github.kloping.qqbot.entities.qqpd.v2.Member;
-import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.qqbot.http.data.V2MsgData;
 import lombok.Getter;
 
 /**
@@ -40,24 +42,27 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
     }
 
     /**
-     * <hr>
-     * <table><thead><tr><th><strong>属性</strong></th> <th><strong>类型</strong></th> <th><strong>必填</strong></th> <th><strong>说明</strong></th></tr></thead> <tbody><tr><td>content</td> <td>string</td> <td>是</td> <td>文本内容</td></tr> <tr><td>msg_type</td> <td>int</td> <td>是</td> <td>消息类型： 0 是文本，1 图文混排 ，2 是 markdown 3 ark，4 embed</td></tr> <tr><td>markdown</td> <td>object</td> <td>否</td> <td>格式参考"消息类型=&gt;markdown=&gt;数据结构与协议"</td></tr> <tr><td>keyboard</td> <td>object</td> <td>否</td> <td>格式参考"消息交互=&gt;消息按钮=&gt;数据结构与协"</td></tr> <tr><td>ark</td> <td>object</td> <td>否</td> <td>格式参考"消息类型=&gt;ark=&gt;数据结构与协议"</td></tr> <tr><td>image</td> <td></td> <td>否</td> <td>【暂不支持】</td></tr> <tr><td>message_reference</td> <td>object</td> <td>否</td> <td>【暂未支持】消息引用</td></tr> <tr><td>event_id</td> <td>string</td> <td>否</td> <td>【暂未支持】前置收到的事件ID，用于发送被动消息</td></tr> <tr><td>msg_id</td> <td>string</td> <td>否</td> <td>前置收到的消息ID，用于发送被动消息</td></tr></tbody></table>
-     *
+     * 发送纯文本
      * @param text
      * @return
      */
     @Override
-    public V2Result sendMessage(String text) {
-        return bot.groupV2Base.send(getSubject().getOpenid(), String.format("{\"msg_type\":0,\"content\":\"%s\",\"msg_id\":\"%s\"}", text, getMsgId()), Channel.SEND_MESSAGE_HEADERS);
+    public String sendMessage(String text) {
+        return sendMessage(text, 1);
+    }
+
+    public String sendMessage(String text, int seq) {
+        V2MsgData data = new V2MsgData().setMsg_id(getMsgId()).setContent(text).setMsg_seq(1);
+        return bot.groupV2Base.send(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
     }
 
     @Override
-    public V2Result sendMessage(SendAble msg) {
-        V2Result result = sendE0(msg);
+    public String sendMessage(SendAble msg) {
+        String result = sendE0(msg);
         return result;
     }
 
-    private V2Result sendE0(SendAble msg) {
+    private String sendE0(SendAble msg) {
         if (msg instanceof PlainText) {
             return sendMessage(((PlainText) msg).getText());
         } else if (msg instanceof Image) {
@@ -73,17 +78,18 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
         return null;
     }
 
-    private V2Result sendChain(MessageChain chain) {
-        V2Result result = new V2Result();
+    private String sendChain(MessageChain chain) {
+        String result = null;
         StringBuilder sb = new StringBuilder();
+        int seq = 1;
         for (int i = 0; i < chain.size(); i++) {
             SendAble e = chain.get(i);
             if (e instanceof Image) {
                 //仅能被动1次
-                /*if (sb.length() > 0) {
-                    result = sendMessage(sb.toString());
+                if (sb.length() > 0) {
+                    result = sendMessage(sb.toString(), seq++);
                     sb = new StringBuilder();
-                }*/
+                }
                 result = sendImage((Image) e);
             } else if (e instanceof MessageChain) {
                 result = sendChain(chain);
@@ -91,13 +97,21 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
                 sb.append(e.toString());
             }
         }
-        if (sb.length() > 0) result = sendMessage(sb.toString());
+        if (sb.length() > 0) result = sendMessage(sb.toString(), seq);
         return result;
     }
 
-    private V2Result sendImage(Image msg) {
-        return bot.groupV2Base.sendFile(getSubject().getId()
-                , String.format("{\"file_type\": 1,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getUrl())
+    private String sendImage(Image msg) {
+        if (Judge.isEmpty(msg.getUrl())) {
+            if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
+                String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
+                if (Judge.isNotEmpty(url))
+                    msg.setUrl(url);
+                else return null;
+            }
+            return null;
+        }
+        return bot.groupV2Base.sendFile(getSubject().getId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
                 , Channel.SEND_MESSAGE_HEADERS);
     }
 

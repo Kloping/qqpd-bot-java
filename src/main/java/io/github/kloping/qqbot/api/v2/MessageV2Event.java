@@ -1,23 +1,23 @@
 package io.github.kloping.qqbot.api.v2;
 
 import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
-import io.github.kloping.qqbot.http.data.V2Result;
 
 /**
  * @author github.kloping
  */
-public interface MessageV2Event {
+public interface MessageV2Event<T> extends Event {
     /**
      * 发送纯文本
      *
      * @param text
      * @return
      */
-    V2Result sendMessage(String text);
+    T sendMessage(String text);
 
-    V2Result sendMessage(SendAble msg);
+    T sendMessage(SendAble msg);
 
     /**
      * 当前 因为腾讯服务器原因 消息中不存在at类型

@@ -2,7 +2,6 @@ package io.github.kloping.qqbot.http;
 
 import io.github.kloping.MySpringTool.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.http.data.V2Result;
 
 import java.util.Map;
 
@@ -18,23 +17,23 @@ import java.util.Map;
 public interface GroupV2Base {
     /**
      * 发送群聊消息
-     *
      * @param gid
      * @param body
      * @param headers
-     * @return
+     * @return msg
      */
     @PostPath("/v2/groups/{group_openid}/messages")
-    V2Result send(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
+    @Callback("io.github.kloping.qqbot.http.data.V2Result.docMsg")
+    String send(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
 
     /**
      * 发送群聊媒体
-     *
      * @param gid
      * @param body
      * @param headers
-     * @return
+     * @return 文件id
      */
     @PostPath("/v2/groups/{group_openid}/files")
-    V2Result sendFile(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
+    @Callback("io.github.kloping.qqbot.http.data.V2Result.docFiles")
+    String sendFile(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
 }

@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.entities;
 
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.*;
@@ -39,6 +40,8 @@ public class Bot {
     @AutoStand
     public AuthV2Base authV2Base;
 
+    @AutoStand
+    Starter.Config config;
 
     private User user;
 
@@ -87,5 +90,9 @@ public class Bot {
 
     public String getId() {
         return getInfo().getId();
+    }
+
+    public Starter.Config getConfig() {
+        return config;
     }
 }
