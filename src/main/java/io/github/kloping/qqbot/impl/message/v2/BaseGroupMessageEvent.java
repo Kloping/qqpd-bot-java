@@ -105,11 +105,10 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
         if (Judge.isEmpty(msg.getUrl())) {
             if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
                 String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
-                if (Judge.isNotEmpty(url))
+                if (Judge.isNotEmpty(url)) {
                     msg.setUrl(url);
-                else return null;
+                } else return null;
             }
-            return null;
         }
         return bot.groupV2Base.sendFile(getSubject().getId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
                 , Channel.SEND_MESSAGE_HEADERS);
