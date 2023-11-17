@@ -13,7 +13,7 @@ Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/de
 Maven
 
 ```xml
-<!-- https://mvnrepository.com/artifact/io.github.kloping/bot-qqpd-java -->
+<!-- https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/ -->
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
