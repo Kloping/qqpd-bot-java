@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
@@ -18,7 +19,7 @@ import io.github.kloping.qqbot.utils.BaseUtils;
 /**
  * @author github.kloping
  */
-public abstract class BaseMessageEvent implements MessageEvent<Member> {
+public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Member> {
     protected RawMessage message;
     protected JSONObject metadata;
     protected Member sender;
@@ -35,6 +36,18 @@ public abstract class BaseMessageEvent implements MessageEvent<Member> {
         this.metadata = jo;
         this.bot = bot;
         this.guild = getBot().getGuild(message.getGuildId());
+        this.channel = getGuild().getChannel(message.getChannelId());
+        this.sender = getGuild().getMember(message.getAuthor().getId());
+    }
+
+    @Override
+    public Channel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
     }
 
     @Override

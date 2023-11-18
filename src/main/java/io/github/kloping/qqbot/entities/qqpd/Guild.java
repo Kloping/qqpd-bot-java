@@ -9,6 +9,7 @@ import io.github.kloping.qqbot.api.SessionCreator;
 import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.ChannelData;
+import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +31,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class Guild implements SessionCreator, OpAble, BotContent {
+public class Guild extends Contact implements SessionCreator, OpAble, BotContent {
     private Boolean owner;
     private String joinedAt;
     private String ownerId;
@@ -138,5 +139,14 @@ public class Guild implements SessionCreator, OpAble, BotContent {
     public Channel create(ChannelData data) {
         Channel channel = getBot().guildBase.create(Channel.SEND_MESSAGE_HEADERS, Guild.this.getId(), data);
         return channel;
+    }
+
+    public String getId() {
+        return Guild.this.id;
+    }
+
+    @Override
+    public String getOpenid() {
+        return getId();
     }
 }

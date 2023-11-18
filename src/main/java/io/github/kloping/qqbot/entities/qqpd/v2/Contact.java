@@ -16,6 +16,9 @@ public class Contact {
     @JSONField(serialize = false, deserialize = false)
     protected JSONObject meta;
 
+    public Contact() {
+    }
+
     public Contact(JSONObject mate) {
         this.meta = mate;
     }

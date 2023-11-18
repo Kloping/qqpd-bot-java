@@ -8,7 +8,7 @@ import io.github.kloping.qqbot.entities.qqpd.Member;
  *
  * @author github.kloping
  */
-public interface MessageChannelReceiveEvent extends MessageEvent<Member>, Reactive {
+public interface MessageChannelReceiveEvent extends MessageReceiveEvent, MessageEvent<Member>, Reactive {
     /**
      * 消息内容
      *

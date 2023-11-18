@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.message;
 
+import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 
 /**
@@ -7,7 +8,7 @@ import io.github.kloping.qqbot.entities.qqpd.Member;
  *
  * @author github.kloping
  */
-public interface MessageReceiveEvent extends MessageEvent<Member> {
+public interface MessageReceiveEvent extends ChannelEvent, MessageEvent<Member> {
     /**
      * 消息内容
      *
