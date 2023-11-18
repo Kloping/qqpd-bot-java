@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-Alpha</version>
+    <version>1.5.0-Alpha2</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>io.github.Kloping</groupId>
             <artifactId>JvUtils</artifactId>
-            <version>0.4.9-R3</version>
+            <version>0.4.9-Beta</version>
         </dependency>
         <dependency>
             <groupId>org.java-websocket</groupId>

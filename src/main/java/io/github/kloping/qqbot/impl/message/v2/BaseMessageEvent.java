@@ -8,6 +8,7 @@ import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
+import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ import lombok.Getter;
  * @author github.kloping
  */
 @Getter
-public abstract class BaseMessageEvent implements MessageEvent<Contact>, MessageV2Event {
+public abstract class BaseMessageEvent implements MessageEvent<Contact, Group>, MessageV2Event {
     public BaseMessageEvent(RawMessage message, JSONObject jo, Bot bot) {
         this.bot = bot;
         this.metadata = jo;

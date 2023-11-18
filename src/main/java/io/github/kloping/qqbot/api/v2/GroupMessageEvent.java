@@ -7,7 +7,7 @@ import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 /**
  * @author github.kloping
  */
-public interface GroupMessageEvent extends GroupEvent, MessageEvent<Contact>, MessageV2Event {
+public interface GroupMessageEvent extends GroupEvent, MessageEvent<Contact,Group>, MessageV2Event {
     /**
      * 发送环境
      *

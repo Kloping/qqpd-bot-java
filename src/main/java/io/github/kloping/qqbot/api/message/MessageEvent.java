@@ -11,7 +11,7 @@ import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
  *
  * @author github.kloping
  */
-public interface MessageEvent<T extends Contact> extends Event, Sender {
+public interface MessageEvent<T extends Contact, S extends Contact> extends Event, Sender {
     /**
      * 获取消息
      *
@@ -26,6 +26,12 @@ public interface MessageEvent<T extends Contact> extends Event, Sender {
      */
     T getSender();
 
+    /**
+     * 发送环境
+     *
+     * @return
+     */
+    S getSubject();
     /**
      * 将消息转为 MessageChain
      *
