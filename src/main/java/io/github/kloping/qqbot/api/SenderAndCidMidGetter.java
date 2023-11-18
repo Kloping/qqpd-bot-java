@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.api.event.BotContent;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 
 /**
  * @author github.kloping
@@ -21,4 +22,12 @@ public interface SenderAndCidMidGetter extends Sender, BotContent {
     default String getMid() {
         return null;
     }
+
+    /**
+     * 获得发送环境
+     * guild/qq
+     *
+     * @return
+     */
+    EnvType getEnvType();
 }

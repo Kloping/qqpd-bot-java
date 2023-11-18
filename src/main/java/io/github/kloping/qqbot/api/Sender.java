@@ -2,7 +2,7 @@ package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -18,7 +18,7 @@ public interface Sender {
      * @param text
      * @return
      */
-    ActionResult send(String text);
+    Result send(String text);
 
     /**
      * 以JSON方式发送文本消息并引用指定消息
@@ -27,23 +27,7 @@ public interface Sender {
      * @param message
      * @return
      */
-    ActionResult send(String text, RawMessage message);
-
-    /**
-     * 以自定义方式发送消息
-     *
-     * @param packet
-     * @return
-     */
-    ActionResult send(MessagePacket packet);
-
-    /**
-     * 自定义消息
-     *
-     * @param msg
-     * @return
-     */
-    ActionResult send(RawPreMessage msg);
+    Result send(String text, RawMessage message);
 
     /**
      * 以各种方式 达到想要发送的效果
@@ -51,5 +35,25 @@ public interface Sender {
      * @param msg
      * @return
      */
-    ActionResult send(SendAble msg);
+    Result send(SendAble msg);
+
+    /**
+     * 以自定义方式发送消息
+     *
+     * @param packet
+     * @return
+     */
+    default Result send(MessagePacket packet) {
+        return null;
+    }
+
+    /**
+     * 自定义消息
+     *
+     * @param msg
+     * @return
+     */
+    default Result send(RawPreMessage msg) {
+        return null;
+    }
 }

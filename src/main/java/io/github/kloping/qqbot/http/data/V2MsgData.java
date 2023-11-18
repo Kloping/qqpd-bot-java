@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.http.data;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,4 +20,9 @@ public class V2MsgData {
 
     private String msg_id;
     private Integer msg_seq = 1;
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }

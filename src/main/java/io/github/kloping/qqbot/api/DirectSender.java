@@ -3,6 +3,7 @@ package io.github.kloping.qqbot.api;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -12,22 +13,22 @@ import io.github.kloping.qqbot.impl.MessagePacket;
  */
 public interface DirectSender extends Sender {
     @Override
-    default ActionResult send(String text) {
+    default Result<ActionResult> send(String text) {
         return sendDirect(text);
     }
 
     @Override
-    default ActionResult send(String text, RawMessage message) {
+    default Result<ActionResult> send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
     @Override
-    default ActionResult send(MessagePacket packet) {
+    default Result<ActionResult> send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
     @Override
-    default ActionResult send(RawPreMessage msg) {
+    default Result<ActionResult> send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
@@ -37,7 +38,7 @@ public interface DirectSender extends Sender {
      * @param text
      * @return
      */
-    ActionResult sendDirect(String text);
+    Result<ActionResult> sendDirect(String text);
 
     /**
      * 以JSON方式发送文本消息并引用指定消息
@@ -46,7 +47,7 @@ public interface DirectSender extends Sender {
      * @param message
      * @return
      */
-    ActionResult sendDirect(String text, RawMessage message);
+    Result<ActionResult> sendDirect(String text, RawMessage message);
 
     /**
      * 以自定义方式发送消息
@@ -54,7 +55,7 @@ public interface DirectSender extends Sender {
      * @param packet
      * @return
      */
-    ActionResult sendDirect(MessagePacket packet);
+    Result<ActionResult> sendDirect(MessagePacket packet);
 
     /**
      * 自定义消息
@@ -62,5 +63,5 @@ public interface DirectSender extends Sender {
      * @param msg
      * @return
      */
-    ActionResult sendDirect(RawPreMessage msg);
+    Result<ActionResult> sendDirect(RawPreMessage msg);
 }

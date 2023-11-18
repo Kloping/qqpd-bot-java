@@ -3,7 +3,8 @@ package io.github.kloping.qqbot.entities.ex;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
-import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import lombok.Data;
 import org.jsoup.helper.HttpConnection;
@@ -58,22 +59,26 @@ public class Image implements SendAble {
     }
 
     @Override
-    public ActionResult send(SenderAndCidMidGetter er) {
-        if (getBytes() != null) {
-            BaseKeyVals keyVals = new BaseKeyVals();
-            if (er.getMid() != null) {
-                HttpConnection.KeyVal v0 = HttpConnection.KeyVal.create("msg_id", er.getMid());
-                v0.contentType("text/plain");
-                keyVals.add(v0);
+    public Result send(SenderAndCidMidGetter er) {
+        if (er.getEnvType() == EnvType.GUILD) {
+            if (getBytes() != null) {
+                BaseKeyVals keyVals = new BaseKeyVals();
+                if (er.getMid() != null) {
+                    HttpConnection.KeyVal v0 = HttpConnection.KeyVal.create("msg_id", er.getMid());
+                    v0.contentType("text/plain");
+                    keyVals.add(v0);
+                }
+                HttpConnection.KeyVal v1 = HttpConnection.KeyVal.create("file_image", name);
+                v1.inputStream(new ByteArrayInputStream(bytes));
+                v1.contentType(type);
+                keyVals.add(v1);
+                return new Result<>(er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals));
             }
-            HttpConnection.KeyVal v1 = HttpConnection.KeyVal.create("file_image", name);
-            v1.inputStream(new ByteArrayInputStream(bytes));
-            v1.contentType(type);
-            keyVals.add(v1);
-            return er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals);
+            MessagePacket packet = new MessagePacket();
+            if (Judge.isNotEmpty(getUrl())) packet.setImage(getUrl());
+            return er.send(packet);
+        } else {
+           return er.send(this);
         }
-        MessagePacket packet = new MessagePacket();
-        if (Judge.isNotEmpty(getUrl())) packet.setImage(getUrl());
-        return er.send(packet);
     }
 }

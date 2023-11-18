@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -42,7 +43,7 @@ public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSe
      * @return
      */
     @Override
-    default ActionResult send(String text) {
+    default Result<ActionResult> send(String text) {
         return sendDirect(text);
     }
 
@@ -54,7 +55,7 @@ public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSe
      * @return
      */
     @Override
-    default ActionResult send(String text, RawMessage message) {
+    default Result<ActionResult> send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -65,7 +66,7 @@ public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSe
      * @return
      */
     @Override
-    default ActionResult send(MessagePacket packet) {
+    default Result<ActionResult> send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
@@ -76,7 +77,7 @@ public interface MessageDirectReceiveEvent extends MessageReceiveEvent, DirectSe
      * @return
      */
     @Override
-    default ActionResult send(RawPreMessage msg) {
+    default Result<ActionResult> send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 }

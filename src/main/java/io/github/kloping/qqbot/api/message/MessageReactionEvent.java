@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.api.message;
 
+import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
 
 /**
@@ -7,7 +8,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
  *
  * @author github.kloping
  */
-public interface MessageReactionEvent extends MessageEvent {
+public interface MessageReactionEvent extends MessageEvent<Member> {
 
     /**
      * get MessageReaction

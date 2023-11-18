@@ -1,22 +1,27 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.DeleteAble;
 import io.github.kloping.qqbot.api.Reactive;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.api.message.Pinsble;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.ex.Image;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.PinsMessage;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
+import io.github.kloping.qqbot.http.data.V2MsgData;
+import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
@@ -34,6 +39,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     private String id;
     private String channelId;
     private String guildId;
+    @Getter
     private String content;
     private String timestamp;
     private String editedTimestamp;
@@ -47,44 +53,71 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     private Integer seq;
     private String seqInChannel;
     private MessageReference messageReference;
+
+    @JSONField(alternateNames = "group_openid")
     private String srcGuildId;
 
+    @Setter
+    @JSONField(serialize = false, deserialize = false)
+    private EnvType envType = EnvType.GUILD;
+
     @Override
-    public ActionResult send(String text, RawMessage message) {
-        return send(new MessagePacket().setContent(text).setReplyId(message.id));
+    public Result send(String text, RawMessage message) {
+        if (envType == EnvType.GUILD) return send(new MessagePacket().setContent(text).setReplyId(message.id));
+        else {
+            V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(1);
+            return new Result<V2Result>(bot.groupV2Base.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
+        }
     }
 
     @Override
-    public ActionResult send(String text) {
-        return send(new MessagePacket().setContent(text));
+    public Result send(String text) {
+        return send(text, this);
+    }
+
+    private V2Result sendImage(Image msg) {
+        if (ImagePrepare(msg, bot)) return null;
+        return bot.groupV2Base.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
+                , Channel.SEND_MESSAGE_HEADERS);
+    }
+
+    public static boolean ImagePrepare(Image msg, Bot bot) {
+        if (Judge.isEmpty(msg.getUrl())) {
+            if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
+                String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
+                if (Judge.isNotEmpty(url)) {
+                    msg.setUrl(url);
+                } else return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public ActionResult send(MessagePacket packet) {
+    public Result send(SendAble msg) {
+        if (envType == EnvType.GROUP) {
+            if (msg instanceof Image) {
+                return new Result<V2Result>(sendImage((Image) msg));
+            } else return msg.send(this);
+        } else return new Result<>(msg.send(this));
+    }
+
+    @Override
+    public Result<ActionResult> send(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(RawMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
+        return new Result<ActionResult>(bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS));
     }
 
     @Override
-    public ActionResult send(RawPreMessage msg) {
-        return bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS);
+    public Result<ActionResult> send(RawPreMessage msg) {
+        return new Result<>(bot.messageBase.send(RawMessage.this.channelId, msg, SEND_MESSAGE_HEADERS));
     }
 
     @Override
     public Object delete() {
         return bot.messageBase.delete(this.channelId, this.id, false);
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    //==
-    @Override
-    public ActionResult send(SendAble msg) {
-        return msg.send(this);
     }
 
     @Override
@@ -97,7 +130,6 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         return getId();
     }
 
-    //==
     @Override
     public void addEmoji(Emoji emoji) {
         bot.channelBase.addEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
@@ -108,19 +140,14 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         bot.channelBase.removeEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
     }
 
-    //==
+    @Getter
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
-
-    public Bot getBot() {
-        return bot;
-    }
 
     public void setBot(Bot bot) {
         this.bot = bot;
     }
 
-    //==
     @Override
     public PinsMessage addPins() {
         PinsMessage pm = new PinsMessage();

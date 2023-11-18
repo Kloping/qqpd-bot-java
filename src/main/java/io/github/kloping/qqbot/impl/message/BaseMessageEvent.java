@@ -11,17 +11,18 @@ import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 
 /**
  * @author github.kloping
  */
-public abstract class BaseMessageEvent implements MessageEvent {
+public abstract class BaseMessageEvent implements MessageEvent<Member> {
     protected RawMessage message;
     protected JSONObject metadata;
-    protected Guild guild;
     protected Member sender;
+    protected Guild guild;
     protected Channel channel;
 
     protected Bot bot;
@@ -34,8 +35,6 @@ public abstract class BaseMessageEvent implements MessageEvent {
         this.metadata = jo;
         this.bot = bot;
         this.guild = getBot().getGuild(message.getGuildId());
-        this.channel = getGuild().getChannel(message.getChannelId());
-        this.sender = getGuild().getMember(message.getAuthor().getId());
     }
 
     @Override
@@ -49,37 +48,27 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public Guild getGuild() {
-        return guild;
-    }
-
-    @Override
     public Member getSender() {
         return sender;
     }
 
     @Override
-    public Channel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public ActionResult send(String text) {
+    public Result<ActionResult> send(String text) {
         return getRawMessage().send(text);
     }
 
     @Override
-    public ActionResult send(String text, RawMessage message) {
+    public Result<ActionResult> send(String text, RawMessage message) {
         return getRawMessage().send(text, message);
     }
 
     @Override
-    public ActionResult send(MessagePacket packet) {
+    public Result<ActionResult> send(MessagePacket packet) {
         return getRawMessage().send(packet);
     }
 
     @Override
-    public ActionResult send(RawPreMessage msg) {
+    public Result<ActionResult> send(RawPreMessage msg) {
         return getRawMessage().send(msg);
     }
 
@@ -89,7 +78,7 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public ActionResult send(SendAble msg) {
+    public Result<ActionResult> send(SendAble msg) {
         return getRawMessage().send(msg);
     }
 

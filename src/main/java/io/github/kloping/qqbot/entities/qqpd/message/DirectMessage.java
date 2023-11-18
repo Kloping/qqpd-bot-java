@@ -1,13 +1,16 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import io.github.kloping.qqbot.api.DirectSender;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -27,6 +30,7 @@ public class DirectMessage extends RawMessage
     private String id;
     private String channelId;
     private String guildId;
+    @Getter
     private String content;
     private String timestamp;
     private String editedTimestamp;
@@ -55,7 +59,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public ActionResult send(String text) {
+    public Result<ActionResult> send(String text) {
         return sendDirect(text);
     }
 
@@ -67,7 +71,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public ActionResult send(String text, RawMessage message) {
+    public Result<ActionResult> send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -78,7 +82,7 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public ActionResult send(MessagePacket packet) {
+    public Result<ActionResult> send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
@@ -89,35 +93,31 @@ public class DirectMessage extends RawMessage
      * @return
      */
     @Override
-    public ActionResult send(RawPreMessage msg) {
+    public Result<ActionResult> send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
     @Override
-    public ActionResult sendDirect(String text) {
+    public Result<ActionResult> sendDirect(String text) {
         return sendDirect(new MessagePacket().setContent(text));
     }
 
     @Override
-    public ActionResult sendDirect(String text, RawMessage message) {
+    public Result<ActionResult> sendDirect(String text, RawMessage message) {
         return sendDirect(new MessagePacket().setContent(text).setReplyId(message.getId()));
     }
 
     @Override
-    public ActionResult sendDirect(MessagePacket packet) {
+    public Result<ActionResult> sendDirect(MessagePacket packet) {
         RawPreMessage msg = new RawPreMessage();
         msg.setMsgId(DirectMessage.this.id);
         BaseUtils.packet2pre(packet, msg);
-        return getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
+        return new Result<>(getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS));
     }
 
     @Override
-    public ActionResult sendDirect(RawPreMessage msg) {
-        return getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS);
-    }
-
-    public String getContent() {
-        return content;
+    public Result<ActionResult> sendDirect(RawPreMessage msg) {
+        return new Result<>(getBot().dmsBase.send(DirectMessage.this.guildId, msg, SEND_MESSAGE_HEADERS));
     }
 
     @Override
@@ -125,4 +125,8 @@ public class DirectMessage extends RawMessage
         return getBot().dmsBase.delete(this.guildId, this.id, false);
     }
 
+    @Override
+    public EnvType getEnvType() {
+        return EnvType.GUILD;
+    }
 }
