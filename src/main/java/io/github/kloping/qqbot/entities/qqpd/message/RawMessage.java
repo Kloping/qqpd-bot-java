@@ -64,10 +64,13 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     @Override
     public Result send(String text, RawMessage message) {
         if (envType == EnvType.GUILD) return send(new MessagePacket().setContent(text).setReplyId(message.id));
-        else {
+        else if (envType == EnvType.GROUP) {
             V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(1);
-            return new Result<V2Result>(bot.groupV2Base.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
-        }
+            return new Result<V2Result>(bot.groupBaseV2.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
+        } else if (envType == EnvType.GROUP_USER) {
+            V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(1);
+            return new Result<V2Result>(bot.userBaseV2.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
+        } else return null;
     }
 
     @Override
@@ -75,10 +78,15 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         return send(text, this);
     }
 
-    private V2Result sendImage(Image msg) {
+    private V2Result sendImage(Image msg, EnvType type) {
         if (ImagePrepare(msg, bot)) return null;
-        return bot.groupV2Base.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
+        if (type == EnvType.GROUP)
+            return bot.groupBaseV2.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
                 , Channel.SEND_MESSAGE_HEADERS);
+        else if (type == EnvType.GROUP_USER)
+            return bot.userBaseV2.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
+                    , Channel.SEND_MESSAGE_HEADERS);
+        else return null;
     }
 
     public static boolean ImagePrepare(Image msg, Bot bot) {
@@ -97,7 +105,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     public Result send(SendAble msg) {
         if (envType == EnvType.GROUP) {
             if (msg instanceof Image) {
-                return new Result<V2Result>(sendImage((Image) msg));
+                return new Result<V2Result>(sendImage((Image) msg, envType));
             } else return msg.send(this);
         } else return new Result<>(msg.send(this));
     }

@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.api;
 
-import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 
 /**

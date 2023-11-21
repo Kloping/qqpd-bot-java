@@ -2,7 +2,10 @@ package io.github.kloping.qqbot.entities.qqpd.v2;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.entities.Bot;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,7 +15,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class Contact {
+public abstract class Contact implements SenderAndCidMidGetter {
     @JSONField(serialize = false, deserialize = false)
     protected JSONObject meta;
 
@@ -25,4 +28,13 @@ public class Contact {
 
     protected String id;
     protected String openid;
+
+    @Getter
+    protected Bot bot;
+
+    @Override
+    public void setBot(Bot bot) {
+        this.bot = bot;
+    }
+
 }

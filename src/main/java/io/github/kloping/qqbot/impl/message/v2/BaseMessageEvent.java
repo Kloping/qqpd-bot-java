@@ -22,17 +22,15 @@ public abstract class BaseMessageEvent implements MessageEvent<Contact, Group>, 
         this.metadata = jo;
         this.rawMessage = message;
         this.rawMessage.setEnvType(EnvType.GROUP);
-        this.sender = new Contact(getMetadata().getJSONObject("author"));
-        this.sender.setId(this.sender.getMeta().getString("id"));
-        this.sender.setOpenid(this.sender.getMeta().getString("member_openid"));
         this.msgId = getMetadata().getString("id");
     }
 
     protected RawMessage rawMessage;
-    protected Contact sender;
     protected Bot bot;
     protected JSONObject metadata;
     protected String msgId;
+
+    public abstract Contact getSender();
 
     @Override
     public String toString() {

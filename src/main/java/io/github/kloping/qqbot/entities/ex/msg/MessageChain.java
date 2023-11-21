@@ -54,7 +54,9 @@ public class MessageChain implements SendAble {
                 if (e instanceof Image) {
                     result.append("\n").append(er.send((Image) e).getData());
                 } else if (e instanceof MessageChain) {
-
+                    ((MessageChain) e).forEach((e1) -> {
+                        result.append("\n").append(er.send(e1));
+                    });
                 } else {
                     sb.append(e.toString());
                 }

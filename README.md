@@ -77,6 +77,9 @@ starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 ```
 
+> 设置日志输出级别 <br>
+> starter.APPLICATION.logger.setLogLevel(0);
+
 #### 导入指引
 
 ```java

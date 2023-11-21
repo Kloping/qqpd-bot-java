@@ -15,26 +15,24 @@ import java.util.Map;
  */
 @HttpClient(Starter.NET_MAIN)
 @Headers("io.github.kloping.qqbot.Start0.getV2Headers")
-public interface GroupV2Base {
+public interface UserBaseV2 {
     /**
-     * 发送群聊消息
-     * @param gid
+     * 发送私聊消息
+     * @param uid
      * @param body
      * @param headers
      * @return msg
      */
-    @PostPath("/v2/groups/{group_openid}/messages")
-    //@Callback("io.github.kloping.qqbot.http.data.V2Result.docMsg")
-    V2Result send(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
+    @PostPath("/v2/users/{openid}/messages")
+    V2Result send(@PathValue("openid") String uid, @RequestBody String body, @Headers Map<String, String> headers);
 
     /**
-     * 发送群聊媒体
-     * @param gid
+     * 发送私聊媒体
+     * @param uid
      * @param body
      * @param headers
      * @return 文件id
      */
-    @PostPath("/v2/groups/{group_openid}/files")
-    //@Callback("io.github.kloping.qqbot.http.data.V2Result.docFiles")
-    V2Result sendFile(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
+    @PostPath("/v2/users/{openid}/files")
+    V2Result sendFile(@PathValue("openid") String uid, @RequestBody String body, @Headers Map<String, String> headers);
 }

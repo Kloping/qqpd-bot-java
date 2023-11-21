@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.message.MessageReference;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
+import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
 import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -34,8 +35,8 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 @ToString
-@EqualsAndHashCode
-public class Channel implements SenderAndCidMidGetter, AtAble, DeleteAble {
+@EqualsAndHashCode(callSuper = false)
+public class Channel extends Contact implements SenderAndCidMidGetter, AtAble, DeleteAble {
     private Integer speakPermission;
     private Integer subType;
     private String ownerId;

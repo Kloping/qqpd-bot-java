@@ -11,7 +11,6 @@ import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
-import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
 import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
@@ -20,7 +19,7 @@ import io.github.kloping.qqbot.utils.BaseUtils;
 /**
  * @author github.kloping
  */
-public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Member, Guild> {
+public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Member, Channel> {
     protected RawMessage message;
     protected JSONObject metadata;
     protected Member sender;
@@ -47,8 +46,8 @@ public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Mem
     }
 
     @Override
-    public Guild getSubject() {
-        return guild;
+    public Channel getSubject() {
+        return getChannel();
     }
 
     @Override

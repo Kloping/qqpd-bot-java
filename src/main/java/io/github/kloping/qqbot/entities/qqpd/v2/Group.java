@@ -3,7 +3,6 @@ package io.github.kloping.qqbot.entities.qqpd.v2;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.SendAble;
-import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.Image;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
@@ -12,23 +11,15 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
  * @author github.kloping
  */
+@Getter
 @Accessors(chain = true)
-public class Group extends Contact implements SenderAndCidMidGetter {
-    private Bot bot;
-
-    public Bot getBot() {
-        return bot;
-    }
-
-    @Override
-    public void setBot(Bot bot) {
-        this.bot = bot;
-    }
+public class Group extends Contact {
 
     public Group(JSONObject mate) {
         super(mate);
@@ -39,7 +30,7 @@ public class Group extends Contact implements SenderAndCidMidGetter {
     @Override
     public Result<V2Result> send(String text) {
         V2MsgData data = new V2MsgData().setContent(text);
-        return new Result<V2Result>(bot.groupV2Base.send(getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS));
+        return new Result<V2Result>(bot.groupBaseV2.send(getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS));
     }
 
     @Override
@@ -49,7 +40,7 @@ public class Group extends Contact implements SenderAndCidMidGetter {
 
     private V2Result sendImage(Image msg) {
         if (RawMessage.ImagePrepare(msg, bot)) return null;
-        return bot.groupV2Base.sendFile(getOpenid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl()), Channel.SEND_MESSAGE_HEADERS);
+        return bot.groupBaseV2.sendFile(getOpenid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl()), Channel.SEND_MESSAGE_HEADERS);
     }
 
     @Override

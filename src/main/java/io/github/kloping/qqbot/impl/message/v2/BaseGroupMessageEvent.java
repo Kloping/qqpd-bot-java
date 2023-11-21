@@ -33,10 +33,16 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
         this.bot = bot;
         this.metadata = jo;
         this.rawMessage = message;
-        this.subject = new Group(getMetadata());
-        this.subject.setBot(bot);
-        this.sender = new Member(getMetadata().getJSONObject("author"));
+
         this.msgId = getMetadata().getString("id");
+        this.sender = new Member(getMetadata().getJSONObject("author"));
+        this.subject = new Group(getMetadata());
+
+        this.getSender().setId(this.getSender().getMeta().getString("id"));
+        this.getSender().setOpenid(this.getSender().getMeta().getString("member_openid"));
+
+        this.subject.setBot(bot);
+        this.sender.setBot(bot);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
 
     public V2Result sendMessage(String text, int seq) {
         V2MsgData data = new V2MsgData().setMsg_id(getMsgId()).setContent(text).setMsg_seq(1);
-        return bot.groupV2Base.send(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
+        return bot.groupBaseV2.send(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
     }
 
     @Override

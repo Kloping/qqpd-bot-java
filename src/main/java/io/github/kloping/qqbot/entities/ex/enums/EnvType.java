@@ -6,5 +6,5 @@ package io.github.kloping.qqbot.entities.ex.enums;
  * @author github.kloping
  */
 public enum EnvType {
-    GUILD, GROUP
+    GUILD, GROUP, GROUP_USER
 }

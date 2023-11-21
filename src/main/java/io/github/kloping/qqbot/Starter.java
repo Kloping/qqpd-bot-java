@@ -113,6 +113,7 @@ public class Starter implements Runnable {
             APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
         });
         APPLICATION.logger.setLogLevel(1);
+        APPLICATION.logger.setPrefix("[qq-pd-group]");
         APPLICATION.run0(Start0.class);
         after();
     }

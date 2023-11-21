@@ -7,7 +7,7 @@ import io.github.kloping.MySpringTool.h1.impl.component.HttpStatusReceiver;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.MySpringTool.interfaces.component.HttpClientManager;
 import io.github.kloping.common.Public;
-import io.github.kloping.qqbot.api.event.BotContent;
+import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;

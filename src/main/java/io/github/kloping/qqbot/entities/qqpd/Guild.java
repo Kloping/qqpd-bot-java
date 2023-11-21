@@ -4,15 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.map.MapUtils;
+import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.api.OpAble;
 import io.github.kloping.qqbot.api.SessionCreator;
-import io.github.kloping.qqbot.api.event.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.ChannelData;
-import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -30,8 +30,8 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 @ToString
-@EqualsAndHashCode
-public class Guild extends Contact implements SessionCreator, OpAble, BotContent {
+@EqualsAndHashCode(callSuper = false)
+public class Guild implements SessionCreator, OpAble, BotContent {
     private Boolean owner;
     private String joinedAt;
     private String ownerId;
@@ -39,6 +39,7 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
     private String icon;
     private Integer maxMembers;
     private String description;
+    @Getter
     private String id;
     private Integer memberCount;
 
@@ -63,6 +64,8 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
         jo.put("guildId", getId());
         MemberWithGuildID w = jo.toJavaObject(MemberWithGuildID.class);
         w.setBot(getBot());
+        member.setGuild(this);
+        w.setGuild(this);
         return w;
     }
 
@@ -71,6 +74,7 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
         member = BaseUtils.tryGet(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId);
         if (member == null) {
             member = bot.guildBase.getMember(Guild.this.getId(), userId);
+            member.setGuild(this);
             if (member.getNick() == null || member.getRoles() == null || member.getUser() == null) return null;
             MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId, member);
         }
@@ -81,6 +85,7 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
         String uid = member.getUser().getId();
         Member m0 = getMember(uid);
         if (m0 == null) m0 = member;
+        member.setGuild(this);
         MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), uid, member);
         return m0;
     }
@@ -120,12 +125,9 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
         return channel;
     }
 
+    @Getter
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
-
-    public Bot getBot() {
-        return bot;
-    }
 
     public void setBot(Bot bot) {
         this.bot = bot;
@@ -139,14 +141,5 @@ public class Guild extends Contact implements SessionCreator, OpAble, BotContent
     public Channel create(ChannelData data) {
         Channel channel = getBot().guildBase.create(Channel.SEND_MESSAGE_HEADERS, Guild.this.getId(), data);
         return channel;
-    }
-
-    public String getId() {
-        return Guild.this.id;
-    }
-
-    @Override
-    public String getOpenid() {
-        return getId();
     }
 }

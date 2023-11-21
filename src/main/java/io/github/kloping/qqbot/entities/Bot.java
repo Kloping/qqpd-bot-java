@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.*;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,11 +36,15 @@ public class Bot {
     public MemberBase memberBase;
 
     @AutoStand
-    public GroupV2Base groupV2Base;
+    public GroupBaseV2 groupBaseV2;
+
+    @AutoStand
+    public UserBaseV2 userBaseV2;
 
     @AutoStand
     public AuthV2Base authV2Base;
 
+    @Getter
     @AutoStand
     Starter.Config config;
 
@@ -90,9 +95,5 @@ public class Bot {
 
     public String getId() {
         return getInfo().getId();
-    }
-
-    public Starter.Config getConfig() {
-        return config;
     }
 }
