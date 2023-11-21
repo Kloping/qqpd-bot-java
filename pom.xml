@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-Alpha2</version>
+    <version>1.5.0-Beta2</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -76,6 +76,12 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.15.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <distributionManagement>
