@@ -2,19 +2,16 @@ package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.api.DeleteAble;
-import io.github.kloping.qqbot.api.Reactive;
-import io.github.kloping.qqbot.api.SendAble;
-import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.*;
 import io.github.kloping.qqbot.api.message.Pinsble;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.Image;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
-import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.PinsMessage;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
+import io.github.kloping.qqbot.http.BaseV2;
 import io.github.kloping.qqbot.http.data.ActionResult;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
@@ -35,7 +32,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode
-public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, Pinsble {
+public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, Pinsble, SenderV2 {
     private String id;
     private String channelId;
     private String guildId;
@@ -78,36 +75,26 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         return send(text, this);
     }
 
-    private V2Result sendImage(Image msg, EnvType type) {
-        if (ImagePrepare(msg, bot)) return null;
-        if (type == EnvType.GROUP)
-            return bot.groupBaseV2.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
-                , Channel.SEND_MESSAGE_HEADERS);
-        else if (type == EnvType.GROUP_USER)
-            return bot.userBaseV2.sendFile(getSrcGuildId(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": true}", msg.getFile_type(), msg.getUrl())
-                    , Channel.SEND_MESSAGE_HEADERS);
-        else return null;
-    }
-
-    public static boolean ImagePrepare(Image msg, Bot bot) {
-        if (Judge.isEmpty(msg.getUrl())) {
-            if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
-                String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
-                if (Judge.isNotEmpty(url)) {
-                    msg.setUrl(url);
-                } else return true;
+    public static boolean imagePrepare(Image msg, Bot bot) {
+        try {
+            if (Judge.isEmpty(msg.getUrl())) {
+                if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
+                    String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
+                    if (Judge.isNotEmpty(url)) {
+                        msg.setUrl(url);
+                    } else return true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            bot.logger.error(e.getMessage());
         }
         return false;
     }
 
     @Override
     public Result send(SendAble msg) {
-        if (envType == EnvType.GROUP) {
-            if (msg instanceof Image) {
-                return new Result<V2Result>(sendImage((Image) msg, envType));
-            } else return msg.send(this);
-        } else return new Result<>(msg.send(this));
+        return new Result<>(msg.send(this));
     }
 
     @Override
@@ -130,7 +117,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
 
     @Override
     public String getCid() {
-        return getChannelId();
+        return (envType == EnvType.GROUP || envType == EnvType.GROUP_USER) ? getSrcGuildId() : getChannelId();
     }
 
     @Override
@@ -187,5 +174,10 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     @Override
     public PinsMessage getPins() {
         return getBot().channelBase.getPins(getChannelId());
+    }
+
+    @Override
+    public BaseV2 getV2() {
+        return envType == EnvType.GROUP ? bot.groupBaseV2 : envType == EnvType.GROUP_USER ? bot.userBaseV2 : null;
     }
 }

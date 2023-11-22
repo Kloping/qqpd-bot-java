@@ -1,16 +1,23 @@
 package io.github.kloping.qqbot.entities.ex.msg;
 
+import io.github.kloping.judge.Judge;
 import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.entities.ex.*;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.http.data.Result;
+import io.github.kloping.qqbot.http.data.V2MsgData;
+import io.github.kloping.qqbot.http.data.V2Result;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
 
 /**
  * @author github.kloping
@@ -21,6 +28,7 @@ public class MessageChain implements SendAble {
 
     @Override
     public Result send(SenderAndCidMidGetter er) {
+        if (list.isEmpty()) return null;
         if (er.getEnvType() == EnvType.GUILD) {
             MessagePreBuilder builder = new MessagePreBuilder();
             boolean flag0 = false;
@@ -46,23 +54,37 @@ public class MessageChain implements SendAble {
             }
             return er.send(builder.build());
         } else {
-            StringBuilder result = new StringBuilder();
-            StringBuilder sb = new StringBuilder();
-            int seq = 1;
-            for (int i = 0; i < list.size(); i++) {
-                SendAble e = list.get(i);
-                if (e instanceof Image) {
-                    result.append("\n").append(er.send((Image) e).getData());
-                } else if (e instanceof MessageChain) {
-                    ((MessageChain) e).forEach((e1) -> {
-                        result.append("\n").append(er.send(e1));
-                    });
+            SenderV2 v2 = (SenderV2) er;
+            boolean flag0 = false;
+
+            V2MsgData data = new V2MsgData();
+            if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
+
+            for (SendAble e0 : list) {
+                if (e0 instanceof Image) {
+                    Image image = (Image) e0;
+                    if (!flag0) {
+                        flag0 = true;
+                        V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
+                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
+                        result.logFileInfo(er.getBot().logger);
+                        data.setMsg_type(7);
+                        data.setMedia(new V2MsgData.Media(result.getFile_info()));
+                    } else {
+                        v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS);
+                        data = new V2MsgData();
+                        if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
+                        V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
+                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
+                        result.logFileInfo(er.getBot().logger);
+                        data.setMsg_type(7);
+                        data.setMedia(new V2MsgData.Media(result.getFile_info()));
+                    }
                 } else {
-                    sb.append(e.toString());
+                    data.setContent(data.getContent() + e0.toString());
                 }
             }
-            if (sb.length() > 0) result.append("\n").append(er.send(sb.toString()).getData());
-            return new Result<String>(result.toString().trim());
+            return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
         }
     }
 

@@ -3,8 +3,13 @@ package io.github.kloping.qqbot.entities.ex;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.entities.qqpd.Channel;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.Result;
+import io.github.kloping.qqbot.http.data.V2MsgData;
+import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import lombok.Data;
 import org.jsoup.helper.HttpConnection;
@@ -13,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADERS;
+import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
 
 /**
  *
@@ -78,7 +84,15 @@ public class Image implements SendAble {
             if (Judge.isNotEmpty(getUrl())) packet.setImage(getUrl());
             return er.send(packet);
         } else {
-           return er.send(this);
+            SenderV2 v2 = (SenderV2) er;
+            if (RawMessage.imagePrepare(this, er.getBot())) return null;
+            V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", getFile_type(), getUrl()), Channel.SEND_MESSAGE_HEADERS);
+            result.logFileInfo(er.getBot().logger);
+            V2MsgData data = new V2MsgData();
+            data.setMsg_type(7);
+            if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
+            data.setMedia(new V2MsgData.Media(result.getFile_info()));
+            return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
         }
     }
 }

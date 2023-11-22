@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @HttpClient(Starter.NET_MAIN)
 @Headers("io.github.kloping.qqbot.Start0.getV2Headers")
-public interface GroupBaseV2 {
+public interface GroupBaseV2 extends BaseV2{
     /**
      * 发送群聊消息
      * @param gid

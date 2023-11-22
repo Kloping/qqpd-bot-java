@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.http.data;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -17,12 +18,22 @@ public class V2MsgData {
     private String content = "";
     private Integer msg_type = 0;
     private String image = null;
+    private Media media;
 
     private String msg_id;
-    private Integer msg_seq = 1;
+    private Integer msg_seq;
 
     @Override
     public String toString() {
         return JSON.toJSONString(this);
+    }
+
+    @Getter
+    public static class Media {
+        private String file_info;
+
+        public Media(String file_info) {
+            this.file_info = file_info;
+        }
     }
 }

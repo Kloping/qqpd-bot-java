@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.http.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.judge.Judge;
 import lombok.Data;
 
@@ -23,6 +24,8 @@ public class V2Result {
     private String msg;
 
     private String file_uuid;
+    private String file_info;
+    private Integer ttl;
 
     public static String docMsg(String json) {
         V2Result result = JSON.parseObject(json, V2Result.class);
@@ -34,5 +37,9 @@ public class V2Result {
         JSONObject data = JSON.parseObject(json);
         if (Judge.isEmpty(data.getString("file_uuid"))) return "";
         else return data.getString("file_uuid");
+    }
+
+    public void logFileInfo(Logger logger) {
+        logger.info("file uuid: " + file_uuid);
     }
 }
