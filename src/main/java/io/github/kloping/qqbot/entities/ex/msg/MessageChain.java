@@ -9,6 +9,7 @@ import io.github.kloping.qqbot.entities.ex.*;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
@@ -63,6 +64,7 @@ public class MessageChain implements SendAble {
             for (SendAble e0 : list) {
                 if (e0 instanceof Image) {
                     Image image = (Image) e0;
+                    if (RawMessage.imagePrepare(image, er.getBot())) continue;
                     if (!flag0) {
                         flag0 = true;
                         V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
