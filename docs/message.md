@@ -51,14 +51,15 @@
 - [MessageAsyncBuilder](../src/main/java/io/github/kloping/qqbot/entities/ex/MessageAsyncBuilder.java) 异步消息构造器
   用于发送部分多图消息
 
-      // 示例
-         MessageAsyncBuilder builder = new MessageAsyncBuilder()
-                .append(new PlainText("你好"))
-                .append(new Image("url"))
-                .append(new Image(new byte[1]))
-                .append(Emoji.emm)
-                .append(new At(At.MEMBER_TYPE, "1"));
-        event.send(builder.build());
+       //示例
+       MessageAsyncBuilder builder = new MessageAsyncBuilder()
+                        .text("你好")
+                        .image("url")
+                        .image(new byte[0])
+                        .at("1")
+                        .append(Emoji.emm);
+       event.send(builder.build());
+-
 
 <hr>
 

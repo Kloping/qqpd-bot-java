@@ -3,7 +3,6 @@ package io.github.kloping.qqbot.entities.ex;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.message.Builder;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
-import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 
 /**
  * 异步 消息 发送 <br>
@@ -13,6 +12,9 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
  * @author github.kloping
  */
 public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
+
+    private final MessageChain chain = new MessageChain();
+
 
     @Override
     public MessageAsyncBuilder append(SendAble sendAble) {
@@ -25,17 +27,24 @@ public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
         return this;
     }
 
-    private MessageChain chain = new MessageChain();
-
     @Override
     public SendAble build() {
         return chain;
     }
 
-    private RawMessage message;
+    public MessageAsyncBuilder at(String id) {
+        return append(new At(At.MEMBER_TYPE, id));
+    }
 
-    public MessageAsyncBuilder reply(RawMessage message) {
-        this.message = message;
-        return this;
+    public MessageAsyncBuilder image(String url) {
+        return append(new Image(url));
+    }
+
+    public MessageAsyncBuilder image(byte[] bytes) {
+        return append(new Image(bytes));
+    }
+
+    public MessageAsyncBuilder text(String text) {
+        return append(new PlainText(text));
     }
 }
