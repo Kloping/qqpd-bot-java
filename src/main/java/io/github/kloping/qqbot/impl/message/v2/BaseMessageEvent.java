@@ -37,8 +37,10 @@ public abstract class BaseMessageEvent implements MessageEvent<Contact, Group>, 
         return String.format("%s post %s:%s=>%s", this.getClass().getSimpleName(), getSubject().getId(), getSender().getId(), getMessage());
     }
 
+    protected MessageChain chain;
+
     @Override
     public MessageChain getMessage() {
-        return BaseUtils.parseToMessageChain(getRawMessage());
+        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage()) : chain;
     }
 }

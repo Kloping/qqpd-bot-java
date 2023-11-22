@@ -100,8 +100,10 @@ public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Mem
         return getRawMessage().send(msg);
     }
 
+    protected MessageChain chain;
+
     @Override
     public MessageChain getMessage() {
-        return BaseUtils.parseToMessageChain(getRawMessage());
+        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage()) : chain;
     }
 }
