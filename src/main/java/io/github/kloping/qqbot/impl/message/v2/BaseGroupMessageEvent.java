@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.api.v2.GroupMessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
@@ -11,6 +12,7 @@ import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 import io.github.kloping.qqbot.entities.qqpd.v2.Member;
+import io.github.kloping.qqbot.http.BaseV2;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
@@ -21,12 +23,14 @@ import lombok.Setter;
  * @author github.kloping
  */
 @Getter
-public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMessageEvent, SenderAndCidMidGetter {
+public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMessageEvent, SenderAndCidMidGetter, SenderV2 {
     @Getter
     private Group subject;
     private Member sender;
     @Setter
     private Bot bot;
+
+    private Integer seq = 1;
 
     public BaseGroupMessageEvent(RawMessage message, JSONObject jo, Bot bot) {
         super(message, jo, bot);
@@ -57,11 +61,11 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
      */
     @Override
     public V2Result sendMessage(String text) {
-        return sendMessage(text, 1);
+        return sendMessage(text, getMsgSeq());
     }
 
     public V2Result sendMessage(String text, int seq) {
-        V2MsgData data = new V2MsgData().setMsg_id(getMsgId()).setContent(text).setMsg_seq(1);
+        V2MsgData data = new V2MsgData().setMsg_id(getMsgId()).setContent(text).setMsg_seq(seq);
         return bot.groupBaseV2.send(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
     }
 
@@ -82,7 +86,7 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
 
     @Override
     public Result send(SendAble msg) {
-        return getRawMessage().send(msg);
+        return msg.send(this);
     }
 
     @Override
@@ -103,5 +107,14 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
     @Override
     public EnvType getEnvType() {
         return EnvType.GROUP;
+    }
+
+    @Override
+    public BaseV2 getV2() {
+        return bot.groupBaseV2;
+    }
+
+    public Integer getMsgSeq() {
+        return seq++;
     }
 }

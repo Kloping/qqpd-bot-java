@@ -7,4 +7,8 @@ import io.github.kloping.qqbot.http.BaseV2;
  */
 public interface SenderV2 extends Sender, BotContent {
     BaseV2 getV2();
+
+    default Integer getMsgSeq() {
+        return 1;
+    }
 }

@@ -61,12 +61,9 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     @Override
     public Result send(String text, RawMessage message) {
         if (envType == EnvType.GUILD) return send(new MessagePacket().setContent(text).setReplyId(message.id));
-        else if (envType == EnvType.GROUP) {
-            V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(1);
-            return new Result<V2Result>(bot.groupBaseV2.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
-        } else if (envType == EnvType.GROUP_USER) {
-            V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(1);
-            return new Result<V2Result>(bot.userBaseV2.send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
+        else if (envType == EnvType.GROUP || envType == EnvType.GROUP_USER) {
+            V2MsgData data = new V2MsgData().setMsg_id(message.getId()).setContent(text).setMsg_seq(getMsgSeq());
+            return new Result<V2Result>(getV2().send(message.getSrcGuildId(), data.toString(), SEND_MESSAGE_HEADERS));
         } else return null;
     }
 

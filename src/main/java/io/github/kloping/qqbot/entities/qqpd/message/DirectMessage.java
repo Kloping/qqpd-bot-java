@@ -47,7 +47,7 @@ public class DirectMessage extends RawMessage
     private String srcGuildId;
 
     public static DirectMessage messageAsDirectMessage(RawMessage message) {
-        DirectMessage msg = new DirectMessage().setId(message.getId()).setChannelId(message.getChannelId()).setGuildId(message.getGuildId()).setContent(message.getContent()).setTimestamp(message.getTimestamp()).setEditedTimestamp(message.getEditedTimestamp()).setMentionEveryone(message.getMentionEveryone()).setAuthor(message.getAuthor()).setAttachments(message.getAttachments()).setEmbed(message.getEmbed()).setMentions(message.getMentions()).setMember(message.getMember()).setArk(message.getArk()).setSeq(message.getSeq()).setSeqInChannel(message.getSeqInChannel()).setMessageReference(message.getMessageReference()).setSrcGuildId(message.getSrcGuildId());
+        DirectMessage msg = new DirectMessage().setId(message.getId()).setChannelId(message.getChannelId()).setGuildId(message.getGuildId()).setContent(message.getContent()).setTimestamp(message.getTimestamp()).setEditedTimestamp(message.getEditedTimestamp()).setMentionEveryone(message.getMentionEveryone()).setAuthor(message.getAuthor()).setAttachments(message.getAttachments()).setEmbed(message.getEmbed()).setMentions(message.getMentions()).setMember(message.getMember()).setArk(message.getArk()).setSeq(message.getMsgSeq()).setSeqInChannel(message.getSeqInChannel()).setMessageReference(message.getMessageReference()).setSrcGuildId(message.getSrcGuildId());
         msg.setBot(message.getBot());
         return msg;
     }

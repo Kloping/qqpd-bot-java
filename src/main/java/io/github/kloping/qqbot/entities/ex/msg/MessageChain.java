@@ -73,6 +73,7 @@ public class MessageChain implements SendAble {
                         data.setMsg_type(7);
                         data.setMedia(new V2MsgData.Media(result.getFile_info()));
                     } else {
+                        data.setMsg_seq(v2.getMsgSeq());
                         v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS);
                         data = new V2MsgData();
                         if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
@@ -86,6 +87,7 @@ public class MessageChain implements SendAble {
                     data.setContent(data.getContent() + e0.toString());
                 }
             }
+            data.setMsg_seq(v2.getMsgSeq());
             return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
         }
     }

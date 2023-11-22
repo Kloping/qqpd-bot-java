@@ -39,7 +39,6 @@ public class At implements SendAble {
             packet.setContent(toString());
             return er.send(packet);
         } else {
-            //暂未开放
             return er.send(toString());
         }
     }
