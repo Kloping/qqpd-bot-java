@@ -1,4 +1,5 @@
-![ComWeChatBotClient](https://socialify.git.ci/Kloping/qqpd-bot-java/image?description=1&font=Inter&name=1&pattern=Circuit%20Board&theme=Auto)
+![qqpd-bot-java](https://socialify.git.ci/Kloping/qqpd-bot-java/image?description=1&descriptionEditable=QQ%E5%AE%98%E6%96%B9%E6%9C%BA%E5%99%A8%E4%BA%BA%20Java%2FJVM%2Fkotlin%20SDK%20QQ%20bot%20sdk%20qq%E6%9C%BA%E5%99%A8%E4%BA%BAsdk&font=Source%20Code%20Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Overlapping%20Hexagons&pulls=1&stargazers=1&theme=Auto)
+
 <p align="center">
     <a href="https://github.com/Kloping/qqpd-bot-java/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kloping/qqpd-bot-java" alt="License"></a>
     <a href="https://github.com/Kloping/qqpd-bot-java/releases"><img src="https://img.shields.io/github/v/release/Kloping/qqpd-bot-java?color=blueviolet&include_prereleases" alt="release"></a>
