@@ -12,6 +12,7 @@ import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.jsoup.helper.HttpConnection;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +29,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
  * @author github.kloping
  */
 @Data
+@Accessors(chain = true)
 public class Image implements SendAble {
     private String url;
     private byte[] bytes;

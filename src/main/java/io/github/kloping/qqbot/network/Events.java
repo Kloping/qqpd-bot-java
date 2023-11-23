@@ -7,9 +7,9 @@ import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.common.Public;
-import io.github.kloping.object.ObjectUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.event.Event;
+import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
@@ -73,8 +73,9 @@ public class Events implements OnPackReceive {
         if (event == null) return;
         for (Method method : getM2L().keySet()) {
             ListenerHost l = getM2L().get(method);
-                if (ObjectUtils.isSuperOrInterface(event.getClass(), method.getParameterTypes()[0])) {
-                    Public.EXECUTOR_SERVICE.submit(() -> {
+            if (method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                invokeBefore(l, event, method, Events.this);
+                Public.EXECUTOR_SERVICE.submit(() -> {
                         try {
                             method.invoke(l, event);
                         } catch (IllegalAccessException e) {
@@ -86,10 +87,8 @@ public class Events implements OnPackReceive {
                         }
                     });
                 }
-
         }
-        logger.info(String.format("Bot(%s) %s post(%s)", bot.getInfo().getUsername(),
-                event.getClass().getSimpleName(), event));
+        logger.info(String.format("Bot(%s) post(%s) from %s", bot.getInfo().getUsername(), event, event.getClassName()));
     }
 
     private final Map<Method, ListenerHost> m2l = new HashMap<>();
@@ -114,6 +113,16 @@ public class Events implements OnPackReceive {
     }
 
     public interface EventRegister {
+
         Event handle(String t, JSONObject mateData, RawMessage message);
+    }
+
+    private void invokeBefore(ListenerHost l, Event event, Method method, Events events) {
+        if (method.isAnnotationPresent(ListenerHost.Filter.class)) {
+            if (event instanceof MessageEvent) {
+                ListenerHost.Filter filter = method.getAnnotation(ListenerHost.Filter.class);
+                ((MessageEvent) event).setFilter(filter.exclusions());
+            }
+        }
     }
 }

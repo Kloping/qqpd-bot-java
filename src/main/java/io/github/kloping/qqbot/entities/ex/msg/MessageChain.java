@@ -251,4 +251,9 @@ public class MessageChain implements SendAble, List<SendAble> {
     public List<SendAble> subList(int fromIndex, int toIndex) {
         return data.subList(fromIndex, toIndex);
     }
+
+    public void reSet(List<SendAble> collect) {
+        data.clear();
+        data.addAll(collect);
+    }
 }

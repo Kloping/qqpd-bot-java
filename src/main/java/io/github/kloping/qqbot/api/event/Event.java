@@ -22,4 +22,8 @@ public interface Event {
      * @return
      */
     Bot getBot();
+
+    default String getClassName() {
+        return this.getClass().getSimpleName();
+    }
 }

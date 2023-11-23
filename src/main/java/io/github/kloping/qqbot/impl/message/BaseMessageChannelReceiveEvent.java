@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.Channel;
-import io.github.kloping.qqbot.entities.qqpd.Guild;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
-import io.github.kloping.qqbot.utils.BaseUtils;
 
 /**
  * @author github.kloping
@@ -18,18 +16,7 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
         super(message, jo, bot);
         this.channel = getGuild().getChannel(message.getChannelId());
         this.sender = getGuild().getMember(message.getAuthor().getId());
-        this.content = BaseUtils.parseToMessageChain(getRawMessage()).toString();
         this.channelId = getChannel().getId();
-    }
-
-    @Override
-    public Channel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public Guild getGuild() {
-        return guild;
     }
 
     protected String content;
@@ -37,7 +24,7 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
 
     @Override
     public String getContent() {
-        return content;
+        return content == null ? content = getMessage().toString() : content;
     }
 
     @Override
@@ -47,8 +34,13 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
 
     @Override
     public String toString() {
-        return String.format("[channel(%s)]member(%s)=>%s", getChannel().getName(),
-                getSender().getNick(), getContent());
+        return String.format("[type(%s) %s].%s member(%s)=>%s"
+                , EnvType.GUILD.name()
+                , getGuild().getName()
+                , getChannel().getName()
+                , getSender().getNick()
+                , getRawMessage().toString0()
+        );
     }
 
     @Override
@@ -59,5 +51,10 @@ public class BaseMessageChannelReceiveEvent extends BaseMessageEvent implements 
     @Override
     public void removeEmoji(Emoji emoji) {
         getRawMessage().addEmoji(emoji);
+    }
+
+    @Override
+    public String getClassName() {
+        return MessageChannelReceiveEvent.class.getSimpleName();
     }
 }

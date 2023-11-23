@@ -38,4 +38,16 @@ public interface MessageEvent<T extends Contact, S extends Contact> extends Even
      * @return
      */
     MessageChain getMessage();
+
+    /**
+     * set filter
+     *
+     * @param filters
+     */
+    void setFilter(Class<?>[] filters);
+
+    @Override
+    default String getClassName() {
+        return MessageEvent.class.getSimpleName();
+    }
 }

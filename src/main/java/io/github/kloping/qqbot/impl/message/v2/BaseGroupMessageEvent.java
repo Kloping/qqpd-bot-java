@@ -117,4 +117,20 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
     public Integer getMsgSeq() {
         return seq++;
     }
+
+
+    @Override
+    public String toString() {
+        return String.format("[type(%s) %s].%s:%s"
+                , EnvType.GROUP.name()
+                , getSubject().getId()
+                , getSender().getId()
+                , getRawMessage().toString0()
+        );
+    }
+
+    @Override
+    public String getClassName() {
+        return GroupMessageEvent.class.getSimpleName();
+    }
 }

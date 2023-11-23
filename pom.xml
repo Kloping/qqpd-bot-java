@@ -50,6 +50,12 @@
             <groupId>io.github.Kloping</groupId>
             <artifactId>SpringTool</artifactId>
             <version>0.6.2-R3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.github.Kloping</groupId>
+                    <artifactId>JvUtils</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.Kloping</groupId>

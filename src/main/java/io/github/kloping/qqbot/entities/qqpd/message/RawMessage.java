@@ -18,7 +18,10 @@ import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
@@ -30,7 +33,6 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
  */
 @Data
 @Accessors(chain = true)
-@ToString
 @EqualsAndHashCode
 public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, Pinsble, SenderV2 {
     private String id;
@@ -51,7 +53,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     private String seqInChannel;
     private MessageReference messageReference;
 
-    @JSONField(alternateNames = "group_openid")
+    @JSONField(alternateNames = {"group_openid", "openid"})
     private String srcGuildId;
 
     @Setter
@@ -176,5 +178,13 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     @Override
     public BaseV2 getV2() {
         return envType == EnvType.GROUP ? bot.groupBaseV2 : envType == EnvType.GROUP_USER ? bot.userBaseV2 : null;
+    }
+
+    public String toString0() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(content);
+        if (attachments != null) for (MessageAttachment attachment : attachments)
+            sb.append("[pic:").append(attachment.getFilename()).append("]");
+        return sb.toString();
     }
 }

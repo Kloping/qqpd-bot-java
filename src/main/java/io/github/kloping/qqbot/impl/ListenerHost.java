@@ -1,5 +1,9 @@
 package io.github.kloping.qqbot.impl;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author github.kloping
  */
@@ -34,5 +38,28 @@ public abstract class ListenerHost {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
+    }
+
+    /**
+     * @author github.kloping
+     */
+    @Target(ElementType.METHOD)
+    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
+    public @interface EventReceiver {
+    }
+
+    /**
+     * 过滤不需要的消息类型 且必须与 {@link EventReceiver} 一起使用
+     * <br>
+     * <code>
+     * //例如
+     * <br>{@code @EventReceiver}
+     * <br>{@code @Filter(exclusions = {At.class})}
+     * </code>
+     */
+    @Target(ElementType.METHOD)
+    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
+    public @interface Filter {
+        Class<?>[] exclusions();
     }
 }

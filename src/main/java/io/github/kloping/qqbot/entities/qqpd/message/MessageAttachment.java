@@ -9,5 +9,11 @@ import lombok.Data;
  */
 @Data
 public class MessageAttachment {
+    private String content_type;
+    private String filename;
     private String url;
+    private String id;
+    private Integer height;
+    private Integer size;
+    private Integer width;
 }

@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.impl.message.v2;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.api.v2.MessageV2Event;
 import io.github.kloping.qqbot.entities.Bot;
@@ -34,13 +35,26 @@ public abstract class BaseMessageEvent implements MessageEvent<Contact, Group>, 
 
     @Override
     public String toString() {
-        return String.format("%s post %s:%s=>%s", this.getClass().getSimpleName(), getSubject().getId(), getSender().getId(), getMessage());
+        return String.format("[type(%s) %s].%s:%s"
+                , EnvType.GROUP.name()
+                , getSubject().getId()
+                , getSender().getId()
+                , getRawMessage().toString0()
+        );
     }
 
     protected MessageChain chain;
 
     @Override
     public MessageChain getMessage() {
-        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage()) : chain;
+        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage(), filters) : chain;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    private Class<?>[] filters = null;
+
+    @Override
+    public void setFilter(Class<?>[] filters) {
+        this.filters = filters;
     }
 }

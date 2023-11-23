@@ -1,10 +1,12 @@
 package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
@@ -38,6 +40,16 @@ public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Mem
         this.guild = getBot().getGuild(message.getGuildId());
         this.channel = getGuild().getChannel(message.getChannelId());
         this.sender = getGuild().getMember(message.getAuthor().getId());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[type(%s) %s].%s:%s"
+                , EnvType.GUILD.name()
+                , getSubject().getId()
+                , getSender().getId()
+                , getRawMessage().toString0()
+        );
     }
 
     @Override
@@ -104,6 +116,14 @@ public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Mem
 
     @Override
     public MessageChain getMessage() {
-        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage()) : chain;
+        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage(), filters) : chain;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    private Class<?>[] filters = null;
+
+    @Override
+    public void setFilter(Class<?>[] filters) {
+        this.filters = filters;
     }
 }
