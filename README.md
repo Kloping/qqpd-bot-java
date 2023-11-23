@@ -4,7 +4,7 @@
     <a href="https://github.com/Kloping/qqpd-bot-java/releases"><img src="https://img.shields.io/github/v/release/Kloping/qqpd-bot-java?color=blueviolet&include_prereleases" alt="release"></a>
 </p>
 
-## QQ频道机器人 Java SDK
+## QQ机器人 Java/JVM/kotlin SDK
 
 > 非官方 可用于 Java 8+
 
