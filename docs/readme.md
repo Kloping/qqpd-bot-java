@@ -56,6 +56,8 @@ starter.registerListenerHost(new ListenerHost(){
 
 ```java
 public class LogDemo {
+    
+    private static final SimpleDateFormat dfn = new SimpleDateFormat("/yyyy-MM-dd");
 
     public static String getLogFile() {
         File file = new File(String.format("./logs/%s.log", dfn.format(new Date())));
