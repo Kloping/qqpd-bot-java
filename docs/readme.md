@@ -52,3 +52,22 @@ starter.registerListenerHost(new ListenerHost(){
 - [消息 message](message.md)
 - [动作 action](action.md)
 
+> 日志设置
+
+```java
+public class LogDemo {
+
+    public static String getLogFile() {
+        File file = new File(String.format("./logs/%s.log", dfn.format(new Date())));
+        file.getParentFile().mkdirs();
+        return file.getAbsolutePath();
+    }
+
+    public static void main(String[] args) {
+        //设置控制台输出日志等级
+        starter.APPLICATION.logger.setLogLevel(0);
+        //设置日志输出文件 不受控制台日志输出等级影响
+        starter.APPLICATION.logger.setOutFile(getLogFile());
+    }
+}
+```

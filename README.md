@@ -78,9 +78,6 @@ starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 ```
 
-    //设置日志输出级别
-    starter.APPLICATION.logger.setLogLevel(0);
-
 #### 导入指引
 
 ```java
@@ -88,7 +85,6 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Intents;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
-import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 ```
 
