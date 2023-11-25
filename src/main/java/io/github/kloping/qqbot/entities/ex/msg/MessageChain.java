@@ -106,6 +106,10 @@ public class MessageChain implements SendAble, List<SendAble> {
                     Image image = (Image) e0;
                     if (RawMessage.imagePrepare(image, er.getBot())) continue;
                     if (!flag0) {
+                        if (image.getFile_type() != 1) {
+                            image.send(er);
+                            continue;
+                        }
                         flag0 = true;
                         V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
                                 image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
