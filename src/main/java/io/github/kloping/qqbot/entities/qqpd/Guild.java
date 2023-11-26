@@ -75,7 +75,8 @@ public class Guild implements SessionCreator, OpAble, BotContent {
         if (member == null) {
             member = bot.guildBase.getMember(Guild.this.getId(), userId);
             member.setGuild(this);
-            if (member.getNick() == null || member.getRoles() == null || member.getUser() == null) return null;
+            if (member == null || member.getNick() == null || member.getRoles() == null || member.getUser() == null)
+                return null;
             MapUtils.append(Common.GUILD_MEMBER_TEMP, Guild.this.getId(), userId, member);
         }
         return member;
