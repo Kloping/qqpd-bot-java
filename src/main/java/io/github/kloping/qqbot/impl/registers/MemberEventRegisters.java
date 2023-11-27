@@ -26,9 +26,7 @@ public class MemberEventRegisters implements Events.EventRegister {
 
     @AutoStandAfter
     private void r5(Events events) {
-        events.register("GUILD_MEMBER_UPDATE", this);
-        events.register(GUILD_MEMBER_ADD, this);
-        events.register(GUILD_MEMBER_REMOVE, this);
+        events.register("GUILD_MEMBER_UPDATE", this).register(GUILD_MEMBER_ADD, this).register(GUILD_MEMBER_REMOVE, this);
     }
 
     @AutoStand

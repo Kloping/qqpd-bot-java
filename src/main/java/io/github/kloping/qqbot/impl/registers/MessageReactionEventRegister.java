@@ -24,8 +24,7 @@ public class MessageReactionEventRegister implements Events.EventRegister {
 
     @AutoStandAfter
     private void r7(Events events) {
-        events.register("MESSAGE_REACTION_ADD", this);
-        events.register("MESSAGE_REACTION_REMOVE", this);
+        events.register("MESSAGE_REACTION_ADD", this).register("MESSAGE_REACTION_REMOVE", this);
     }
 
     @Override

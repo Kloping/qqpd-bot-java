@@ -1,12 +1,14 @@
 package io.github.kloping.qqbot;
 
 import io.github.kloping.MySpringTool.StarterObjectApplication;
+import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.ImageUploadInterceptor;
+import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.qqbot.network.WssWorker;
 import lombok.Data;
 import lombok.Getter;
@@ -14,6 +16,8 @@ import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import static io.github.kloping.MySpringTool.PartUtils.getExceptionLine;
 
 /**
  * <h3>一般启动方式</h3>
@@ -147,6 +151,22 @@ public class Starter implements Runnable {
 
     public void registerListenerHost(ListenerHost listenerHost) {
         getConfig().getListenerHosts().add(listenerHost);
+    }
+
+    /**
+     * 该类必须注解为 @{@link Entity}
+     *
+     * @param register
+     */
+    public void registerEventsRegister(Class<? extends Events.EventRegister> cla) {
+        APPLICATION.POST_SCAN_RUNNABLE.add(() -> {
+            try {
+                APPLICATION.INSTANCE.getClassManager().add(cla);
+            } catch (Exception e) {
+                APPLICATION.logger.error("An error occurred in the registration class " + cla.getSimpleName());
+                APPLICATION.logger.error("\n\tat " + getExceptionLine(e));
+            }
+        });
     }
 
     @Data
