@@ -20,13 +20,13 @@ public class BaseConnectedEvent implements ConnectedEvent {
     }
 
     @Override
-    public JSONObject getMetadata() {
-        return metadata;
+    public Bot getBot() {
+        return bot;
     }
 
     @Override
-    public Bot getBot() {
-        return bot;
+    public JSONObject getMetadata() {
+        return metadata;
     }
 
     @Override
