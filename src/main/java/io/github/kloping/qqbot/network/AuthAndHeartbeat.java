@@ -113,7 +113,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @Override
     public boolean onReceive(Pack pack) {
         if (wssWorker.msgr == 0) {
-            logger.info("鉴权");
+            logger.info("Authentication");
             authPack = new Pack();
             authPack.setOp(2);
             JSONObject jo = new JSONObject();
@@ -136,7 +136,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
             }, heartbeatInterval.longValue(), heartbeatInterval.longValue(), TimeUnit.MILLISECONDS);
             return true;
         } else if (pack.getOp() == 7) {
-            logger.waring("服务端通知客户端重新连接");
+            logger.waring("op 7 Reconnect");
         }
         if (pack.getS() != null) {
             newstId = pack.getS().intValue();
@@ -155,7 +155,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage message) {
         sessionId = mateData.getString("session_id");
-        logger.info("Started Successfully!");
+        logger.info("Ready!");
         return new BaseConnectedEvent(mateData, bot, sessionId);
     }
 }

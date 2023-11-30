@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author github.kloping
  */
-public class MvnTest extends ListenerHost {
+public class EventsRegisterTest extends ListenerHost {
     private Starter starter;
     private Logger logger;
     @Test
