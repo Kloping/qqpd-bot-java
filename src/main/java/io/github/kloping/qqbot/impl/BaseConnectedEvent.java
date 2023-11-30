@@ -30,13 +30,13 @@ public class BaseConnectedEvent implements ConnectedEvent {
     }
 
     @Override
-    public String getClassName() {
-        return ConnectedEvent.class.getSimpleName();
+    public String getSessionId() {
+        return sessionId;
     }
 
     @Override
-    public String getSessionId() {
-        return sessionId;
+    public String getClassName() {
+        return ConnectedEvent.class.getSimpleName();
     }
 
     @Override
