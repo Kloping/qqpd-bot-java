@@ -50,6 +50,9 @@ public class WssWorker implements Runnable {
         try {
             try {
                 if (uri == null) uri = new URI(botBase.gateway().getUrl());
+            } catch (NullPointerException ex) {
+                logger.error(String.format("%s Probably The APPID or TOKEN is incorrect", ex.getClass().getName()));
+                return;
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

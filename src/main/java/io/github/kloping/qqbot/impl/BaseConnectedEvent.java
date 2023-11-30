@@ -5,6 +5,7 @@ import io.github.kloping.qqbot.api.event.ConnectedEvent;
 import io.github.kloping.qqbot.entities.Bot;
 
 /**
+ * version show
  * @author github.kloping
  */
 public class BaseConnectedEvent implements ConnectedEvent {
