@@ -1,4 +1,3 @@
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
@@ -8,6 +7,7 @@ public class MvnTest {
 
     @Test
     public void test() {
-        System.out.println("测试通过");
+        String arg0 = System.getProperty("test.arg");
+        System.out.println("测试通过: for " + arg0);
     }
 }
