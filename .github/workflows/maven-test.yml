@@ -12,11 +12,7 @@ on:
   push:
     branches: [ "group-r0" ]
     paths:
-      - '**/src/main/**/*.java'
-  pull_request:
-    branches: [ "group-r0" ]
-    paths:
-      - '**/src/main/**/*.java'
+      - '**/src/test/**/*.java'
 
 jobs:
   build:
@@ -33,7 +29,11 @@ jobs:
         cache: maven
     - shell: bash
       name: Build with Maven
-      run: mvn clean
+      env:
+        test: ${{ secrets.SIMPLESECRET }}
+        appid: ${{ secrets.APPID }}
+        token: ${{ secrets.TOKEN }}
+      run: mvn test --file pom.xml -Dappid=${appid} -Dtoken=${token}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph

@@ -52,6 +52,7 @@ public class MvnTest extends ListenerHost {
         @Override
         public Event handle(String t, JSONObject mateData, RawMessage message) {
             if (TEST_EVENT.equals(TEST_EVENT)) {
+                bot.logger.info("=====================================");
                 bot.logger.waring(TEST_EVENT + " handle for raw " + mateData);
             }
             return null;
