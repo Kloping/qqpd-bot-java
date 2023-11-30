@@ -25,13 +25,13 @@ public class BaseConnectedEvent implements ConnectedEvent {
     }
 
     @Override
-    public JSONObject getMetadata() {
-        return metadata;
+    public String getSessionId() {
+        return sessionId;
     }
 
     @Override
-    public String getSessionId() {
-        return sessionId;
+    public JSONObject getMetadata() {
+        return metadata;
     }
 
     @Override
