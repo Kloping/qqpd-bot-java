@@ -32,8 +32,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dtest.arg=${{ test.SIMPLESECRET }}
+    - shell: bash
+      name: Build with Maven
+      env:
+        test: ${{ secrets.SIMPLESECRET }}
+      run: mvn -B package --file pom.xml -Dtest.arg=${test}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
