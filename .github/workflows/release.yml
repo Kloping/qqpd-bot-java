@@ -1,7 +1,10 @@
 name: Publish package to the Maven Central Repository
 on:
   push:
-    tags: [ "*" ]
+    branches: [ "group-r0" ]
+    paths:
+      - '**/src/main/java/io/github/kloping/qqbot/impl/BaseConnectedEvent.java'
+
 jobs:
   publish:
     runs-on: ubuntu-latest
