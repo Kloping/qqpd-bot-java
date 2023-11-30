@@ -13,6 +13,10 @@ on:
     branches: [ "group-r0" ]
     paths:
       - '**/src/test/**/*.java'
+  pull_request:
+    branches: [ "group-r0" ]
+    paths:
+      - '**/src/main/**/*.java'
 
 jobs:
   build:
