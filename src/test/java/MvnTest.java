@@ -94,6 +94,6 @@ public class MvnTest extends ListenerHost {
 
     @Override
     public void handleException(Throwable e) {
-
+        throw new RuntimeException(e);
     }
 }
