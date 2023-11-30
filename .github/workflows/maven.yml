@@ -36,7 +36,9 @@ jobs:
       name: Build with Maven
       env:
         test: ${{ secrets.SIMPLESECRET }}
-      run: mvn -B package --file pom.xml -Dtest.arg=${test}
+        appid: ${{ secrets.APPID }}
+        token: ${{ secrets.TOKEN }}
+      run: mvn -B package --file pom.xml -Dappid=${appid} -Dtoken=${token}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph

@@ -155,8 +155,8 @@ public class Starter implements Runnable {
 
     /**
      * 该类必须注解为 @{@link Entity}
-     *
-     * @param register
+     * <br> 参考 {@link io.github.kloping.qqbot.impl.registers}
+     * @param cla
      */
     public void registerEventsRegister(Class<? extends Events.EventRegister> cla) {
         APPLICATION.POST_SCAN_RUNNABLE.add(() -> {
