@@ -99,14 +99,17 @@ public class Events implements OnPackReceive {
     }
 
     private final Map<Method, ListenerHost> m2l = new HashMap<>();
+    private int cap = 0;
 
     private Map<Method, ListenerHost> getM2L() {
-        if (m2l.isEmpty()) {
+        if (m2l.isEmpty() || cap != config.getListenerHosts().size()) {
             synchronized (m2l) {
+                cap = 0;
                 for (ListenerHost listenerHost : config.getListenerHosts()) {
                     for (Method method : InvokeUtils.getAllMethod(listenerHost)) {
                         m2l.put(method, listenerHost);
                     }
+                    cap++;
                 }
             }
         }
