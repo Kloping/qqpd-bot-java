@@ -6,11 +6,13 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author github.kloping
  */
 @Getter
+@ToString
 public class ActionResult {
     public static ActionResult doc(String json) {
         try {

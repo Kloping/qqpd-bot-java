@@ -2,7 +2,6 @@ package io.github.kloping.qqbot.api.message;
 
 import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
-import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.EmojiReaction;
 
@@ -19,4 +18,9 @@ public interface MessageReactionEvent extends ChannelEvent, MessageEvent<Member,
      * @return
      */
     EmojiReaction getMessageReaction();
+
+    @Override
+    default String getClassName() {
+        return "MessageReactionEvent";
+    }
 }

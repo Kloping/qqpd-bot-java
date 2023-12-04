@@ -3,6 +3,7 @@ package io.github.kloping.qqbot;
 import io.github.kloping.MySpringTool.StarterObjectApplication;
 import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.MySpringTool.interfaces.component.HttpClientManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
@@ -137,6 +138,7 @@ public class Starter implements Runnable {
         contextManager.append("Bot " + appid + "." + token, AUTH_ID);
         contextManager.append(getConfig().getReconnect(), RECONNECT_K_ID);
         wssWorker = contextManager.getContextEntity(WssWorker.class);
+        contextManager.getContextEntity(HttpClientManager.class).setPrint(false);
         wssWork();
     }
 
