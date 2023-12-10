@@ -20,16 +20,6 @@ public class BaseMessageReceiveEvent extends BaseMessageEvent implements Message
         this.content = getRawMessage().getContent() == null ? "" : getRawMessage().getContent();
     }
 
-    @Override
-    public Channel getChannel() {
-        return this.channel;
-    }
-
-    @Override
-    public Guild getGuild() {
-        return null;
-    }
-
     protected String content;
 
     @Override

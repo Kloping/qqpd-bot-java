@@ -17,7 +17,7 @@ import io.github.kloping.qqbot.network.Events;
 public class MessageDeleteEventRegister implements Events.EventRegister {
     @AutoStandAfter
     private void r3(Events events) {
-        events.register("MESSAGE_DELETE", this);
+        events.register("MESSAGE_DELETE", this).register("PUBLIC_MESSAGE_DELETE", this);
     }
 
     @AutoStand

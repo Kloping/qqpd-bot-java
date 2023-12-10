@@ -43,7 +43,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
     @Override
     public void receive(HttpClientManager manager, String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
-
+        if (o == null || code == null || metadata == null) return;
         logger.log(String.format("Use the (%s) method through the (%s) interface to request " +
                         "the data obtained by the response code of the (%s) URL is (%s), " +
                         "and (%s) may be converted to (%s) type Will be processed and filtered",
@@ -56,7 +56,6 @@ public class HttpClientConfig implements HttpStatusReceiver {
                         : Ansi.ansi().fgRgb(dataColor.getRGB()).a(metadata.body().wholeText()).reset().toString(),
                 Ansi.ansi().fgRgb(LoggerImpl.NORMAL_LOW_COLOR.getRGB()).a(o).reset().toString()
         ));
-        if (o == null) return;
         fillAll(cla, o);
 
         Public.EXECUTOR_SERVICE.submit(() -> {

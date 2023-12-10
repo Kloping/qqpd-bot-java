@@ -26,4 +26,9 @@ public class BaseMessageDeleteEvent extends BaseMessageReceiveEvent implements M
     public String getOpUserId() {
         return opUserId;
     }
+
+    @Override
+    public String getClassName() {
+        return "MessageDeleteEvent";
+    }
 }
