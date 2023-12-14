@@ -18,7 +18,7 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-Beta6</version>
+    <version>1.5.0-Beta7</version>
 </dependency>
 ```
 
@@ -40,14 +40,10 @@ Maven
     starter.run();
 ```
 
-> #### V1.4+ 注册监听器主机方式 [荐]
+> #### V1.5.0-Beta7+ 注册监听器主机方式 [荐]
 
 ```java
 starter.registerListenerHost(new ListenerHost(){
-    @Override
-    public void handleException(Throwable e){
-    }
-
     @EventReceiver
     public void onEvent(MessageChannelReceiveEvent event){
         event.send("测试");

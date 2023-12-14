@@ -113,7 +113,7 @@ public class MessageChain implements SendAble, List<SendAble> {
                         flag0 = true;
                         V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
                                 image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
-                        result.logFileInfo(er.getBot().logger);
+                        result.logFileInfo(er.getBot().logger, image);
                         data.setMsg_type(7);
                         data.setMedia(new V2MsgData.Media(result.getFile_info()));
                     } else {
@@ -123,7 +123,7 @@ public class MessageChain implements SendAble, List<SendAble> {
                         if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
                         V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
                                 image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
-                        result.logFileInfo(er.getBot().logger);
+                        result.logFileInfo(er.getBot().logger, image);
                         data.setMsg_type(7);
                         data.setMedia(new V2MsgData.Media(result.getFile_info()));
                     }

@@ -44,7 +44,7 @@ public class Group extends Contact implements SenderV2 {
     private V2Result sendImage(Image msg) {
         if (RawMessage.imagePrepare(msg, bot)) return null;
         V2Result result = bot.groupBaseV2.sendFile(getOpenid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", msg.getFile_type(), msg.getUrl()), Channel.SEND_MESSAGE_HEADERS);
-        result.logFileInfo(bot.logger);
+        result.logFileInfo(bot.logger, msg);
         V2MsgData data = new V2MsgData();
         data.setMedia(new V2MsgData.Media(result.getFile_info()));
         return bot.groupBaseV2.send(getOpenid(), data.toString(), SEND_MESSAGE_HEADERS);

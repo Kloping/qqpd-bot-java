@@ -89,7 +89,7 @@ public class Image implements SendAble {
             SenderV2 v2 = (SenderV2) er;
             if (RawMessage.imagePrepare(this, er.getBot())) return null;
             V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", getFile_type(), getUrl()), Channel.SEND_MESSAGE_HEADERS);
-            result.logFileInfo(er.getBot().logger);
+            result.logFileInfo(er.getBot().logger, this);
             V2MsgData data = new V2MsgData();
             data.setMsg_type(7);
             if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());

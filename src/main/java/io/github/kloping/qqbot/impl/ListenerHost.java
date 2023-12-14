@@ -13,7 +13,9 @@ public abstract class ListenerHost {
      *
      * @param e
      */
-    public abstract void handleException(Throwable e);
+    public void handleException(Throwable e) {
+        e.printStackTrace();
+    }
 
     @Override
     public int hashCode() {

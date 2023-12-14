@@ -88,8 +88,11 @@ public class Events implements OnPackReceive {
                             logger.error("EventReceiver The method parameter is set incorrectly");
                             logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
                         } catch (InvocationTargetException e) {
-                            logger.error(e.getMessage());
+                            logger.error(getExceptionLine(e.getTargetException()));
                             l.handleException(e.getTargetException());
+                        } catch (Exception e) {
+                            logger.error(getExceptionLine(e));
+                            l.handleException(e);
                         }
                     });
                 }

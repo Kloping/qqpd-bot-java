@@ -2,9 +2,15 @@ package io.github.kloping.qqbot.http.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.judge.Judge;
+import io.github.kloping.qqbot.entities.ex.Image;
+import io.github.kloping.qqbot.entities.exceptions.ImageUploadFailedException;
 import lombok.Data;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * 官方文档
@@ -39,7 +45,21 @@ public class V2Result {
         else return data.getString("file_uuid");
     }
 
-    public void logFileInfo(Logger logger) {
+    public void logFileInfo(Logger logger, Image image) {
+        if (file_uuid == null)
+            throw new ImageUploadFailedException(String.format("Failed to upload image(%s)", image.getUrl()));
         logger.info("file uuid: " + file_uuid);
+    }
+
+    @JSONField(deserialize = false, serialize = false)
+    public static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    public void setTimestamp(String timestamp) {
+        try {
+            Long t0 = format.parse(timestamp).getTime();
+            this.timestamp = t0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
