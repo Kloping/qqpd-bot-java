@@ -81,6 +81,7 @@ public class LogDemo {
 - 通过http请求达到想要的目的获取bot请求必要的请求头方式
 
 ```java
+//方法必须在start.run 之后
 //频道发送请求必要请求头
 starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
 //q群发送请求必要请求头
