@@ -52,6 +52,8 @@ starter.registerListenerHost(new ListenerHost(){
 - [消息 message](message.md)
 - [动作 action](action.md)
 
+<hr>
+
 > 日志设置
 
 ```java
@@ -72,4 +74,15 @@ public class LogDemo {
         starter.APPLICATION.logger.setOutFile(getLogFile());
     }
 }
+```
+<hr>
+
+> 自定义消息发送 
+- 通过http请求达到想要的目的获取bot请求必要的请求头方式
+
+```java
+//频道发送请求必要请求头
+starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
+//q群发送请求必要请求头
+starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
 ```
