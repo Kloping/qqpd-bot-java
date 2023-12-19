@@ -79,7 +79,8 @@ public class LogDemo {
 
 ### 依赖排斥
 
-- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2 同时引用时会产生大量空指针#20
+- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2
+  同时引用时会产生大量空指针[#20](https://github.com/Kloping/qqpd-bot-java/issues/20)
 
 <hr>
 
