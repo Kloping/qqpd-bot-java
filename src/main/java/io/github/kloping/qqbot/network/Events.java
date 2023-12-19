@@ -63,7 +63,8 @@ public class Events implements OnPackReceive {
 
     private void onEvent(String t, JSONObject obj) throws Exception {
         Class<? extends Event> c0 = null;
-        RawMessage msg = obj.toJavaObject(RawMessage.class);
+        RawMessage msg = null;
+        msg = obj.toJavaObject(RawMessage.class);
         if (msg == null) {
             logger.waring(String.format("Unknown Pack(%s)", obj.toString()));
             return;

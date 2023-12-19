@@ -54,7 +54,7 @@ starter.registerListenerHost(new ListenerHost(){
 
 <hr>
 
-> 日志设置
+### 日志设置
 
 ```java
 public class LogDemo {
@@ -77,8 +77,14 @@ public class LogDemo {
 ```
 <hr>
 
-> 自定义消息发送 
-- 通过http请求达到想要的目的获取bot请求必要的请求头方式
+### 依赖排斥
+
+- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2 同时引用时会产生大量空指针#20
+
+<hr>
+
+### 自定义消息发送 
+> 通过http请求达到想要的目的获取bot请求必要的请求头方式
 
 ```java
 //方法必须在start.run 之后
@@ -87,3 +93,4 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
 //q群发送请求必要请求头
 starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
 ```
+
