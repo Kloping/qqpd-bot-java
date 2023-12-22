@@ -1,11 +1,15 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.AtAble;
 import io.github.kloping.qqbot.api.OpAble;
+import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.ex.At;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
+import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
+import io.github.kloping.qqbot.http.data.Result;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -16,8 +20,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @ToString
-@EqualsAndHashCode
-public class Member implements OpAble, AtAble {
+@EqualsAndHashCode(callSuper = false)
+public class Member extends Contact implements OpAble, AtAble {
     private String nick;
     private String joinedAt;
     private String[] roles;
@@ -27,5 +31,45 @@ public class Member implements OpAble, AtAble {
     @Override
     public At at() {
         return new At("member", user.getId());
+    }
+
+    @Getter
+    @Setter
+    @JSONField(serialize = false, deserialize = false)
+    private Guild guild;
+
+    @Override
+    public String getId() {
+        return user.getId();
+    }
+
+    @Override
+    public String getOpenid() {
+        return getId();
+    }
+
+    @Override
+    public Result send(String text) {
+        return getGuild().create(user.getId()).send(text);
+    }
+
+    @Override
+    public Result send(String text, RawMessage message) {
+        return getGuild().create(user.getId()).send(text, message);
+    }
+
+    @Override
+    public Result send(SendAble msg) {
+        return getGuild().create(getId()).send(msg);
+    }
+
+    @Override
+    public String getCid() {
+        return getGuild().create(getId()).getCid();
+    }
+
+    @Override
+    public EnvType getEnvType() {
+        return EnvType.GUILD;
     }
 }

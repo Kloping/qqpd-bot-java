@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.qqpd.Dms;
 import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import lombok.Data;
 import org.jsoup.helper.HttpConnection;
@@ -15,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADERS;
 
 /**
+ * 不适配 group
  * @author github.kloping
  */
 @Data
@@ -24,7 +26,7 @@ public class MessagePre implements SendAble {
     private String replyId;
 
     @Override
-    public ActionResult send(SenderAndCidMidGetter er) {
+    public Result<ActionResult> send(SenderAndCidMidGetter er) {
         if (image != null) {
             if (image.getBytes() != null) {
                 BaseKeyVals keyVals = new BaseKeyVals();
@@ -43,17 +45,17 @@ public class MessagePre implements SendAble {
                 keyVals.add(v1);
                 if (er instanceof Dms) {
                     Dms dms = (Dms) er;
-                    return er.getBot().dmsBase.send(dms.getGuildId(), SEND_FORM_DATA_HEADERS, keyVals);
+                    return new Result<>(er.getBot().dmsBase.send(dms.getGuildId(), SEND_FORM_DATA_HEADERS, keyVals));
                 }else if (er instanceof DirectMessage) {
                     DirectMessage dms = (DirectMessage) er;
-                    return er.getBot().dmsBase.send(dms.getGuildId(), SEND_FORM_DATA_HEADERS, keyVals);
-                } else return er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals);
+                    return new Result<>(er.getBot().dmsBase.send(dms.getGuildId(), SEND_FORM_DATA_HEADERS, keyVals));
+                } else return new Result<>(er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals));
             }
         }
         return getActionResult(er, image, content, replyId);
     }
 
-    public static ActionResult getActionResult(SenderAndCidMidGetter er, Image image, String content, String replyId) {
+    public static Result<ActionResult> getActionResult(SenderAndCidMidGetter er, Image image, String content, String replyId) {
         MessagePacket packet = new MessagePacket();
         if (Judge.isNotEmpty(replyId)) packet.setReplyId(replyId);
         if (Judge.isNotEmpty(content)) packet.setContent(content);

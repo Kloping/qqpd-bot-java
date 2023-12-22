@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.entities.qqpd;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.qqbot.api.event.BotContent;
+import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.http.data.MutePack;
 import lombok.Data;

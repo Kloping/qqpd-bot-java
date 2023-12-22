@@ -52,3 +52,46 @@ starter.registerListenerHost(new ListenerHost(){
 - [消息 message](message.md)
 - [动作 action](action.md)
 
+<hr>
+
+### 日志设置
+
+```java
+public class LogDemo {
+    
+    private static final SimpleDateFormat dfn = new SimpleDateFormat("/yyyy-MM-dd");
+
+    public static String getLogFile() {
+        File file = new File(String.format("./logs/%s.log", dfn.format(new Date())));
+        file.getParentFile().mkdirs();
+        return file.getAbsolutePath();
+    }
+
+    public static void main(String[] args) {
+        //设置控制台输出日志等级
+        starter.APPLICATION.logger.setLogLevel(0);
+        //设置日志输出文件 不受控制台日志输出等级影响
+        starter.APPLICATION.logger.setOutFile(getLogFile());
+    }
+}
+```
+<hr>
+
+### 依赖排斥
+
+- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2
+  同时引用时会产生大量空指针[#20](https://github.com/Kloping/qqpd-bot-java/issues/20)
+
+<hr>
+
+### 自定义消息发送 
+> 通过http请求达到想要的目的获取bot请求必要的请求头方式
+
+```java
+//方法必须在start.run 之后
+//频道发送请求必要请求头
+starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
+//q群发送请求必要请求头
+starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
+```
+

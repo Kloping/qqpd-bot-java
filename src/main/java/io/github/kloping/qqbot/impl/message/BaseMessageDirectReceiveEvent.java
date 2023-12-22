@@ -10,6 +10,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.DirectMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 /**
@@ -60,7 +61,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public ActionResult send(String text) {
+    public Result<ActionResult> send(String text) {
         return sendDirect(text);
     }
 
@@ -72,7 +73,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public ActionResult send(String text, RawMessage message) {
+    public Result<ActionResult> send(String text, RawMessage message) {
         return sendDirect(text, message);
     }
 
@@ -83,7 +84,7 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public ActionResult send(MessagePacket packet) {
+    public Result<ActionResult> send(MessagePacket packet) {
         return sendDirect(packet);
     }
 
@@ -94,27 +95,27 @@ public class BaseMessageDirectReceiveEvent extends BaseMessageReceiveEvent imple
      * @return
      */
     @Override
-    public ActionResult send(RawPreMessage msg) {
+    public Result<ActionResult> send(RawPreMessage msg) {
         return sendDirect(msg);
     }
 
     @Override
-    public ActionResult sendDirect(String text) {
+    public Result<ActionResult> sendDirect(String text) {
         return getDirectMessage().sendDirect(text);
     }
 
     @Override
-    public ActionResult sendDirect(String text, RawMessage message) {
+    public Result<ActionResult> sendDirect(String text, RawMessage message) {
         return getDirectMessage().sendDirect(text, message);
     }
 
     @Override
-    public ActionResult sendDirect(MessagePacket packet) {
+    public Result<ActionResult> sendDirect(MessagePacket packet) {
         return getDirectMessage().sendDirect(packet);
     }
 
     @Override
-    public ActionResult sendDirect(RawPreMessage msg) {
+    public Result<ActionResult> sendDirect(RawPreMessage msg) {
         return getDirectMessage().sendDirect(msg);
     }
 

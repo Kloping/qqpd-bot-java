@@ -11,6 +11,8 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 public class BaseMessageContainsAtEvent extends BaseMessageChannelReceiveEvent implements MessageContainsAtEvent {
     public BaseMessageContainsAtEvent(RawMessage message, JSONObject jo, Bot bot) {
         super(message, jo,bot);
+        this.channel = getGuild().getChannel(message.getChannelId());
+        this.sender = getGuild().getMember(message.getAuthor().getId());
         ats = new String[message.getMentions().length];
         for (int i = 0; i < message.getMentions().length; i++) {
             ats[i] = message.getMentions()[i].getId();

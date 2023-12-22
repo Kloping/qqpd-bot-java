@@ -89,6 +89,10 @@ public enum Intents {
      */
     OPEN_FORUMS_EVENT(1 << 18),
     AUDIO_OR_LIVE_CHANNEL_MEMBER(1 << 19),
+    /**
+     * 群聊事件
+     */
+    GROUP_INTENTS(1 << 25),
     INTERACTION(1 << 26),
     MESSAGE_AUDIT(1 << 27),
     /**
@@ -109,6 +113,7 @@ public enum Intents {
      * 公域机器人订阅推荐
      */
     PUBLIC_INTENTS(1812468739),
+    PUBLIC_GROUP_INTENTS(1812468739 | 1 << 25),
     /**
      * 私域机器人订阅推荐
      */

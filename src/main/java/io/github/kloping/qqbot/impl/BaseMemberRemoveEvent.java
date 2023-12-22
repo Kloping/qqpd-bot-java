@@ -15,8 +15,9 @@ public class BaseMemberRemoveEvent extends BaseGuildEvent implements MemberUpdat
         this.metadata = jo;
         this.bot = bot;
         this.member = jo.toJavaObject(MemberWithGuildID.class);
-        if (member != null) member.setBot(bot);
         this.guild = getBot().getGuild(member.getGuildId());
+        this.member.setGuild(guild);
+        if (member != null) member.setBot(bot);
     }
 
     protected MemberWithGuildID member;

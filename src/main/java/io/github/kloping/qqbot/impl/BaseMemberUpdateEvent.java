@@ -17,6 +17,7 @@ public class BaseMemberUpdateEvent extends BaseGuildEvent implements MemberUpdat
         this.member = jo.toJavaObject(MemberWithGuildID.class);
         if (member != null) member.setBot(bot);
         this.guild = getBot().getGuild(member.getGuildId());
+        this.member.setGuild(guild);
         getGuild().setMember(member);
     }
 

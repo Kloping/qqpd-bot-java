@@ -22,9 +22,7 @@ public class GuildEventsRegister implements Events.EventRegister {
 
     @AutoStandAfter
     private void r4(Events events) {
-        events.register("GUILD_UPDATE", this);
-        events.register(GUILD_CREATE, this);
-        events.register(GUILD_DELETE, this);
+        events.register("GUILD_UPDATE", this).register(GUILD_CREATE, this).register(GUILD_DELETE, this);
       }
 
     @AutoStand

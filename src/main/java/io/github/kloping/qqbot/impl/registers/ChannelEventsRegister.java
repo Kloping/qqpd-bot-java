@@ -22,9 +22,7 @@ public class ChannelEventsRegister implements Events.EventRegister {
 
     @AutoStandAfter
     private void r8(Events events) {
-        events.register("CHANNEL_UPDATE", this);
-        events.register(CHANNEL_CREATE, this);
-        events.register(CHANNEL_DELETE, this);
+        events.register("CHANNEL_UPDATE", this).register(CHANNEL_CREATE, this).register(CHANNEL_DELETE, this);
     }
 
     @AutoStand

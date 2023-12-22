@@ -1,4 +1,4 @@
-package io.github.kloping.qqbot.api.event;
+package io.github.kloping.qqbot.api;
 
 import io.github.kloping.qqbot.entities.Bot;
 

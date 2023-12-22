@@ -28,6 +28,6 @@ public class EmojiReaction {
         /**
          * <table><thead><tr><th>值</th> <th>描述</th></tr></thead> <tbody><tr><td>0</td> <td>消息</td></tr> <tr><td>1</td> <td>帖子</td></tr> <tr><td>2</td> <td>评论</td></tr> <tr><td>3</td> <td>回复</td></tr></tbody></table>
          */
-        private Integer type;
+        private String type;
     }
 }

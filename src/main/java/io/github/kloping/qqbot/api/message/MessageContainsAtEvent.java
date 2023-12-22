@@ -5,7 +5,7 @@ package io.github.kloping.qqbot.api.message;
  *
  * @author github.kloping
  */
-public interface MessageContainsAtEvent extends MessageReceiveEvent {
+public interface MessageContainsAtEvent extends MessageChannelReceiveEvent, MessageReceiveEvent {
     /**
      * 获取消息中所有被AT者ID
      *

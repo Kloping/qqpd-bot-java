@@ -2,7 +2,8 @@ package io.github.kloping.qqbot.entities.ex;
 
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
-import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import lombok.Data;
 
@@ -32,9 +33,13 @@ public class At implements SendAble {
     }
 
     @Override
-    public ActionResult send(SenderAndCidMidGetter er) {
-        MessagePacket packet = new MessagePacket();
-        packet.setContent(toString());
-        return er.send(packet);
+    public Result send(SenderAndCidMidGetter er) {
+        if (er.getEnvType() == EnvType.GUILD) {
+            MessagePacket packet = new MessagePacket();
+            packet.setContent(toString());
+            return er.send(packet);
+        } else {
+            return er.send(toString());
+        }
     }
 }

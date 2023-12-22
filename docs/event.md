@@ -27,3 +27,6 @@
     - BaseMemberRemoveEvent
     - BaseMemberUpdateEvent
   
+> 对框架未处理的事件 在 1.5.0-Alpha5 中添加的[事件注册的方法](../src/test/java/EventsRegisterTest.java)
+
+    Starter#registerEventsRegister(Class<? extends Events.EventRegister> cla) 

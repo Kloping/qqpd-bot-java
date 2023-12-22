@@ -2,9 +2,12 @@ package io.github.kloping.qqbot.entities;
 
 import io.github.kloping.MySpringTool.annotations.AutoStand;
 import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.MySpringTool.interfaces.Logger;
+import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.*;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +18,9 @@ import java.util.Map;
  */
 @Entity
 public class Bot {
+    @AutoStand
+    public Logger logger;
+
     @AutoStand
     public GuildBase guildBase;
 
@@ -32,6 +38,19 @@ public class Bot {
 
     @AutoStand
     public MemberBase memberBase;
+
+    @AutoStand
+    public GroupBaseV2 groupBaseV2;
+
+    @AutoStand
+    public UserBaseV2 userBaseV2;
+
+    @AutoStand
+    public AuthV2Base authV2Base;
+
+    @Getter
+    @AutoStand
+    Starter.Config config;
 
     private User user;
 

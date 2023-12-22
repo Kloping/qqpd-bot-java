@@ -57,22 +57,6 @@ public class PdCode {
         });
     }
 
-    public static String serializeToPdCode(MessageChain chain) {
-        StringBuilder sb = new StringBuilder();
-        chain.forEach((e) -> {
-            sb.append(serializeToPdCode(e));
-        });
-        return sb.toString();
-    }
-
-    public static String serializeToPdCode(SendAble[] datas) {
-        StringBuilder sb = new StringBuilder();
-        for (SendAble data : datas) {
-            sb.append(serializeToPdCode(data));
-        }
-        return sb.toString();
-    }
-
     public static String serializeToPdCode(SendAble e) {
         if (e instanceof Emoji) {
             Emoji emoji = (Emoji) e;
@@ -90,6 +74,22 @@ public class PdCode {
             PlainText plainText = (PlainText) e;
             return (plainText.toString());
         } else return e.toString();
+    }
+
+    public static String serializeToPdCode(SendAble[] datas) {
+        StringBuilder sb = new StringBuilder();
+        for (SendAble data : datas) {
+            sb.append(serializeToPdCode(data));
+        }
+        return sb.toString();
+    }
+
+    public static String serializeToPdCode(MessageChain chain) {
+        StringBuilder sb = new StringBuilder();
+        chain.forEach((e) -> {
+            sb.append(serializeToPdCode(e));
+        });
+        return sb.toString();
     }
 
     public static MessageChain deserializePdCode(String pdCode) {

@@ -1,9 +1,12 @@
 package io.github.kloping.qqbot.impl.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.SendAble;
+import io.github.kloping.qqbot.api.event.ChannelEvent;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
@@ -11,17 +14,18 @@ import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 
 /**
  * @author github.kloping
  */
-public abstract class BaseMessageEvent implements MessageEvent {
+public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Member, Channel> {
     protected RawMessage message;
     protected JSONObject metadata;
-    protected Guild guild;
     protected Member sender;
+    protected Guild guild;
     protected Channel channel;
 
     protected Bot bot;
@@ -39,6 +43,31 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
+    public String toString() {
+        return String.format("[type(%s) %s].%s:%s"
+                , EnvType.GUILD.name()
+                , getSubject().getId()
+                , getSender().getId()
+                , getRawMessage().toString0()
+        );
+    }
+
+    @Override
+    public Channel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public Channel getSubject() {
+        return getChannel();
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
+    }
+
+    @Override
     public RawMessage getRawMessage() {
         return message;
     }
@@ -49,37 +78,27 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public Guild getGuild() {
-        return guild;
-    }
-
-    @Override
     public Member getSender() {
         return sender;
     }
 
     @Override
-    public Channel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public ActionResult send(String text) {
+    public Result<ActionResult> send(String text) {
         return getRawMessage().send(text);
     }
 
     @Override
-    public ActionResult send(String text, RawMessage message) {
+    public Result<ActionResult> send(String text, RawMessage message) {
         return getRawMessage().send(text, message);
     }
 
     @Override
-    public ActionResult send(MessagePacket packet) {
+    public Result<ActionResult> send(MessagePacket packet) {
         return getRawMessage().send(packet);
     }
 
     @Override
-    public ActionResult send(RawPreMessage msg) {
+    public Result<ActionResult> send(RawPreMessage msg) {
         return getRawMessage().send(msg);
     }
 
@@ -89,12 +108,22 @@ public abstract class BaseMessageEvent implements MessageEvent {
     }
 
     @Override
-    public ActionResult send(SendAble msg) {
+    public Result<ActionResult> send(SendAble msg) {
         return getRawMessage().send(msg);
     }
 
+    protected MessageChain chain;
+
     @Override
     public MessageChain getMessage() {
-        return BaseUtils.parseToMessageChain(getRawMessage());
+        return chain == null ? chain = BaseUtils.parseToMessageChain(getRawMessage(), filters) : chain;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    private Class<?>[] filters = null;
+
+    @Override
+    public void setFilter(Class<?>[] filters) {
+        this.filters = filters;
     }
 }

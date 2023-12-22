@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.entities.qqpd.data;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
-import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
 import java.util.LinkedList;
@@ -400,7 +400,7 @@ public class Emoji implements SendAble {
     }
 
     @Override
-    public ActionResult send(SenderAndCidMidGetter er) {
+    public Result send(SenderAndCidMidGetter er) {
         MessagePacket packet = new MessagePacket();
         packet.setContent(toString0());
         return er.send(packet);

@@ -1,10 +1,11 @@
-![ComWeChatBotClient](https://socialify.git.ci/Kloping/qqpd-bot-java/image?description=1&font=Inter&name=1&pattern=Circuit%20Board&theme=Auto)
+![qqpd-bot-java](https://socialify.git.ci/Kloping/qqpd-bot-java/image?description=1&descriptionEditable=QQ%E5%AE%98%E6%96%B9%E6%9C%BA%E5%99%A8%E4%BA%BA%20Java%2FJVM%2Fkotlin%20SDK%20QQ%20bot%20sdk%20qq%E6%9C%BA%E5%99%A8%E4%BA%BAsdk&font=Source%20Code%20Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Overlapping%20Hexagons&pulls=1&stargazers=1&theme=Auto)
+
 <p align="center">
     <a href="https://github.com/Kloping/qqpd-bot-java/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kloping/qqpd-bot-java" alt="License"></a>
     <a href="https://github.com/Kloping/qqpd-bot-java/releases"><img src="https://img.shields.io/github/v/release/Kloping/qqpd-bot-java?color=blueviolet&include_prereleases" alt="release"></a>
 </p>
 
-## QQ频道机器人 Java SDK
+## QQ机器人 Java/JVM/kotlin SDK
 
 > 非官方 可用于 Java 8+
 
@@ -13,11 +14,11 @@ Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/de
 Maven
 
 ```xml
-<!-- https://mvnrepository.com/artifact/io.github.kloping/bot-qqpd-java -->
+<!-- https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/ -->
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.0-R2</version>
+    <version>1.5.0-Beta7</version>
 </dependency>
 ```
 
@@ -27,7 +28,7 @@ Maven
 
 ~~2. 发布审核 发布后为公域~~
 
-### [开发文档](./docs)
+### [开发文档](./docs) / [q群使用说明](./docs/v2.md)
 
 ### 使用示例
 
@@ -39,14 +40,10 @@ Maven
     starter.run();
 ```
 
-> #### V1.4+ 注册监听器主机方式 [荐]
+> #### V1.5.0-Beta7+ 注册监听器主机方式 [荐]
 
 ```java
 starter.registerListenerHost(new ListenerHost(){
-    @Override
-    public void handleException(Throwable e){
-    }
-
     @EventReceiver
     public void onEvent(MessageChannelReceiveEvent event){
         event.send("测试");
@@ -84,7 +81,6 @@ import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Intents;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
-import io.github.kloping.qqbot.impl.EventReceiver;
 import io.github.kloping.qqbot.impl.ListenerHost;
 ```
 

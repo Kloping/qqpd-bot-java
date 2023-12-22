@@ -5,6 +5,7 @@ import io.github.kloping.qqbot.api.event.ConnectedEvent;
 import io.github.kloping.qqbot.entities.Bot;
 
 /**
+ * version show
  * @author github.kloping
  */
 public class BaseConnectedEvent implements ConnectedEvent {
@@ -19,13 +20,13 @@ public class BaseConnectedEvent implements ConnectedEvent {
     }
 
     @Override
-    public JSONObject getMetadata() {
-        return metadata;
+    public Bot getBot() {
+        return bot;
     }
 
     @Override
-    public Bot getBot() {
-        return bot;
+    public JSONObject getMetadata() {
+        return metadata;
     }
 
     @Override
@@ -34,7 +35,12 @@ public class BaseConnectedEvent implements ConnectedEvent {
     }
 
     @Override
+    public String getClassName() {
+        return ConnectedEvent.class.getSimpleName();
+    }
+
+    @Override
     public String toString() {
-        return String.format("Bot(%s) Started! By author kloping of bot-qqpd-java for version 1.5.0-L4", bot.getInfo().getUsername());
+        return String.format("Bot(%s) Connected! By author kloping of bot-qqpd-java for version 1.5.0-R4", bot.getConfig().getAppid());
     }
 }

@@ -16,9 +16,12 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author github.kloping
@@ -58,13 +61,21 @@ public class BaseUtils {
     public static final Pattern EMOJI = Pattern.compile("<emoji:[0-9]+>");
 
     public static MessageChain parseToMessageChain(RawMessage rawMessage) {
+        return parseToMessageChain(rawMessage, null);
+    }
+
+    public static MessageChain parseToMessageChain(RawMessage rawMessage, Class<?>[] filter) {
         String content = rawMessage.getContent();
         MessageChain chain = new MessageChain();
         dispose(content, chain);
         if (rawMessage.getAttachments() != null) {
             for (MessageAttachment attachment : rawMessage.getAttachments()) {
-                chain.append(new Image(attachment.getUrl()));
+                chain.append(new Image(attachment.getUrl()).setName(attachment.getFilename()).setType(attachment.getContent_type()));
             }
+        }
+        if (filter != null && filter.length > 0) {
+            List<Class> list = new ArrayList<>(Arrays.asList(filter));
+            chain.reSet(chain.stream().filter(s -> s != null && !list.contains(s.getClass())).collect(Collectors.toList()));
         }
         return chain;
     }
