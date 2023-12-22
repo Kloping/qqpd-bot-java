@@ -2,7 +2,6 @@ package io.github.kloping.qqbot.entities.ex;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.sun.istack.internal.Nullable;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
