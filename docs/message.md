@@ -72,3 +72,18 @@ source: [Emoji 列表](https://bot.q.qq.com/wiki/develop/api/openapi/emoji/model
 
 </details> 
 
+***
+
+### 关于markdown与按钮
+
+```java
+event.send(new Markdown("custom_template_id")
+        //申请的模板 参数填充
+        .addParam("key", "value")
+        .setKeyboard("id"));
+```
+
+- [md模板申请 与 按钮组件申请](https://q.qq.com/qqbot/#/developer/advanced-features) 
+- [按钮配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/msg-btn.html#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8D%8F%E8%AE%AE)
+- [md配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/type/markdown.html#%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F)
+> 当前仅支持群聊发送md 按钮组件不能单独发送 须与md消息组合发送

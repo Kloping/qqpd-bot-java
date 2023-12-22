@@ -18,7 +18,7 @@ import static org.jsoup.Connection.Method.DELETE;
 @HttpClient(Starter.NET_MAIN)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface MessageBase {
-    /**
+     /**
      * send a message
      *
      * @param cid
@@ -28,7 +28,7 @@ public interface MessageBase {
      */
     @PostPath("/channels/{channel_id}/messages")
     @Callback("io.github.kloping.qqbot.http.data.ActionResult.doc")
-    ActionResult send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) RawPreMessage body, @Headers Map<String, String> headers);
+    ActionResult send(@PathValue("channel_id") String cid, @RequestBody(type = RequestBody.type.json) Object body, @Headers Map<String, String> headers);
 
     /**
      * send a message

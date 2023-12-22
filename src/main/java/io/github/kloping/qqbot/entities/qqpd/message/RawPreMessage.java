@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.qqbot.entities.ex.Markdown;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -23,7 +24,7 @@ public class RawPreMessage {
     @JSONField(name = "msg_id")
     private String msgId;
     private String eventId;
-    private Object markdown;
+    private Markdown markdown;
 
     public RawPreMessage(String content) {
         this.content = content;

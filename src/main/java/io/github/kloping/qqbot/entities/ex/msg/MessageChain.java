@@ -73,6 +73,7 @@ public class MessageChain implements SendAble, List<SendAble> {
         if (er.getEnvType() == EnvType.GUILD) {
             MessagePreBuilder builder = new MessagePreBuilder();
             boolean flag0 = false;
+            Result result = null;
             for (SendAble sendAble : data) {
                 if (sendAble instanceof PlainText) {
                     builder.append(sendAble.toString());
@@ -91,16 +92,21 @@ public class MessageChain implements SendAble, List<SendAble> {
                     builder.append((AtAll) sendAble);
                 } else if (sendAble instanceof Emoji) {
                     builder.append((Emoji) sendAble);
+                } else if (sendAble instanceof Markdown) {
+                    result = ((Markdown) sendAble).send(er);
                 }
             }
-            return er.send(builder.build());
+            if (!builder.isEmpty()) {
+                result = er.send(builder.build());
+            }
+            return result;
         } else {
             SenderV2 v2 = (SenderV2) er;
             boolean flag0 = false;
-
             V2MsgData data = new V2MsgData();
             if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
-
+            Result<V2Result> result = null;
+            int sent = 0;
             for (SendAble e0 : this.data) {
                 if (e0 instanceof Image) {
                     Image image = (Image) e0;
@@ -108,31 +114,31 @@ public class MessageChain implements SendAble, List<SendAble> {
                     if (!flag0) {
                         if (image.getFile_type() != 1) {
                             image.send(er);
+                            sent++;
                             continue;
                         }
                         flag0 = true;
-                        V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
-                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
-                        result.logFileInfo(er.getBot().logger, image);
-                        data.setMsg_type(7);
-                        data.setMedia(new V2MsgData.Media(result.getFile_info()));
                     } else {
                         data.setMsg_seq(v2.getMsgSeq());
                         v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS);
                         data = new V2MsgData();
                         if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
-                        V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
-                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS);
-                        result.logFileInfo(er.getBot().logger, image);
-                        data.setMsg_type(7);
-                        data.setMedia(new V2MsgData.Media(result.getFile_info()));
                     }
+                    result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS));
+                    result.getData().logFileInfo(er.getBot().logger, image);
+                    data.setMsg_type(7);
+                    data.setMedia(new V2MsgData.Media(result.getData().getFile_info()));
+                } else if (e0 instanceof Markdown) {
+                    result = ((Markdown) e0).send(er, v2.getMsgSeq());
+                    sent++;
                 } else {
                     data.setContent(data.getContent() + e0.toString());
                 }
             }
-            data.setMsg_seq(v2.getMsgSeq());
-            return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
+            if (sent < this.data.size()) {
+                data.setMsg_seq(v2.getMsgSeq());
+                return result = new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
+            } else return result;
         }
     }
 

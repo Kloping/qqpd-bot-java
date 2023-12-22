@@ -2,36 +2,37 @@ package io.github.kloping.qqbot.entities.ex;
 
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
+import lombok.Getter;
 
 /**
  * @author github.kloping
  */
 public class MessagePreBuilder {
     private MessagePre pre = new MessagePre();
-
+    @Getter
+    private boolean empty = true;
     public MessagePreBuilder append(String text) {
         pre.setContent(pre.getContent() + text);
+        empty = false;
         return this;
     }
 
     public MessagePreBuilder append(Image image) {
         pre.setImage(image);
+        empty = false;
         return this;
     }
 
     public MessagePreBuilder append(At at) {
-        pre.setContent(pre.getContent() + at);
-        return this;
+        return append(at.toString());
     }
 
     public MessagePreBuilder append(AtAll at) {
-        pre.setContent(pre.getContent() + "@everyone");
-        return this;
+        return append("@everyone");
     }
 
     public MessagePreBuilder append(Emoji emoji) {
-        pre.setContent(pre.getContent() + emoji.toString0());
-        return this;
+        return append(emoji.toString0());
     }
 
     public MessagePreBuilder reply(RawMessage message) {
@@ -45,5 +46,6 @@ public class MessagePreBuilder {
 
     public void clear() {
         pre.setContent("");
+        empty = true;
     }
 }
