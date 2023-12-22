@@ -31,7 +31,6 @@ public class Markdown implements SendAble {
     /**
      * 原生md可用
      */
-    @Nullable
     private String content;
 
     @JSONField(serialize = false, deserialize = false)
