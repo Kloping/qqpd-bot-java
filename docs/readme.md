@@ -93,5 +93,15 @@ public class LogDemo {
 starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
 //q群发送请求必要请求头
 starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).getHeaders()
+
 ```
 
+//其中主动发送qq群
+
+    starter.registerListenerHost(new ListenerHost() {
+        @EventReceiver
+        public void onEvent(ConnectedEvent event) {
+            V2MsgData data = new V2MsgData().setContent("测试主动消息");
+            starter.getBot().groupBaseV2.send("8468B15808B8200A56E6DD92EBA51AAC", data.toString(), SEND_MESSAGE_HEADERS);
+        }
+    });
