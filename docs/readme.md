@@ -58,20 +58,12 @@ starter.registerListenerHost(new ListenerHost(){
 
 ```java
 public class LogDemo {
-    
-    private static final SimpleDateFormat dfn = new SimpleDateFormat("/yyyy-MM-dd");
-
-    public static String getLogFile() {
-        File file = new File(String.format("./logs/%s.log", dfn.format(new Date())));
-        file.getParentFile().mkdirs();
-        return file.getAbsolutePath();
-    }
-
     public static void main(String[] args) {
-        //设置控制台输出日志等级
-        starter.APPLICATION.logger.setLogLevel(0);
-        //设置日志输出文件 不受控制台日志输出等级影响
-        starter.APPLICATION.logger.setOutFile(getLogFile());
+        //默认方式
+        //日志文件路径
+        LoggerImpl.INSTANCE.logFileDir = "./logs/%s.log";
+        //日志文件格式
+        LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
     }
 }
 ```

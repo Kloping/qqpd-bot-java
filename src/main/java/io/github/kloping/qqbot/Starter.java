@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.ImageUploadInterceptor;
 import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.qqbot.network.WssWorker;
+import io.github.kloping.qqbot.utils.LoggerImpl;
 import lombok.Data;
 import lombok.Getter;
 
@@ -93,8 +94,7 @@ public class Starter implements Runnable {
     private ContextManager contextManager;
 
     public Starter(String appid, String token) {
-        this.getConfig().setAppid(appid);
-        this.getConfig().setToken(token);
+        this(appid, token, null);
     }
 
     /**
@@ -108,6 +108,7 @@ public class Starter implements Runnable {
         this.getConfig().setAppid(appid);
         this.getConfig().setToken(token);
         this.getConfig().setSecret(secret);
+        APPLICATION.logger = LoggerImpl.INSTANCE;
     }
 
     @Override
