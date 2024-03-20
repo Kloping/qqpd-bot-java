@@ -25,14 +25,13 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 @Getter
 public class Markdown implements SendAble {
     private String custom_template_id;
-    private List<Param> params = new LinkedList<>();
+    private List<Param> params = null;
 
     /**
      * 原生md可用
      */
     private String content;
 
-    @JSONField(serialize = false, deserialize = false)
     private Keyboard keyboard;
 
     /**
@@ -45,6 +44,7 @@ public class Markdown implements SendAble {
     }
 
     public Markdown addParam(String key, String value) {
+        if (params == null) params = new LinkedList<>();
         params.add(new Param(key, new String[]{value}));
         return this;
     }
@@ -67,7 +67,6 @@ public class Markdown implements SendAble {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Param {
-
         public String key;
         private String[] values;
     }

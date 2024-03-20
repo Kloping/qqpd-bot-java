@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.http.data;
 
 import com.alibaba.fastjson.JSON;
-import io.github.kloping.qqbot.entities.ex.Keyboard;
 import io.github.kloping.qqbot.entities.ex.Markdown;
 import lombok.Data;
 import lombok.Getter;
@@ -22,7 +21,7 @@ public class V2MsgData {
     private String image = null;
     private Media media;
     private Markdown markdown;
-    private Keyboard keyboard;
+    private Object keyboard;
     private String msg_id;
     private Integer msg_seq;
 

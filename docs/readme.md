@@ -97,3 +97,5 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
             starter.getBot().groupBaseV2.send("8468B15808B8200A56E6DD92EBA51AAC", data.toString(), SEND_MESSAGE_HEADERS);
         }
     });
+![img.png](./imgs/img.png)
+

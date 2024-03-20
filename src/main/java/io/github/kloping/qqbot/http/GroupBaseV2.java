@@ -24,7 +24,6 @@ public interface GroupBaseV2 extends BaseV2{
      * @return msg
      */
     @PostPath("/v2/groups/{group_openid}/messages")
-    //@Callback("io.github.kloping.qqbot.http.data.V2Result.docMsg")
     V2Result send(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
 
     /**
@@ -35,6 +34,5 @@ public interface GroupBaseV2 extends BaseV2{
      * @return 文件id
      */
     @PostPath("/v2/groups/{group_openid}/files")
-    //@Callback("io.github.kloping.qqbot.http.data.V2Result.docFiles")
     V2Result sendFile(@PathValue("group_openid") String gid, @RequestBody String body, @Headers Map<String, String> headers);
 }

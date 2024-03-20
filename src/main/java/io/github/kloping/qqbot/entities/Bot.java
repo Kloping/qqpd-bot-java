@@ -22,6 +22,9 @@ public class Bot {
     public Logger logger;
 
     @AutoStand
+    public InterActionBase interActionBase;
+
+    @AutoStand
     public GuildBase guildBase;
 
     @AutoStand

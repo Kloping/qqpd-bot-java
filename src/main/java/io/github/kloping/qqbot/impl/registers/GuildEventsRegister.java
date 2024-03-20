@@ -7,7 +7,6 @@ import io.github.kloping.MySpringTool.annotations.Entity;
 import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseGuildUpdateEvent;
 import io.github.kloping.qqbot.network.Events;
@@ -23,7 +22,7 @@ public class GuildEventsRegister implements Events.EventRegister {
     @AutoStandAfter
     private void r4(Events events) {
         events.register("GUILD_UPDATE", this).register(GUILD_CREATE, this).register(GUILD_DELETE, this);
-      }
+    }
 
     @AutoStand
     Bot bot;
