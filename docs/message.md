@@ -93,7 +93,7 @@ event.send(new Markdown("custom_template_id")
 
 
 ![img_1.png](./imgs/img_1.png)
-> 效果如
+> 效果如  24/3/21 补充目前可搭配md模板使用
 
 
 ![img_2.png](./imgs/img_2.png)
