@@ -16,6 +16,14 @@ _**待完善..**_
 
 <hr>
 
+### 相关指引
+
+- **[事件 event](event.md)**
+- **[消息 message](message.md)**
+- **[动作 action](action.md)**
+
+<hr>
+
 在配置好项目依赖后 即可使用
 
 [maven仓库](https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/)
@@ -45,12 +53,6 @@ starter.registerListenerHost(new ListenerHost(){
     }
 });
 ```
-
-分为板块
-
-- [事件 event](event.md)
-- [消息 message](message.md)
-- [动作 action](action.md)
 
 <hr>
 
