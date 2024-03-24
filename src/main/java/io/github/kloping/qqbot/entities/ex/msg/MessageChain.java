@@ -110,7 +110,7 @@ public class MessageChain implements SendAble, List<SendAble> {
             for (SendAble e0 : this.data) {
                 if (e0 instanceof Image) {
                     Image image = (Image) e0;
-                    if (RawMessage.imagePrepare(image, er.getBot())) continue;
+                    RawMessage.imagePrepare(image, er.getBot());
                     if (!flag0) {
                         if (image.getFile_type() != 1) {
                             image.send(er);
@@ -124,7 +124,13 @@ public class MessageChain implements SendAble, List<SendAble> {
                         data = new V2MsgData();
                         if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
                     }
-                    result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS));
+                    if (Judge.isNotEmpty(image.getUrl())) {
+                        result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
+                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS));
+                    } else {
+                        result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}",
+                                image.getFile_type(), Base64.getEncoder().encodeToString(image.getBytes())), Channel.SEND_MESSAGE_HEADERS));
+                    }
                     result.getData().logFileInfo(er.getBot().logger, image);
                     data.setMsg_type(7);
                     data.setMedia(new V2MsgData.Media(result.getData().getFile_info()));

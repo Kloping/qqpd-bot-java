@@ -28,6 +28,7 @@ public interface GroupBaseV2 extends BaseV2{
 
     /**
      * 发送群聊媒体
+     * <table><thead><tr><th><strong>属性</strong></th> <th><strong>类型</strong></th> <th><strong>必填</strong></th> <th><strong>说明</strong></th></tr></thead> <tbody><tr><td>file_type</td> <td>int</td> <td>是</td> <td>媒体类型：1 图片，2 视频，3 语音，4 文件（暂不开放）<br>资源格式要求<br>图片：png/jpg，视频：mp4，语音：silk</td></tr> <tr><td>url</td> <td>string</td> <td>是</td> <td>需要发送媒体资源的url</td></tr> <tr><td>srv_send_msg</td> <td>bool</td> <td>是</td> <td>设置 true 会直接发送消息到目标端，且会占用<code>主动消息频次</code></td></tr> <tr><td>file_data</td> <td></td> <td>否</td> <td>【暂未支持】</td></tr></tbody></table>
      * @param gid
      * @param body
      * @param headers

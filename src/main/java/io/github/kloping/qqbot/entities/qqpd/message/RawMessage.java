@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.github.kloping.MySpringTool.PartUtils;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.*;
 import io.github.kloping.qqbot.api.message.Pinsble;
@@ -74,21 +75,19 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         return send(text, this);
     }
 
-    public static boolean imagePrepare(Image msg, Bot bot) {
+    public static void imagePrepare(Image msg, Bot bot) {
         try {
             if (Judge.isEmpty(msg.getUrl())) {
                 if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {
                     String url = bot.getConfig().getInterceptor0().upload(msg.getBytes());
                     if (Judge.isNotEmpty(url)) {
                         msg.setUrl(url);
-                    } else return true;
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            bot.logger.error(e.getMessage());
+            bot.logger.error(PartUtils.getExceptionLine(e));
         }
-        return false;
     }
 
     @Override

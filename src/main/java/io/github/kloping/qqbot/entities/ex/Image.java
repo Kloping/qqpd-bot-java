@@ -16,6 +16,7 @@ import lombok.experimental.Accessors;
 import org.jsoup.helper.HttpConnection;
 
 import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.UUID;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADERS;
@@ -23,8 +24,6 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
 
 /**
  *
- * 发送到q群时必须使用url构造参数
- * <br>
  * 发送到频道时url必须备案(少数情况不需要
  * @author github.kloping
  */
@@ -87,14 +86,20 @@ public class Image implements SendAble {
             return er.send(packet);
         } else {
             SenderV2 v2 = (SenderV2) er;
-            if (RawMessage.imagePrepare(this, er.getBot())) return null;
-            V2Result result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", getFile_type(), getUrl()), Channel.SEND_MESSAGE_HEADERS);
+            RawMessage.imagePrepare(this, er.getBot());
+            V2Result result = null;
+            if (Judge.isNotEmpty(getUrl())) {
+                result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", getFile_type(), getUrl()), Channel.SEND_MESSAGE_HEADERS);
+            } else {
+                result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}", getFile_type(), Base64.getEncoder().encodeToString(bytes)), Channel.SEND_MESSAGE_HEADERS);
+            }
             result.logFileInfo(er.getBot().logger, this);
             V2MsgData data = new V2MsgData();
             data.setMsg_type(7);
             if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
             data.setMedia(new V2MsgData.Media(result.getFile_info()));
             data.setMsg_seq(v2.getMsgSeq());
+
             return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
         }
     }
