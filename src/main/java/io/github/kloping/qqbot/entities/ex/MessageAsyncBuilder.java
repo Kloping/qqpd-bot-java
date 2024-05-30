@@ -15,7 +15,6 @@ public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
 
     private final MessageChain chain = new MessageChain();
 
-
     @Override
     public MessageAsyncBuilder append(SendAble sendAble) {
         chain.append(sendAble);
@@ -46,5 +45,12 @@ public class MessageAsyncBuilder implements Builder<SendAble, SendAble> {
 
     public MessageAsyncBuilder text(String text) {
         return append(new PlainText(text));
+    }
+
+    /**
+     * @return
+     */
+    public boolean isEmpty() {
+        return chain.isEmpty();
     }
 }

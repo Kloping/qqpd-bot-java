@@ -16,6 +16,7 @@ public class Pack {
     private Number s;
     private Object d;
     private String t;
+    private String id;
 
     public <T> T dAsMapGet(Object key, Class<T> cla) {
         if (d instanceof Map) {

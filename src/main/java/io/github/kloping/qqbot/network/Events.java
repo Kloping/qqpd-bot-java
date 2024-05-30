@@ -32,6 +32,8 @@ import static io.github.kloping.MySpringTool.PartUtils.getExceptionLine;
  */
 @Entity
 public class Events implements OnPackReceive {
+    public static final String EXTEND_ID = "raw-id";
+
     @AutoStandAfter
     public void r1(WssWorker wssWorker) {
         wssWorker.getOnPackReceives().add(this);
@@ -42,6 +44,7 @@ public class Events implements OnPackReceive {
         String t = pack.getT();
         if (t == null) return false;
         JSONObject jo = JSON.parseObject(JSON.toJSONString(pack.getD()));
+        jo.put(EXTEND_ID, pack.getId());
         Public.EXECUTOR_SERVICE.submit(() -> {
             try {
                 onEvent(t, jo);

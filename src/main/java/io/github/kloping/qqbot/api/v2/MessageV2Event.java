@@ -10,7 +10,7 @@ import io.github.kloping.qqbot.http.data.V2Result;
 /**
  * @author github.kloping
  */
-public interface MessageV2Event extends Event, Sender {
+public interface MessageV2Event extends Event, Sender, V2Event {
     /**
      * 发送纯文本
      *

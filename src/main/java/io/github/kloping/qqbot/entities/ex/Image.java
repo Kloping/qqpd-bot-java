@@ -99,7 +99,6 @@ public class Image implements SendAble {
             if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
             data.setMedia(new V2MsgData.Media(result.getFile_info()));
             data.setMsg_seq(v2.getMsgSeq());
-
             return new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
         }
     }

@@ -137,6 +137,9 @@ public class MessageChain implements SendAble, List<SendAble> {
                 } else if (e0 instanceof Markdown) {
                     result = ((Markdown) e0).send(er, v2.getMsgSeq());
                     sent++;
+                } else if (e0 instanceof Keyboard) {
+                    data.setKeyboard(e0);
+                    data.setMsg_type(2);
                 } else {
                     data.setContent(data.getContent() + e0.toString());
                 }

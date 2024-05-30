@@ -16,6 +16,7 @@ import io.github.kloping.qqbot.http.BaseV2;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.qqbot.network.Events;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +48,11 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
 
         this.subject.setBot(bot);
         this.sender.setBot(bot);
+    }
+
+    @Override
+    public String getId() {
+        return metadata.getString(Events.EXTEND_ID);
     }
 
     @Override
@@ -117,7 +123,6 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
     public Integer getMsgSeq() {
         return seq++;
     }
-
 
     @Override
     public String toString() {

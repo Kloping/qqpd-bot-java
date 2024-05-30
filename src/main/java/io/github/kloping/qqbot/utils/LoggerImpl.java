@@ -62,9 +62,15 @@ public class LoggerImpl implements Logger {
         file = new File(String.format(logFileDir, dfn.format(new Date())));
     }
 
+    /**
+     * 必须设置为 %s 以替换 日期的字符串格式 默认 "./logs/%s.log"
+     * 设置为 null 时不输出日志文件
+     *
+     * @param path
+     */
     @Override
     public void setOutFile(String path) {
-        error("The log file cannot be customized now!");
+        this.logFileDir = path;
     }
 
     @Override
@@ -108,20 +114,22 @@ public class LoggerImpl implements Logger {
             if (level != -1 && level < logLevel) {
             } else e.printStackTrace();
         }
-        try {
-            BufferedWriter writer = getWriter();
-            if (writer != null) {
-                try {
-                    log = log.replaceAll("\\\u001B\\[38\\;2\\;[0-9]+\\;[0-9]+\\;[0-9]+m", "")
-                            .replaceAll("\\\u001B\\[m", "");
-                } catch (Exception e) {
+        if (logFileDir != null) {
+            try {
+                BufferedWriter writer = getWriter();
+                if (writer != null) {
+                    try {
+                        log = log.replaceAll("\\\u001B\\[38\\;2\\;[0-9]+\\;[0-9]+\\;[0-9]+m", "")
+                                .replaceAll("\\\u001B\\[m", "");
+                    } catch (Exception e) {
+                    }
+                    writer.write(log);
+                    writer.newLine();
+                    writer.flush();
                 }
-                writer.write(log);
-                writer.newLine();
-                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         if (level != -1 && level < logLevel) return;
         System.out.println(out);
