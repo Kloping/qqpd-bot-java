@@ -62,8 +62,8 @@ starter.registerListenerHost(new ListenerHost(){
 public class LogDemo {
     public static void main(String[] args) {
         //默认方式
-        //日志文件路径
-        LoggerImpl.INSTANCE.logFileDir = "./logs/%s.log";
+        //日志文件路径 设置为null 时不输出文件
+        starter.APPLICATION.logger.setOutFile("./logs/%s.log");
         //日志文件格式
         LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
     }
