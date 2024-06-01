@@ -10,10 +10,12 @@ import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.ImageUploadInterceptor;
 import io.github.kloping.qqbot.network.Events;
+import io.github.kloping.qqbot.network.WebSocketListener;
 import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.qqbot.utils.LoggerImpl;
 import lombok.Data;
 import lombok.Getter;
+import org.java_websocket.client.WebSocketClient;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -187,6 +189,7 @@ public class Starter implements Runnable {
         private Boolean reconnect = true;
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private ImageUploadInterceptor interceptor0;
+        private WebSocketListener webSocketListener;
     }
 
     public Bot getBot() {

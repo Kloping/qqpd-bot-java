@@ -38,6 +38,9 @@ public class WssWorker implements Runnable {
     @AutoStand
     private Logger logger;
 
+    @AutoStand
+    Starter.Config config;
+
     public WebSocketClient webSocket;
 
     protected Integer msgr = 0;
@@ -62,11 +65,15 @@ public class WssWorker implements Runnable {
 
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
+                    if (preMethods(serverHandshake)) return;
                     logger.info("wss opened");
                 }
 
                 @Override
                 public void onMessage(String s) {
+                    if (config.getWebSocketListener() != null)
+                        if (!config.getWebSocketListener().onMessage(webSocket, s))
+                            return;
                     Pack pack = GSON.fromJson(s, Pack.class);
                     logger.log(String.format("receive %s", s));
                     if (pack == null) {
@@ -80,14 +87,16 @@ public class WssWorker implements Runnable {
                 }
 
                 @Override
-                public void send(String text) throws NotYetConnectedException {
-                    super.send(text);
-                    logger.log("wss send: " + text);
+                public void send(String msg) throws NotYetConnectedException {
+                    if (preMethods(msg)) return;
+                    super.send(msg);
+                    logger.log("wss send: " + msg);
                     msgs++;
                 }
 
                 @Override
                 public void onClose(int i, String s, boolean b) {
+                    if (preMethods(i, s, b)) return;
                     logger.waring("wss closed with code " + i + " " + s);
                     for (OnCloseListener onCloseListener : closeListeners) {
                         onCloseListener.onClose(i, webSocket);
@@ -96,12 +105,13 @@ public class WssWorker implements Runnable {
 
                 @Override
                 public void onError(Exception e) {
+                    if (preMethods(e)) return;
                     logger.error("wss error");
                     e.printStackTrace();
                 }
             };
             //两次心跳的事件
-            webSocket.setConnectionLostTimeout(120);
+            webSocket.setConnectionLostTimeout(86);
             webSocket.run();
         } catch (Exception e) {
             logger.error("在WebSocketClient启动时失败");
@@ -115,11 +125,8 @@ public class WssWorker implements Runnable {
             run();
         }
     }
-
-    @AutoStand
-    Starter.Config config;
-
     public List<OnCloseListener> closeListeners = new ArrayList<>();
+
     public List<OnPackReceive> onPackReceives = new LinkedList<>();
 
     public Boolean getReconnect() {
@@ -135,6 +142,18 @@ public class WssWorker implements Runnable {
         return onPackReceives;
     }
 
-    public void close() {
+    private boolean preMethods(Object... objects) {
+        WebSocketListener listener = config.getWebSocketListener();
+        if (listener == null) return false;
+        Object o1 = objects[0];
+        if (o1 instanceof Exception) {
+            return !listener.onError(webSocket, (Exception) o1);
+        } else if (o1 instanceof String) {
+            return !listener.onSend(webSocket, o1.toString());
+        } else if (o1 instanceof ServerHandshake) {
+            return !listener.onOpen(webSocket, (ServerHandshake) o1);
+        } else if (o1 instanceof Integer) {
+            return !listener.onClose(webSocket, (Integer) objects[0], (String) objects[1], (boolean) objects[2]);
+        } else return false;
     }
 }
