@@ -18,7 +18,7 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.1-R1</version>
+    <version>1.5.1-L2</version>
 </dependency>
 ```
 

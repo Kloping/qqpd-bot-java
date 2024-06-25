@@ -1,12 +1,12 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.spt.annotations.AutoStand;
-import io.github.kloping.spt.annotations.CommentScan;
-import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.http.AuthV2Base;
 import io.github.kloping.qqbot.http.data.Token;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.ComponentScan;
+import io.github.kloping.spt.interfaces.component.ContextManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author github.kloping
  */
-@CommentScan(path = "io.github.kloping.qqbot")
+@ComponentScan(value = "io.github.kloping.qqbot")
 public class Start0 {
 
     public Map<String, String> headers = new HashMap();
