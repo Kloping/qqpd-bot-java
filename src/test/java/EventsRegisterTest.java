@@ -1,8 +1,4 @@
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.event.ConnectedEvent;
 import io.github.kloping.qqbot.api.event.Event;
@@ -10,6 +6,10 @@ import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.network.Events;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
 import org.junit.Test;
 
 /**
@@ -89,10 +89,5 @@ public class EventsRegisterTest extends ListenerHost {
                         "    \"type\": 0\n" +
                         "  }\n" +
                         "}");
-    }
-
-    @Override
-    public void handleException(Throwable e) {
-        throw new RuntimeException(e);
     }
 }

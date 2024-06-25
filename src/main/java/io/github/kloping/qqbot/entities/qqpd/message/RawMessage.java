@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.MySpringTool.PartUtils;
+import io.github.kloping.spt.PartUtils;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.*;
 import io.github.kloping.qqbot.api.message.Pinsble;

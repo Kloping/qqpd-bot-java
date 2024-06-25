@@ -1,8 +1,8 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.CommentScan;
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.CommentScan;
+import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.http.AuthV2Base;

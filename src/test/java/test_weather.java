@@ -19,10 +19,6 @@ public class test_weather {
         starter.run();
         String w0 = String.format("<@!%s> /天气", starter.getBot().getInfo().getId());
         starter.registerListenerHost(new ListenerHost() {
-            @Override
-            public void handleException(Throwable e) {
-
-            }
 
             @EventReceiver
             private void event(MessageEvent event) {

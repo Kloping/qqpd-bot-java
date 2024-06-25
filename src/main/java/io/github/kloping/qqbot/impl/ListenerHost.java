@@ -12,9 +12,10 @@ public abstract class ListenerHost {
      * 错误抛出处理
      *
      * @param e
+     * @return true 继续日志打印报错
      */
-    public void handleException(Throwable e) {
-        e.printStackTrace();
+    public boolean handleException(Throwable e) {
+        return true;
     }
 
     @Override

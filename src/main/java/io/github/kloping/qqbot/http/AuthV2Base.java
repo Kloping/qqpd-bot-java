@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.MySpringTool.annotations.http.Headers;
-import io.github.kloping.MySpringTool.annotations.http.HttpClient;
-import io.github.kloping.MySpringTool.annotations.http.PostPath;
-import io.github.kloping.MySpringTool.annotations.http.RequestBody;
+import io.github.kloping.spt.annotations.http.Headers;
+import io.github.kloping.spt.annotations.http.HttpClient;
+import io.github.kloping.spt.annotations.http.PostPath;
+import io.github.kloping.spt.annotations.http.RequestBody;
 import io.github.kloping.qqbot.http.data.Token;
 
 import java.util.Map;

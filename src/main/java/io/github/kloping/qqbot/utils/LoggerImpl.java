@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.utils;
 
-import io.github.kloping.MySpringTool.interfaces.Logger;
+import io.github.kloping.spt.interfaces.Logger;
 import org.fusesource.jansi.Ansi;
 
 import java.awt.*;

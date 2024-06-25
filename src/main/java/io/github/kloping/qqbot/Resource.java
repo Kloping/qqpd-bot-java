@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot;
 
 import com.google.gson.Gson;
-import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.spt.annotations.Entity;
 
 /**
  * @author github.kloping

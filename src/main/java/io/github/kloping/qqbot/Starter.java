@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.MySpringTool.StarterObjectApplication;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
-import io.github.kloping.MySpringTool.interfaces.component.HttpClientManager;
+import io.github.kloping.spt.StarterObjectApplication;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.component.ContextManager;
+import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static io.github.kloping.MySpringTool.PartUtils.getExceptionLine;
+import static io.github.kloping.spt.PartUtils.getExceptionLine;
 
 /**
  * <h3>一般启动方式</h3>

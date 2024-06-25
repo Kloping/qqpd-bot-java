@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.entities.ex;
 
-import io.github.kloping.MySpringTool.entity.KeyVals;
+import io.github.kloping.spt.entity.KeyVals;
 import org.jsoup.helper.HttpConnection;
 
 import java.util.Collection;

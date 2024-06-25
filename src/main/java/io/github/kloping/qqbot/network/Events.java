@@ -2,10 +2,6 @@ package io.github.kloping.qqbot.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.interfaces.Logger;
 import io.github.kloping.common.Public;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Starter;
@@ -17,6 +13,10 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import io.github.kloping.qqbot.utils.InvokeUtils;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.kloping.MySpringTool.PartUtils.getExceptionLine;
+import static io.github.kloping.spt.PartUtils.getExceptionLine;
 
 /**
  * @author github.kloping
@@ -92,11 +92,11 @@ public class Events implements OnPackReceive {
                             logger.error("EventReceiver The method parameter is set incorrectly");
                             logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
                         } catch (InvocationTargetException e) {
-                            logger.error(getExceptionLine(e.getTargetException()));
-                            l.handleException(e.getTargetException());
+                            if (l.handleException(e.getTargetException()))
+                                logger.error(getExceptionLine(e.getTargetException()));
                         } catch (Exception e) {
-                            logger.error(getExceptionLine(e));
-                            l.handleException(e);
+                            if (l.handleException(e))
+                                logger.error(getExceptionLine(e));
                         }
                     });
                 }

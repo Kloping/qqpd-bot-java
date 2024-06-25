@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.MySpringTool.annotations.http.*;
-import io.github.kloping.MySpringTool.entity.KeyVals;
+import io.github.kloping.spt.annotations.http.*;
+import io.github.kloping.spt.entity.KeyVals;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Dms;
 import io.github.kloping.qqbot.entities.qqpd.DmsRequest;

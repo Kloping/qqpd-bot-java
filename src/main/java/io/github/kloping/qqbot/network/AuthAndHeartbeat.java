@@ -2,11 +2,11 @@ package io.github.kloping.qqbot.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.interfaces.Logger;
-import io.github.kloping.MySpringTool.interfaces.component.ContextManager;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.Starter;

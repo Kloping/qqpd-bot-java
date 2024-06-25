@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.MySpringTool.annotations.http.*;
+import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
 import org.jsoup.Connection;
 

@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot.impl.registers;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
-import io.github.kloping.MySpringTool.annotations.Entity;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.api.event.MemberUpdateEvent;

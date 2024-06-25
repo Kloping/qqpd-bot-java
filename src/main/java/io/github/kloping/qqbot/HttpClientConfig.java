@@ -1,17 +1,18 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.MySpringTool.annotations.AutoStand;
-import io.github.kloping.MySpringTool.annotations.AutoStandAfter;
-import io.github.kloping.MySpringTool.annotations.Entity;
-import io.github.kloping.MySpringTool.h1.impl.LoggerImpl;
-import io.github.kloping.MySpringTool.h1.impl.component.HttpStatusReceiver;
-import io.github.kloping.MySpringTool.interfaces.Logger;
-import io.github.kloping.MySpringTool.interfaces.component.HttpClientManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.utils.RequestException;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.impls.HttpStatusReceiver;
+import io.github.kloping.spt.impls.LoggerImpl;
+import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import org.fusesource.jansi.Ansi;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
@@ -44,6 +45,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
     public void receive(HttpClientManager manager, String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
         if (o == null || code == null || metadata == null) return;
+
         logger.log(String.format("Use the (%s) method through the (%s) interface to request " +
                         "the data obtained by the response code of the (%s) URL is (%s), " +
                         "and (%s) may be converted to (%s) type Will be processed and filtered",
@@ -57,7 +59,6 @@ public class HttpClientConfig implements HttpStatusReceiver {
                 Ansi.ansi().fgRgb(LoggerImpl.NORMAL_LOW_COLOR.getRGB()).a(o).reset().toString()
         ));
         fillAll(cla, o);
-
         Public.EXECUTOR_SERVICE.submit(() -> {
             if (o instanceof ActionResult) {
                 ActionResult result = (ActionResult) o;
@@ -76,6 +77,9 @@ public class HttpClientConfig implements HttpStatusReceiver {
                 }
             }
         });
+        if (code >= 400 || code < 200) {
+            throw new RequestException(code, metadata.body().wholeText(), url, method.getName());
+        }
     }
 
     public void fillAll(Class<?> cla, Object o) {

@@ -3,7 +3,7 @@ package io.github.kloping.qqbot.http.data;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.MySpringTool.interfaces.Logger;
+import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.ex.Image;
 import io.github.kloping.qqbot.entities.exceptions.ImageUploadFailedException;

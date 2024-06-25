@@ -19,10 +19,6 @@ public class test_onMessage {
         Starter starter = test_main.factory();
         starter.run();
         starter.registerListenerHost(new ListenerHost() {
-            @Override
-            public void handleException(Throwable e) {
-
-            }
 
             @EventReceiver
             private void event(MessageEvent event) {
@@ -31,10 +27,6 @@ public class test_onMessage {
             }
         });
         starter.registerListenerHost(new ListenerHost() {
-            @Override
-            public void handleException(Throwable e) {
-
-            }
 
             @EventReceiver
             public void onEvent(MessageEvent event) {
