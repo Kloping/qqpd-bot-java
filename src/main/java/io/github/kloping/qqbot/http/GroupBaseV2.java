@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author github.kloping
  */
-@HttpClient(Starter.NET_MAIN)
+@HttpClient(Starter.NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getV2Headers")
 public interface GroupBaseV2 extends BaseV2{
     /**

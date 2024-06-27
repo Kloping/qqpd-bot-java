@@ -7,7 +7,7 @@ import org.jsoup.Connection;
 /**
  * @author github.kloping
  */
-@HttpClient(Starter.NET_MAIN)
+@HttpClient(Starter.NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getV2Headers")
 public interface InterActionBase {
     /**

@@ -9,7 +9,7 @@ import io.github.kloping.qqbot.http.data.UrlPack;
 /**
  * @author github.kloping
  */
-@HttpClient(Starter.NET_MAIN)
+@HttpClient(Starter.NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface BotBase {
     /**

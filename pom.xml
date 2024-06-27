@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.1-L2</version>
+    <version>1.5.1-R2</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>io.github.Kloping</groupId>
             <artifactId>SpringTool</artifactId>
-            <version>0.6.3-R1</version>
+            <version>0.6.3-L1</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.github.Kloping</groupId>
@@ -154,12 +154,12 @@
                     </execution>
                 </executions>
                 <!--非手动签名配置-->
-<!--                <configuration>-->
-<!--                    <gpgArguments>-->
-<!--                        <arg>&#45;&#45;pinentry-mode</arg>-->
-<!--                        <arg>loopback</arg>-->
-<!--                    </gpgArguments>-->
-<!--                </configuration>-->
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -3,7 +3,6 @@ package io.github.kloping.qqbot.http;
 import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.spt.entity.KeyVals;
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
 
 import java.util.Map;
@@ -15,7 +14,7 @@ import static org.jsoup.Connection.Method.DELETE;
  *
  * @author github.kloping
  */
-@HttpClient(Starter.NET_MAIN)
+@HttpClient(Starter.NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface MessageBase {
      /**

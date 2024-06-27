@@ -32,11 +32,13 @@ _**待完善..**_
 #### 启动方式
 
 ```java
-//启动类新建
+// 启动类新建
 Starter starter = new Starter("appid", "token");
 // 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
-//启动
+// 切换沙箱与正式环境
+starter.getConfig().sandbox();
+// 启动
 starter.run();
 ```
 #### 事件注册

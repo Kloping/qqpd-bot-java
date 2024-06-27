@@ -7,14 +7,13 @@ import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.Roles;
-import org.jsoup.Connection;
 
 import java.util.Map;
 
 /**
  * @author github.kloping
  */
-@HttpClient(Starter.NET_MAIN)
+@HttpClient(Starter.NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface GuildBase {
     /**

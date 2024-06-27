@@ -5,18 +5,17 @@ import io.github.kloping.spt.annotations.http.Headers;
 import io.github.kloping.spt.annotations.http.HttpClient;
 import io.github.kloping.qqbot.entities.qqpd.User;
 
-import static io.github.kloping.qqbot.Starter.NET_MAIN;
+import static io.github.kloping.qqbot.Starter.NET_POINT;
 
 /**
  * @author github.kloping
  */
-@HttpClient(NET_MAIN)
+@HttpClient(NET_POINT)
 @Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface UserBase {
     /**
      * bot info
      *
-     * @param headers
      * @return
      */
     @GetPath("/users/@me")

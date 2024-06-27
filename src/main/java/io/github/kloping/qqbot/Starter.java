@@ -1,9 +1,5 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.spt.StarterObjectApplication;
-import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.component.ContextManager;
-import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
@@ -13,9 +9,12 @@ import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.qqbot.network.WebSocketListener;
 import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.qqbot.utils.LoggerImpl;
+import io.github.kloping.spt.StarterObjectApplication;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.component.ContextManager;
+import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import lombok.Data;
 import lombok.Getter;
-import org.java_websocket.client.WebSocketClient;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -67,7 +66,10 @@ import static io.github.kloping.spt.PartUtils.getExceptionLine;
  * @author github.kloping
  */
 public class Starter implements Runnable {
+    public static final String SANDBOX_NET_MAIN = "https://sandbox.api.sgroup.qq.com/";
     public static final String NET_MAIN = "https://api.sgroup.qq.com/";
+    public String net = NET_MAIN;
+    public static final String NET_POINT = "{io.github.kloping.qqbot.Starter.net}";
     public static final String APPID_ID = "appid";
     public static final String TOKEN_ID = "token";
     public static final String SECRET_ID = "secret";
@@ -130,6 +132,7 @@ public class Starter implements Runnable {
         String appid = getConfig().getAppid();
         String token = getConfig().getToken();
         String secret = getConfig().getSecret();
+        net = getConfig().sandbox ? SANDBOX_NET_MAIN : NET_MAIN;
         contextManager = APPLICATION.INSTANCE.getContextManager();
         contextManager.append(this);
         contextManager.append(appid, APPID_ID);
@@ -176,6 +179,7 @@ public class Starter implements Runnable {
 
     @Data
     public static class Config {
+        public boolean sandbox = false;
         private String appid;
         private String token;
         /**
@@ -190,6 +194,13 @@ public class Starter implements Runnable {
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private ImageUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
+
+        /**
+         * 在沙箱环境与正式环境 之前切换 默认正式环境
+         */
+        public void sandbox() {
+            sandbox = !sandbox;
+        }
     }
 
     public Bot getBot() {
