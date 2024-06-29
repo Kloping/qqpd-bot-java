@@ -125,6 +125,13 @@ public class BaseGroupMessageEvent extends BaseMessageEvent implements GroupMess
     }
 
     @Override
+    public Integer setMsgSeq(Integer seq) {
+        Integer oseq = this.seq;
+        this.seq = seq;
+        return oseq;
+    }
+
+    @Override
     public String toString() {
         return String.format("[type(%s) %s].%s:%s"
                 , EnvType.GROUP.name()
