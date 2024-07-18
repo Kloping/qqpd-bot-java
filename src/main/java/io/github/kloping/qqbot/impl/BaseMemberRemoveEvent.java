@@ -31,4 +31,9 @@ public class BaseMemberRemoveEvent extends BaseGuildEvent implements MemberUpdat
     public String toString() {
         return String.format("member(%s) remove from %s", member.getNick(), guild.getName());
     }
+
+    @Override
+    public String getId() {
+        return getMetadata().get("id").toString();
+    }
 }

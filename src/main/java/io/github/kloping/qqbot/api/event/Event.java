@@ -23,6 +23,13 @@ public interface Event {
      */
     Bot getBot();
 
+    /**
+     * 事件id
+     *
+     * @return
+     */
+    String getId();
+
     default String getClassName() {
         return this.getClass().getSimpleName();
     }

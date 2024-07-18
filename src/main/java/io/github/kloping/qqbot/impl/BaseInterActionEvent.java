@@ -68,4 +68,9 @@ public class BaseInterActionEvent implements InterActionEvent {
                 , getInterAction().getData().getResolved().getButton_id()
                 , getInterAction().getCid());
     }
+
+    @Override
+    public String getId() {
+        return getMetadata().get("id").toString();
+    }
 }

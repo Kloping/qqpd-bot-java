@@ -1,3 +1,4 @@
+logs/*
 temp*
 # Project exclude paths
 src/test/java/temp/gs/**
@@ -9,7 +10,6 @@ temp.json
 temp.http
 bot-qqpd-java.iml
 test_temp.java
-logs
 src/test/java/temp/*
 /src/test/java/test_temp_public.java
 /src/test/java/test_temp_private.java

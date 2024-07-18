@@ -31,4 +31,9 @@ public class BaseGuildUpdateEvent extends BaseGuildEvent implements GuildUpdateE
     public String toString() {
         return String.format("guild(%s) id(%s) info change", guild.getName(), guild.getId());
     }
+
+    @Override
+    public String getId() {
+        return getMetadata().get("id").toString();
+    }
 }

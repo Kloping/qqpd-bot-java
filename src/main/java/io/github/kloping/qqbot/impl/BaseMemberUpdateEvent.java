@@ -32,4 +32,9 @@ public class BaseMemberUpdateEvent extends BaseGuildEvent implements MemberUpdat
     public String toString() {
         return String.format("member(%s) in %s info change", member.getNick(), guild.getName());
     }
+
+    @Override
+    public String getId() {
+        return getMetadata().get("id").toString();
+    }
 }

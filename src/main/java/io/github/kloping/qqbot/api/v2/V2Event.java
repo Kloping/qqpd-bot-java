@@ -1,22 +1,14 @@
 package io.github.kloping.qqbot.api.v2;
 
+import io.github.kloping.qqbot.api.event.Event;
+
 /**
- * 机器人群聊事件
- *
  * @author github.kloping
  */
-public interface V2Event {
+public interface V2Event extends Event {
     /**
-     * 事件id
-     *
-     * @return
+     * 所处环境 openid  可能是 user openid 或 group openid
+      * @return
      */
-    String getId();
-
-    /**
-     * 事情群聊openid
-     *
-     * @return
-     */
-    String getGroupOpenId();
+    String getOpenId();
 }

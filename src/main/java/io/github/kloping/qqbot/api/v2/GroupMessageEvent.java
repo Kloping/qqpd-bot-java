@@ -15,12 +15,4 @@ public interface GroupMessageEvent extends GroupEvent, MessageEvent<Contact,Grou
      * @return
      */
     Group getSubject();
-
-
-    /**
-     * 设置消息序列号并返回原序列号
-     * @param seq
-     * @return
-     */
-    Integer setMsgSeq(Integer seq);
 }

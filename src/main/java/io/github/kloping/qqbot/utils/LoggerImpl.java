@@ -148,6 +148,7 @@ public class LoggerImpl implements Logger {
     private void setWriter(File f0) {
         try {
             if (writer != null) writer.close();
+            if (!f0.exists()) f0.getParentFile().mkdirs();
             writer = new BufferedWriter(new FileWriter(f0, true));
         } catch (IOException e) {
             e.printStackTrace();

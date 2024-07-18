@@ -126,4 +126,9 @@ public abstract class BaseMessageEvent implements ChannelEvent, MessageEvent<Mem
     public void setFilter(Class<?>[] filters) {
         this.filters = filters;
     }
+
+    @Override
+    public String getId() {
+        return getRawMessage().getId();
+    }
 }

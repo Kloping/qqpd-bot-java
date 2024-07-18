@@ -15,11 +15,15 @@ public class At implements SendAble {
     public static final String MEMBER_TYPE = "member";
     public static final String CHANNEL_TYPE = "channel";
 
-    private String type;
+    private String type = "member";
     private String targetId;
 
     public At(String type, String targetId) {
         this.type = type;
+        this.targetId = targetId;
+    }
+
+    public At(String targetId) {
         this.targetId = targetId;
     }
 
@@ -28,7 +32,7 @@ public class At implements SendAble {
         if (CHANNEL_TYPE.equals(type)) {
             return "<#" + targetId + ">";
         } else if (MEMBER_TYPE.equals(type)) {
-            return "<@!" + targetId + ">";
+            return String.format("<qqbot-at-user id=\"%s\" />", targetId);
         } else return "@";
     }
 

@@ -42,4 +42,12 @@ public interface MessageV2Event extends Event, Sender, V2Event {
      * @return
      */
     Contact getSubject();
+
+
+    /**
+     * 设置消息序列号并返回原序列号
+     * @param seq
+     * @return
+     */
+    Integer setMsgSeq(Integer seq);
 }

@@ -16,10 +16,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.impl.MessagePacket;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -59,6 +56,7 @@ public class BaseUtils {
     public static final Pattern AT_ALL = Pattern.compile("@everyone");
     public static final Pattern AT_CHANNEL = Pattern.compile("<#[0-9]+>");
     public static final Pattern EMOJI = Pattern.compile("<emoji:[0-9]+>");
+    public static final Pattern EMOJI_V2 = Pattern.compile("<faceType=.*?>");
 
     public static MessageChain parseToMessageChain(RawMessage rawMessage) {
         return parseToMessageChain(rawMessage, null);
@@ -107,6 +105,14 @@ public class BaseUtils {
                 return Emoji.valueOf(Integer.valueOf(NumberUtils.findNumberFromString(s)));
             }
         });
+        DE_SERIALIZER.add(EMOJI_V2, new ArrDeSerializer.Rule0<Emoji>() {
+            @Override
+            public Emoji deserializer(String s) {
+                Map<String, Object> mm = parseAngleBracketsEmoji(s);
+                Object v = mm.get("faceId");
+                return Emoji.valueOf(Integer.valueOf(NumberUtils.findNumberFromString(v.toString())));
+            }
+        });
         DE_SERIALIZER.add(ArrDeSerializer.EMPTY_PATTERN, new ArrDeSerializer.Rule0<PlainText>() {
             @Override
             public PlainText deserializer(String s) {
@@ -122,5 +128,19 @@ public class BaseUtils {
         for (SendAble sendAble : sendAbles) {
             chain.append(sendAble);
         }
+    }
+
+    public static Map<String, Object> parseAngleBracketsEmoji(String s) {
+        Map<String, Object> map = new HashMap<>();
+        String[] split = s.substring(1, s.length() - 1).split(",");
+        for (String s1 : split) {
+            Integer i0 = s1.indexOf("=");
+            String key = s1.substring(0, i0);
+            String value = s1.substring(i0 + 1, s1.length());
+            if (value.startsWith("\"") && value.endsWith("\"")) {
+                map.put(key, value.substring(1, value.length() - 1));
+            } else map.put(key, value);
+        }
+        return map;
     }
 }

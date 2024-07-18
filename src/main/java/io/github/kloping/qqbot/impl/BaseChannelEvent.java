@@ -22,4 +22,9 @@ public class BaseChannelEvent extends BaseGuildEvent implements ChannelEvent {
     public Channel getChannel() {
         return channel;
     }
+
+    @Override
+    public String getId() {
+        return getMetadata().get("id").toString();
+    }
 }
