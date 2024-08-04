@@ -18,7 +18,7 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.1-L3</version>
+    <version>1.5.1-R3</version>
 </dependency>
 ```
 
@@ -45,12 +45,7 @@ Maven
 ```java
 starter.registerListenerHost(new ListenerHost(){
     @EventReceiver
-    public void onEvent(MessageChannelReceiveEvent event){
-        event.send("测试");
-    }
-
-    @EventReceiver 
-    public void onEvent(MessageDirectReceiveEvent event){
+    public void onEvent(MessageEvent event){
         event.send("测试通过");
     }
 });
@@ -85,5 +80,3 @@ import io.github.kloping.qqbot.impl.ListenerHost;
 ```
 
 更多使用方式参考查看 [test](./src/test/java)
-
-SDK尚在完善中...

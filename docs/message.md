@@ -24,6 +24,8 @@
   - MessageChain
   - MessagePre
   - PlainText
+  - Markdown
+  - Keyboard
 - 消息发送者 Sender
   - BaseMessageChannelReceiveEvent
   - BaseMessageContainsAtEvent

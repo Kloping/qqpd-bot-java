@@ -38,9 +38,6 @@ public class BaseUtils {
         if (Judge.isNotEmpty(packet.getImage())) {
             msg.setImage(packet.getImage());
         }
-        if (Judge.isNotEmpty(packet.getImage())) {
-            msg.setImage(packet.getImage());
-        }
         if (Judge.isNotEmpty(packet.getReplyId())) {
             msg.setMessageReference(new MessageReference(packet.getReplyId()));
         }

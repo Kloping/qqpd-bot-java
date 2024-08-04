@@ -1,5 +1,5 @@
-## QQ频道机器人 Java SDK 非官方 文档
-_**待完善..**_
+## QQ官方机器人 JavaSDK 开发文档
+
 <hr>
 
 ### 包目录说明:
@@ -16,12 +16,12 @@ _**待完善..**_
 
 <hr>
 
-### 相关指引
+#### 相关部分文档指引
 
 - **[事件 event](event.md)**
 - **[消息 message](message.md)**
-- **[动作 action](action.md)**
 - **[网络相关设置](network.md)**
+- **[V2群](v2.md)**
 
 <hr>
 
@@ -32,7 +32,7 @@ _**待完善..**_
 #### 启动方式
 
 ```java
-// 启动类新建
+// 启动类新建 一般启动方法 不可接收发送 群聊消息 见v2文档
 Starter starter = new Starter("appid", "token");
 // 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
@@ -45,13 +45,9 @@ starter.run();
 
 ```java
 starter.registerListenerHost(new ListenerHost(){
-    @Override
-    public void handleException(Throwable e){
-    }
-    
     //必须要有该注解 否则将不注册
     @EventReceiver
-    public void onEvent(MessageChannelReceiveEvent event){
+    public void onEvent(MessageEvent event){
         event.send("Hello World!");
     }
 });
@@ -74,12 +70,6 @@ public class LogDemo {
 ```
 <hr>
 
-### 依赖排斥
-
-- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2
-  同时引用时会产生大量空指针[#20](https://github.com/Kloping/qqpd-bot-java/issues/20)
-
-<hr>
 
 ### 自定义消息发送 
 > 通过http请求达到想要的目的获取bot请求必要的请求头方式
@@ -99,8 +89,14 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
         @EventReceiver
         public void onEvent(ConnectedEvent event) {
             V2MsgData data = new V2MsgData().setContent("测试主动消息");
-            starter.getBot().groupBaseV2.send("8468B15808B8200A56E6DD92EBA51AAC", data.toString(), SEND_MESSAGE_HEADERS);
+            starter.getBot().groupBaseV2.send("groupOpenId", data.toString(), SEND_MESSAGE_HEADERS);
         }
     });
 ![img.png](./imgs/img.png)
 
+### 依赖排斥
+
+- v1.5.0-Beta7 在与com.alibaba.fastjson2:fastjson2
+  同时引用时会产生大量空指针[#20](https://github.com/Kloping/qqpd-bot-java/issues/20)
+
+<hr>

@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot.entities.ex;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.Result;
@@ -77,17 +77,13 @@ public class Markdown implements SendAble {
     }
 
     public Result<V2Result> send(SenderAndCidMidGetter er, Integer msgSeq) {
-        if (er.getEnvType() == EnvType.GROUP) {
-            V2MsgData v2MsgData = new V2MsgData();
-            v2MsgData.setMarkdown(this);
-            v2MsgData.setMsg_type(2);
-            v2MsgData.setMsg_id(er.getMid());
+        if (er.getEnvType().isV2()) {
+            V2MsgData v2MsgData = new V2MsgData().setMarkdown(this).setMsg_type(2).setMsg_id(er.getMid());
             if (keyboard != null) v2MsgData.setKeyboard(getKeyboard());
-            return new Result(er.getBot().groupBaseV2.send(er.getCid(), JSON.toJSONString(v2MsgData), SEND_MESSAGE_HEADERS));
+            SenderV2 senderV2 = (SenderV2) er;
+            return new Result(senderV2.getV2().send(er.getCid(), JSON.toJSONString(v2MsgData), SEND_MESSAGE_HEADERS));
         } else if (er.getEnvType() == EnvType.GUILD) {
-            RawPreMessage preMessage = new RawPreMessage();
-            preMessage.setMarkdown(this);
-            preMessage.setMsgId(er.getMid());
+            RawPreMessage preMessage = new RawPreMessage().setMarkdown(this).setMsgId(er.getMid());
             return new Result(er.getBot().messageBase.send(er.getCid(), preMessage, SEND_MESSAGE_HEADERS));
         }
         return er.send(this);
