@@ -4,7 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.http.data.Result;
-import io.github.kloping.qqbot.impl.MessagePacket;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -451,9 +450,7 @@ public class Emoji implements SendAble {
 
     @Override
     public Result send(SenderAndCidMidGetter er) {
-        MessagePacket packet = new MessagePacket();
-        packet.setContent(toString0());
-        return er.send(packet);
+        return er.send(toString0());
     }
 
     @Override

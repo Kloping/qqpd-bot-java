@@ -30,7 +30,7 @@
 [maven仓库](https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/)
 
 #### 启动方式
-
+> step0 启动程序
 ```java
 // 启动类新建 一般启动方法 不可接收发送 群聊消息 见v2文档
 Starter starter = new Starter("appid", "token");
@@ -41,8 +41,8 @@ starter.getConfig().sandbox();
 // 启动
 starter.run();
 ```
-#### 事件注册
-
+#### 事件注册 
+> step1 接收事件 tips:方法中参数为Event任一子类或实现
 ```java
 starter.registerListenerHost(new ListenerHost(){
     //必须要有该注解 否则将不注册
@@ -53,9 +53,34 @@ starter.registerListenerHost(new ListenerHost(){
 });
 ```
 
+### 消息发送
+> step2 发送消息   tips: MessageEvent exts Sender
+- 发送文本`sender.send("文本");`
+- 发送图片
+```java
+//step1 构造Image
+Image image = null;
+//图片链接构造
+image = new Image(url);
+//bytes数据构造
+image = new Image(bytes);        
+//step2 send
+sender.send(image);
+```
+- 发送 markdown
+
+      event.send(new Markdown("custom_template_id")
+        //申请的模板 参数填充
+        .addParam("key", "value")
+        //可选 设置按钮模板 
+        .setKeyboard("id"));   
+
+
 <hr>
 
-### 日志设置
+### 其他设置项
+
+#### 日志设置
 
 ```java
 public class LogDemo {
@@ -71,7 +96,7 @@ public class LogDemo {
 <hr>
 
 
-### 自定义消息发送 
+#### 自定义消息发送 
 > 通过http请求达到想要的目的获取bot请求必要的请求头方式
 
 ```java
