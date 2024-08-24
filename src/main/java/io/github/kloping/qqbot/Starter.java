@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.qqbot.utils.LoggerImpl;
 import io.github.kloping.spt.StarterObjectApplication;
 import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.AutomaticWiringValue;
 import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import lombok.Data;
@@ -149,6 +150,14 @@ public class Starter implements Runnable {
     }
 
     protected void wssWork() {
+        AutomaticWiringValue automaticWiringValue = contextManager.getContextEntity(AutomaticWiringValue.class);
+        if (config.getWebSocketListener() != null) {
+            try {
+                automaticWiringValue.wiring(config.getWebSocketListener(), contextManager);
+            } catch (Exception e) {
+                APPLICATION.logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
+            }
+        }
         Future future = Public.EXECUTOR_SERVICE.submit(wssWorker);
         APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
     }

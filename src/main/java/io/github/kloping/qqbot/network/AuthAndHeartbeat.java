@@ -77,7 +77,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @AutoStand
     Config config;
 
-    private void identifyConnect(int code, WebSocketClient wss) {
+    public void identifyConnect(int code, WebSocketClient wss) {
         if (!config.getReconnect()) return;
         Future future = contextManager.getContextEntity(Future.class, Starter.MAIN_FUTURE_ID);
         if (future != null && !future.isCancelled()) {
