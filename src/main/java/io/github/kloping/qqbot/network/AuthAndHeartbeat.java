@@ -2,11 +2,6 @@ package io.github.kloping.qqbot.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.spt.annotations.AutoStand;
-import io.github.kloping.spt.annotations.AutoStandAfter;
-import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
-import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.Starter;
@@ -17,6 +12,12 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseConnectedEvent;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.interfaces.component.ContextManager;
+import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 
 import java.util.concurrent.Future;
@@ -28,8 +29,21 @@ import static io.github.kloping.qqbot.Starter.*;
 /**
  * @author github.kloping
  */
+@Slf4j
 @Entity
 public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
+
+    public static final int CODE_4006 = 4006;
+    public static final int CODE_4007 = 4007;
+    public static final int CODE_4008 = 4008;
+    public static final int CODE_4009 = 4009;
+    public static final int CODE_4900 = 4900;
+    public static final int CODE_4913 = 4913;
+    /**
+     * 服务器 内部异常
+     */
+    public static final int CODE_1011 = 1011;
+
     @AutoStand
     Logger logger;
 
@@ -66,6 +80,18 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
                 // For more information check:
                 // https://github.com/TooTallNate/Java-WebSocket/wiki/Lost-connection-detection
                 identifyConnect(code, wss);
+                break;
+            case CODE_1011:
+                Public.EXECUTOR_SERVICE.execute(() -> {
+                    logger.error("websocket closed with code 1011,server internal exception");
+                    logger.error("reconnect in 3 seconds");
+                    try {
+                        TimeUnit.SECONDS.sleep(3);
+                    } catch (InterruptedException e) {
+                        logger.error(e.getMessage());
+                    }
+                    identifyConnect(code, wss);
+                });
                 break;
             default:
                 logger.error(String.format("暂未处理的异常code(%s)", code));

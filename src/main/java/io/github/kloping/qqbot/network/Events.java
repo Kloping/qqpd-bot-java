@@ -6,6 +6,7 @@ import io.github.kloping.common.Public;
 import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.event.Event;
+import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.api.message.MessageEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.Pack;
@@ -92,8 +93,18 @@ public class Events implements OnPackReceive {
                             logger.error("EventReceiver The method parameter is set incorrectly");
                             logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
                         } catch (InvocationTargetException e) {
-                            if (l.handleException(e.getTargetException()))
-                                logger.error(getExceptionLine(e.getTargetException()));
+                            if (l.handleException(e.getTargetException())) {
+                                if (e.getTargetException() instanceof RequestException) {
+                                    RequestException re = (RequestException) e.getTargetException();
+                                    logger.error(String.format("%s: code(%s) %s at", re.getClass().getSimpleName(), re.getCode(), re.getData().getMessage()));
+                                    for (StackTraceElement traceElement : re.getStackTrace()) {
+                                        logger.error(String.format("\t%s.%s(%s:%s)", traceElement.getClassName(), traceElement.getMethodName(),
+                                                traceElement.getFileName() == null ? "unknown" : traceElement.getFileName(), traceElement.getLineNumber()));
+                                    }
+                                } else {
+                                    logger.error(getExceptionLine(e.getTargetException()));
+                                }
+                            }
                         } catch (Exception e) {
                             if (l.handleException(e))
                                 logger.error(getExceptionLine(e));

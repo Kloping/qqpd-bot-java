@@ -1,11 +1,14 @@
 package io.github.kloping.qqbot;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.BotContent;
+import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.entities.Bot;
+import io.github.kloping.qqbot.entities.exc.QBotError;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
-import io.github.kloping.qqbot.utils.RequestException;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
@@ -18,6 +21,7 @@ import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 
 import java.awt.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
@@ -45,7 +49,6 @@ public class HttpClientConfig implements HttpStatusReceiver {
     public void receive(HttpClientManager manager, String url, Integer code, Class<?> interface0, Method method,
                         Connection.Method reqMethod, Class<?> cla, Object o, Document metadata) {
         if (o == null || code == null || metadata == null) return;
-
         logger.log(String.format("Use the (%s) method through the (%s) interface to request " +
                         "the data obtained by the response code of the (%s) URL is (%s), " +
                         "and (%s) may be converted to (%s) type Will be processed and filtered",
@@ -78,9 +81,28 @@ public class HttpClientConfig implements HttpStatusReceiver {
             }
         });
         if (code >= 400 || code < 200) {
-            throw new RequestException(code, metadata.body().wholeText(), url, method.getName());
+            RequestException requestException = null;
+            String bodyJson = metadata.body().wholeText();
+            JSONObject exjo = JSON.parseObject(bodyJson);
+            QBotError error = exjo.toJavaObject(QBotError.class);
+            //加入exc对象
+            int eccode = exjo.getInteger("code");
+            if (Resource.CODE2EXCEPTION.containsKey(eccode)) {
+                try {
+                    Class<? extends RequestException> exceptionClass = Resource.CODE2EXCEPTION.get(eccode);
+                    Constructor constructor = exceptionClass.getConstructor(int.class, String.class, String.class, String.class);
+                    requestException = (RequestException) constructor.newInstance(eccode, bodyJson, url, method.getName());
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            } else {
+                requestException = new RequestException(eccode, bodyJson, url, method.getName());
+            }
+            if (requestException != null) requestException.setData(error);
+            throw requestException;
         }
     }
+
 
     public void fillAll(Class<?> cla, Object o) {
         if (o instanceof BotContent) {

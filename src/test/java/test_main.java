@@ -1,5 +1,6 @@
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.Intents;
+import io.github.kloping.qqbot.entities.qqpd.Dms;
 
 /**
  * @author github.kloping

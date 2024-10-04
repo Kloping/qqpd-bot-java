@@ -82,12 +82,6 @@ public class Starter implements Runnable {
     public static final String RECONNECT_K_ID = "is_reconnect";
     public static final String CONFIG_ID = "config";
 
-    public static final Integer CODE_4006 = 4006;
-    public static final Integer CODE_4007 = 4007;
-    public static final Integer CODE_4008 = 4008;
-    public static final Integer CODE_4009 = 4009;
-    public static final Integer CODE_4900 = 4900;
-    public static final Integer CODE_4913 = 4913;
 
     @Getter
     private Config config = new Config();
