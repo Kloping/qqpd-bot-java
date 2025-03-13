@@ -459,6 +459,7 @@ public class Emoji implements SendAble {
     }
 
     public String toString0() {
+        if (type == 2) return getText().split(" ")[0];
         return String.format("<emoji:%s>", getId());
     }
 }
