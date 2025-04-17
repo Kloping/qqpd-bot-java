@@ -35,19 +35,19 @@ import static io.github.kloping.spt.PartUtils.getExceptionLine;
  * <pre>{@code
  *
  * starter.registerListenerHost(new ListenerHost(){
- *      @Override
- *      public void handleException(Throwable e){
- *      }
+ * @Override
+ * public void handleException(Throwable e){
+ * }
  *
- *      @EventReceiver
- *      public void onEvent(MessageChannelReceiveEvent event){
- *          event.send("测试");
- *      }
+ * @EventReceiver
+ * public void onEvent(MessageChannelReceiveEvent event){
+ * event.send("测试");
+ * }
  *
- *      @EventReceiver
- *      public void onEvent(MessageDirectReceiveEvent event){
- *          event.send("测试通过");
- *      }
+ * @EventReceiver
+ * public void onEvent(MessageDirectReceiveEvent event){
+ * event.send("测试通过");
+ * }
  * });
  * }</pre>
  * <p>
@@ -167,6 +167,7 @@ public class Starter implements Runnable {
     /**
      * 该类必须注解为 @{@link Entity}
      * <br> 参考 {@link io.github.kloping.qqbot.impl.registers}
+     *
      * @param cla
      */
     public void registerEventsRegister(Class<? extends Events.EventRegister> cla) {
@@ -194,6 +195,7 @@ public class Starter implements Runnable {
          */
         private Integer code;
         private Boolean reconnect = true;
+        private String wslink = null;
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private ImageUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
@@ -203,6 +205,14 @@ public class Starter implements Runnable {
          */
         public void sandbox() {
             sandbox = !sandbox;
+        }
+
+        /**
+         * 设置WebSocket链接地址 ##通常用于webhook转发 也可用于固定地址减少请求 加快启动速度
+         * @param wslink 配置后将不再通过/gateway请求获的地址(wss://api.sgroup.qq.com/websocket)
+         */
+        public void setWslink(String wslink) {
+            this.wslink = wslink;
         }
     }
 

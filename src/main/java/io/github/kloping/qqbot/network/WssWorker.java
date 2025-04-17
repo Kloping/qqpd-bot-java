@@ -1,5 +1,6 @@
 package io.github.kloping.qqbot.network;
 
+import io.github.kloping.judge.Judge;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
@@ -52,7 +53,11 @@ public class WssWorker implements Runnable {
     public void run() {
         try {
             try {
-                if (uri == null) uri = new URI(botBase.gateway().getUrl());
+                if (uri == null) {
+                    if (Judge.isEmpty(config.getWslink()))
+                        uri = new URI(botBase.gateway().getUrl());
+                    else uri = new URI(config.getWslink());
+                }
             } catch (NullPointerException ex) {
                 logger.error(String.format("%s Probably The APPID or TOKEN is incorrect", ex.getClass().getName()));
                 return;
@@ -125,6 +130,7 @@ public class WssWorker implements Runnable {
             run();
         }
     }
+
     public List<OnCloseListener> closeListeners = new ArrayList<>();
 
     public List<OnPackReceive> onPackReceives = new LinkedList<>();
