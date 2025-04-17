@@ -131,7 +131,7 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
 
 <hr>
 
-- 2025/4/18 v1.5.2-R1 + 
+### 2025/4/18 v1.5.2-R1 + 
 
 > 支持自定义websocket链接地址
 
