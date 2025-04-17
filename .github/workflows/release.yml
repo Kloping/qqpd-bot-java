@@ -29,4 +29,4 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           appid: ${{ secrets.APPID }}
           token: ${{ secrets.TOKEN }}
-        run: mvn --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} clean deploy -Dappid=${appid} -Dtoken=${token}
+        run: mvn --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} clean deploy -P release
