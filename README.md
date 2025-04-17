@@ -11,6 +11,15 @@
 
 Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
 
+### ✨ 特性
+- 支持QQ官方频道与Q群消息收发（私域/公域兼容）
+- 开箱即用的消息类型（文本/图片/Markdown/按钮交互）
+- 灵活的事件监听机制（`@EventReceiver`注解驱动）
+- 多环境支持（沙箱/正式环境一键切换）
+- 完善的HTTP API封装（频道管理、禁言、消息审核等）
+- 支持Java 8+及Kotlin协程环境
+
+
 Maven
 
 ```xml
@@ -18,9 +27,13 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2-R1</version>
 </dependency>
 ```
+
+Gradle
+ 
+    implementation 'io.github.kloping:bot-qqpd-java:1.5.2-R1'
 
 ### 使用前提
 
@@ -28,14 +41,15 @@ Maven
 
 ~~2. 发布审核 发布后为公域~~
 
-### [开发文档](./docs) / [q群使用说明](./docs/v2.md)
+### [开发文档](./docs/readme.md) / [q群使用说明](./docs/v2.md)
 
 ### 使用示例
 
 启动方式
 
 ```java 
-    Starter starter=new Starter("appid","token");
+    Starter starter = new Starter("appid","token");
+    //如果使用q群 则 new Starter("appid", "token", "secret");
     starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
     starter.run();
 ```

@@ -20,24 +20,29 @@
 
 - **[事件 event](event.md)**
 - **[消息 message](message.md)**
-- **[网络相关设置](network.md)**
+- **[网络相关配置](network.md)**
 - **[V2群](v2.md)**
 
 <hr>
 
 在配置好项目依赖后 即可使用
 
-[maven仓库](https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/)
+> [maven仓库](https://repo1.maven.org/maven2/io/github/kloping/bot-qqpd-java/)
 
-#### 启动方式
+#### 启动流程
+
+> step-1
+
+ 登录q.qq开发者平台获得appid token 等参数
+
 > step0 启动程序
 ```java
-// 启动类新建 一般启动方法 不可接收发送 群聊消息 见v2文档
+// 启动类新建 一般启动方法 不可接收发送 群聊消息 见v2群文档
 Starter starter = new Starter("appid", "token");
 // 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 // 切换沙箱与正式环境
-starter.getConfig().sandbox();
+// starter.getConfig().sandbox();
 // 启动
 starter.run();
 ```
@@ -125,3 +130,36 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
   同时引用时会产生大量空指针[#20](https://github.com/Kloping/qqpd-bot-java/issues/20)
 
 <hr>
+
+- 2025/4/18 v1.5.2-R1 + 
+
+> 支持自定义websocket链接地址
+
+对于webhook已开通且无法再进行websocket开发者而言 
+
+可通过[webhook转websocket服务](https://github.com/DevOpen-Club/qbot-webhook-to-websocket)继续使用本项目
+
+from github@NintyCat
+
+使用代码如下
+```java
+    //===========================你的自定义地址
+    starter.getConfig().setWslink("wss://api.sgroup.qq.com/websocket");
+    starter.getConfig().setWebSocketListener(new WebSocketListener() {
+        @Override
+        public boolean onMessage(WebSocketClient client, String msg) {
+            Pack pack = GSON.fromJson(msg, Pack.class);
+            // log or syso
+            if (pack == null) {
+                //TODO
+            } else {
+                for (OnPackReceive onPackReceive : starter.getWssWorker().getOnPackReceives()) {
+                    if (onPackReceive instanceof AuthAndHeartbeat) continue;
+                    onPackReceive.onReceive(pack);
+                }
+            }
+            return false;
+        }
+    });
+    start.run();
+```
