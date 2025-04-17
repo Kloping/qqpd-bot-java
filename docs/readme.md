@@ -139,7 +139,7 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
 
 可通过[webhook转websocket服务](https://github.com/DevOpen-Club/qbot-webhook-to-websocket)继续使用本项目
 
-from github@NintyCat
+from [@NintyCat](https://github.com/NintyCat)
 
 使用代码如下
 ```java
