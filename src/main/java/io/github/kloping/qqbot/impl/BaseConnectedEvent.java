@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.entities.Bot;
 
 /**
  * version show
+ *
  * @author github.kloping
  */
 public class BaseConnectedEvent implements ConnectedEvent {
@@ -41,11 +42,17 @@ public class BaseConnectedEvent implements ConnectedEvent {
 
     @Override
     public String toString() {
-        return String.format("Bot(%s) Connected! By author kloping of bot-qqpd-java for version 1.5.2-R1.", bot.getConfig().getAppid());
+        return String.format(FORMAT, bot.getConfig().getAppid());
     }
 
     @Override
     public String getId() {
         return getMetadata().get("id").toString();
     }
+
+    public static final String VERSION = "1.5.2-R2";
+    public static final String PROJECT_NAME = "qqpd-bot-java";
+    public static final String AUTHOR = "kloping";
+    public static final String FORMAT = "Bot(%s) connected! By " + AUTHOR + " of " + PROJECT_NAME + " v" + VERSION;
+    public static final String FORMAT_SERVER = "Bot(%s) webhook server started! By " + AUTHOR + " of " + PROJECT_NAME + " v" + VERSION;
 }

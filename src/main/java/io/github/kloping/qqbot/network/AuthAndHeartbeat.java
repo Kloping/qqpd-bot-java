@@ -29,7 +29,6 @@ import static io.github.kloping.qqbot.Starter.*;
 /**
  * @author github.kloping
  */
-@Slf4j
 @Entity
 public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
 

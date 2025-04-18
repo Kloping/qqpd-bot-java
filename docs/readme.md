@@ -163,3 +163,21 @@ from [@NintyCat](https://github.com/NintyCat)
     });
     start.run();
 ```
+
+### 1.5.2-R2 
+
+> 初步对webhook链接方式的支持
+> 
+> 使用该方式链接 其他配置参数将失效
+
+在服务启动后需要将q.qq配置链接设置为 "https://you-domain/webhook0" 路径
+
+> 确保https地址可访问到项目部署机器 #此类问题 不建议开issue
+
+验证完成后确定配置
+
+
+```java
+  //设置webhook服务端口 默认为0时不开启webhook
+  starter.getConfig().setWebhookport(81);
+```

@@ -118,7 +118,7 @@ public class Starter implements Runnable {
             APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
         });
         APPLICATION.logger.setLogLevel(1);
-        APPLICATION.logger.setPrefix("[qq-pd-group]");
+        APPLICATION.logger.setPrefix("[qgpd-bot]");
         APPLICATION.run0(Start0.class);
         after();
     }
@@ -141,6 +141,7 @@ public class Starter implements Runnable {
         wssWorker = contextManager.getContextEntity(WssWorker.class);
         contextManager.getContextEntity(HttpClientManager.class).setPrint(false);
         wssWork();
+        Resource.print();
     }
 
     protected void wssWork() {
@@ -196,6 +197,7 @@ public class Starter implements Runnable {
         private Integer code;
         private Boolean reconnect = true;
         private String wslink = null;
+        private Integer webhookport = 0;
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private ImageUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
@@ -209,10 +211,22 @@ public class Starter implements Runnable {
 
         /**
          * 设置WebSocket链接地址 ##通常用于webhook转发 也可用于固定地址减少请求 加快启动速度
+         *
          * @param wslink 配置后将不再通过/gateway请求获的地址(wss://api.sgroup.qq.com/websocket)
          */
         public void setWslink(String wslink) {
             this.wslink = wslink;
+        }
+
+        /**
+         * 设置webhook服务端口 默认为0时不开启webhook
+         * <br/>需要将q.qq配置链接设置为 "https://you-domain/webhook0" 路径
+         * <br/>若设置此项 则 配置项 code sandbox reconnect webhookport 可能会失效
+         *
+         * @param webhookport
+         */
+        public void setWebhookport(Integer webhookport) {
+            this.webhookport = webhookport;
         }
     }
 

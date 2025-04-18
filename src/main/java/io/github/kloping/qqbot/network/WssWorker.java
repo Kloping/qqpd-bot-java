@@ -1,6 +1,7 @@
 package io.github.kloping.qqbot.network;
 
 import io.github.kloping.judge.Judge;
+import io.github.kloping.qqbot.network.hookauth.HookAuth;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
@@ -40,6 +41,9 @@ public class WssWorker implements Runnable {
     private Logger logger;
 
     @AutoStand
+    HookAuth hookAuth;
+
+    @AutoStand
     Starter.Config config;
 
     public WebSocketClient webSocket;
@@ -51,6 +55,13 @@ public class WssWorker implements Runnable {
 
     @Override
     public void run() {
+        if (config.getWebhookport() != null && config.getWebhookport() > 0) {
+            hookAuth.webhookServerStart();
+        }
+        else websockettorunning();
+    }
+
+    private void websockettorunning() {
         try {
             try {
                 if (uri == null) {

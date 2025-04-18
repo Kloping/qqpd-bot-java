@@ -27,13 +27,13 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.2-R1</version>
+    <version>1.5.2-R2</version>
 </dependency>
 ```
 
 Gradle
  
-    implementation 'io.github.kloping:bot-qqpd-java:1.5.2-R1'
+    implementation 'io.github.kloping:bot-qqpd-java:1.5.2-R2'
 
 ### 使用前提
 
@@ -51,6 +51,8 @@ Gradle
     Starter starter = new Starter("appid","token");
     //如果使用q群 则 new Starter("appid", "token", "secret");
     starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
+    // webhook 链接方式
+    //starter.getConfig().setWebhookport(81);
     starter.run();
 ```
 
