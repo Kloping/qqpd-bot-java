@@ -18,7 +18,7 @@ Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/de
 - 多环境支持（沙箱/正式环境一键切换）
 - 完善的HTTP API封装（频道管理、禁言、消息审核等）
 - 支持Java 8+及Kotlin协程环境
-
+- 支持`websocket`与`webhook`方式链接
 
 Maven
 
