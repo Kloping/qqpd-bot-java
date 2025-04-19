@@ -153,7 +153,7 @@ public class Starter implements Runnable {
                 APPLICATION.logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
             }
         }
-        Future future = Public.EXECUTOR_SERVICE.submit(wssWorker);
+        Future future = Public.EXECUTOR_SERVICE1.submit(wssWorker);
         APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
     }
 

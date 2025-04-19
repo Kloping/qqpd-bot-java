@@ -57,11 +57,8 @@ public class WssWorker implements Runnable {
     public void run() {
         if (config.getWebhookport() != null && config.getWebhookport() > 0) {
             hookAuth.webhookServerStart();
+            return;
         }
-        else websockettorunning();
-    }
-
-    private void websockettorunning() {
         try {
             try {
                 if (uri == null) {
@@ -91,7 +88,7 @@ public class WssWorker implements Runnable {
                         if (!config.getWebSocketListener().onMessage(webSocket, s))
                             return;
                     Pack pack = GSON.fromJson(s, Pack.class);
-                    logger.log(String.format("receive %s", s));
+                    logger.log(String.format("websocket-r: %s", s));
                     if (pack == null) {
                         logger.error(String.format("message pack parse error (%s)", s));
                     } else {
@@ -126,9 +123,9 @@ public class WssWorker implements Runnable {
                     e.printStackTrace();
                 }
             };
-            //两次心跳的事件
+            //两次心跳的时间
             webSocket.setConnectionLostTimeout(86);
-            webSocket.run();
+            webSocket.connectBlocking(10,TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.error("在WebSocketClient启动时失败");
             e.printStackTrace();

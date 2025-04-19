@@ -81,6 +81,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
                 identifyConnect(code, wss);
                 break;
             case CODE_1011:
+            case 1001:
                 Public.EXECUTOR_SERVICE.execute(() -> {
                     logger.error("websocket closed with code 1011,server internal exception");
                     logger.error("reconnect in 3 seconds");
@@ -110,7 +111,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
         }
         wssWorker.msgr = 0;
         wssWorker.msgs = 0;
-        future = Public.EXECUTOR_SERVICE.submit(wssWorker);
+        future = Public.EXECUTOR_SERVICE1.submit(wssWorker);
         contextManager.append(future, Starter.MAIN_FUTURE_ID);
     }
 
@@ -137,7 +138,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
 
     @Override
     public boolean onReceive(Pack pack) {
-        if (wssWorker.msgr == 0) {
+        if (pack.getOp() == 10) {
             logger.info("Authentication");
             authPack = new Pack();
             authPack.setOp(2);
