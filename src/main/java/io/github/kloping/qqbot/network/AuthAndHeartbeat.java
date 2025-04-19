@@ -74,30 +74,31 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
                 logger.error("无权限订阅事件");
                 break;
             case 1006:
-                // wss closed with code 1006 The connection was closed
-                // because the other endpoint did not respond with a pong in time.
-                // For more information check:
-                // https://github.com/TooTallNate/Java-WebSocket/wiki/Lost-connection-detection
                 identifyConnect(code, wss);
                 break;
             case CODE_1011:
             case 1001:
-                Public.EXECUTOR_SERVICE.execute(() -> {
-                    logger.error("websocket closed with code 1011,server internal exception");
-                    logger.error("reconnect in 3 seconds");
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException e) {
-                        logger.error(e.getMessage());
-                    }
-                    identifyConnect(code, wss);
-                });
+                delayIdentifyConnect(code, wss);
                 break;
             default:
                 logger.error(String.format("暂未处理的异常code(%s)", code));
+                if (config.getAnyCloseReconnect()) delayIdentifyConnect(code, wss);
                 break;
         }
 
+    }
+
+    private void delayIdentifyConnect(int code, WebSocketClient wss) {
+        Public.EXECUTOR_SERVICE.execute(() -> {
+            logger.error("websocket closed with code 1011,server internal exception");
+            logger.error("reconnect in 3 seconds");
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage());
+            }
+            identifyConnect(code, wss);
+        });
     }
 
     @AutoStand

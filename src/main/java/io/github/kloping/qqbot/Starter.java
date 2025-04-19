@@ -196,6 +196,7 @@ public class Starter implements Runnable {
          */
         private Integer code;
         private Boolean reconnect = true;
+        private Boolean anyCloseReconnect = false;
         private String wslink = null;
         private Integer webhookport = 0;
         private Set<ListenerHost> listenerHosts = new HashSet<>();

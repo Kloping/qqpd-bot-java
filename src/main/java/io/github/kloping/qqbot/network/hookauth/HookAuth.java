@@ -75,12 +75,12 @@ public class HookAuth {
                     } catch (Exception e) {
                         logger.error("验证签名报错(不影响接收和发送)：\n" + getExceptionLine(e));
                     }
-                    //过滤掉AuthAndHeartbeat 其他接收
-                    wssWorker.getOnPackReceives().stream().filter(o -> !(o instanceof AuthAndHeartbeat)).forEach(p -> p.onReceive(pack));
+                    wssWorker.getOnPackReceives().stream().filter(o -> !(o instanceof AuthAndHeartbeat))
+                            .forEach(p -> p.onReceive(pack));
                 }
-                logger.log("WebHook服务响应：" + resp);
+                logger.log("WebHook服务响应: " + resp);
                 exchange.sendResponseHeaders(200, resp.length());
-                exchange.getResponseBody().write(resp.getBytes());
+                exchange.getResponseBody().write(resp.getBytes("UTF-8"));
             });
             server.start();
             logger.info(String.format(BaseConnectedEvent.FORMAT_SERVER, config.getAppid()));
@@ -90,8 +90,7 @@ public class HookAuth {
     }
 
     private KeyPair getKeyPair() {
-        KeyPair keyPair = generateEd25519KeyPair(prepareSeed(config.getSecret()).getBytes(StandardCharsets.UTF_8));
-        return keyPair;
+        return generateEd25519KeyPair(prepareSeed(config.getSecret()).getBytes(StandardCharsets.UTF_8));
     }
 
     private String auth(String body, Pack pack, HttpExchange exchange) {
@@ -103,7 +102,7 @@ public class HookAuth {
             String event_ts = packD.get("event_ts");
             byte[] message = (event_ts + plain_token).getBytes(StandardCharsets.UTF_8);
             byte[] signature = signMessage(keyPair.getPrivate(), message);
-            return String.format("{\"plain\": \"%s\", \"signature\": \"%s\"}", plain_token, bytesToHex(signature));
+            return String.format("{\"plain_token\": \"%s\", \"signature\": \"%s\"}", plain_token, bytesToHex(signature));
         } catch (Exception e) {
             logger.error("验证失败：\n" + getExceptionLine(e));
             return "{}";
