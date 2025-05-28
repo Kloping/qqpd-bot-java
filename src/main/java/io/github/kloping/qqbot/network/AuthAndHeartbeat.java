@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.common.Public;
 import io.github.kloping.date.FrameUtils;
+import io.github.kloping.qqbot.Start0;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
@@ -17,7 +18,6 @@ import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.interfaces.component.ContextManager;
-import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 
 import java.util.concurrent.Future;
@@ -104,6 +104,9 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @AutoStand
     Config config;
 
+    @AutoStand
+    Start0 start0;
+
     public void identifyConnect(int code, WebSocketClient wss) {
         if (!config.getReconnect()) return;
         Future future = contextManager.getContextEntity(Future.class, Starter.MAIN_FUTURE_ID);
@@ -144,7 +147,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
             authPack = new Pack();
             authPack.setOp(2);
             JSONObject jo = new JSONObject();
-            jo.put(TOKEN_ID, contextManager.getContextEntity(String.class, AUTH_ID));
+            jo.put(TOKEN_ID, "QQBot " + start0.getAccessToken());
             jo.put(INTENTS_ID, contextManager.getContextEntity(Integer.class, INTENTS_ID));
             jo.put(SHARD_ID, contextManager.getContextEntity(Integer[].class, SHARD_ID));
             jo.put(PROPERTIES_ID, new Object());

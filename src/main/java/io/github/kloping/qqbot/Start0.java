@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.http.AuthV2Base;
 import io.github.kloping.qqbot.http.data.Token;
@@ -24,8 +23,9 @@ public class Start0 {
     ContextManager contextManager;
 
     public Map<String, String> getHeaders() {
+        if (isExpired(token)) headers.clear();
         if (headers.isEmpty()) {
-            headers.put("Authorization", contextManager.getContextEntity(String.class, Starter.AUTH_ID));
+            headers.put("Authorization", String.format("QQBot %s", getV2Token()));
             headers.put("Accept-Encoding", "application/json");
         }
         return headers;
@@ -34,9 +34,7 @@ public class Start0 {
     public Map<String, String> getV2Headers() {
         if (isExpired(token)) v2headers.clear();
         if (v2headers.isEmpty()) {
-            String secret = contextManager.getContextEntity(String.class, Starter.SECRET_ID);
-            if (Judge.isEmpty(secret)) return v2headers;
-            v2headers.put("Authorization", String.format("QQBot %s", getV2Token(secret)));
+            v2headers.put("Authorization", String.format("QQBot %s", getV2Token()));
             v2headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
         }
         return v2headers;
@@ -49,14 +47,20 @@ public class Start0 {
     @AutoStand
     AuthV2Base authV2Base;
 
+
     private Token token;
 
-    private String getV2Token(String secret) {
+    private String getV2Token() {
+        String appid = contextManager.getContextEntity(String.class, Starter.APPID_ID);
+        String secret = contextManager.getContextEntity(String.class, Starter.SECRET_ID);
         token = authV2Base.auth(
-                String.format("{\"appId\": \"%s\",\"clientSecret\": \"%s\"}\n", contextManager.getContextEntity(String.class, Starter.APPID_ID), secret)
-                , Channel.SEND_MESSAGE_HEADERS
-        );
+                String.format("{\"appId\": \"%s\",\"clientSecret\": \"%s\"}\n", appid, secret)
+                , Channel.SEND_MESSAGE_HEADERS);
         token.setT0(System.currentTimeMillis());
         return token.getAccess_token();
+    }
+
+    public String getAccessToken() {
+        return isExpired(token) ? getV2Token() : token.getAccess_token();
     }
 }
