@@ -25,9 +25,13 @@ public class Token {
     @JSONField(serialize = false, deserialize = false)
     private Long t0;
 
+    /**
+     * @return true 当前时间 > 过期截止
+     */
     public boolean isExpired() {
         Integer sec = Integer.valueOf(expires_in);
-        Long t = t0 + (sec * 1000);
+        Integer secto = (sec * 1000);
+        Long t = t0 + secto;
         return System.currentTimeMillis() >= t;
     }
 }

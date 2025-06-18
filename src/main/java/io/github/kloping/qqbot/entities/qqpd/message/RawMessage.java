@@ -133,13 +133,10 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         bot.channelBase.removeEmoji(getChannelId(), getMid(), emoji.getType(), emoji.getId().toString());
     }
 
+    @Setter
     @Getter
     @JSONField(serialize = false, deserialize = false)
     private Bot bot;
-
-    public void setBot(Bot bot) {
-        this.bot = bot;
-    }
 
     @Override
     public PinsMessage addPins() {
