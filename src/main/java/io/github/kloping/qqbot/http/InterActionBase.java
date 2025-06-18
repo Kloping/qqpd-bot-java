@@ -8,7 +8,7 @@ import org.jsoup.Connection;
  * @author github.kloping
  */
 @HttpClient(Starter.NET_POINT)
-@Headers("io.github.kloping.qqbot.Start0.getV2Headers")
+@Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface InterActionBase {
     /**
      * <table><thead><tr><th><strong>属性</strong></th> <th><strong>类型</strong></th> <th><strong>必填</strong></th> <th><strong>说明</strong></th></tr></thead> <tbody><tr><td>interaction_id</td> <td>string</td> <td>是</td> <td>上述事件中获得。</td></tr></tbody></table>

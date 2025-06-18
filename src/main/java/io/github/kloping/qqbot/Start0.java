@@ -22,23 +22,15 @@ public class Start0 {
     @AutoStand
     ContextManager contextManager;
 
-    public Map<String, String> getHeaders() {
+    //ALL req token header
+    public synchronized Map<String, String> getHeaders() {
         if (isExpired(token)) headers.clear();
         if (headers.isEmpty()) {
             headers.put("Authorization", String.format("QQBot %s", getV2Token()));
             headers.put("Accept-Encoding", "application/json");
+            headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
         }
         return headers;
-    }
-
-    //group send headers
-    public Map<String, String> getV2Headers() {
-        if (isExpired(token)) v2headers.clear();
-        if (v2headers.isEmpty()) {
-            v2headers.put("Authorization", String.format("QQBot %s", getV2Token()));
-            v2headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
-        }
-        return v2headers;
     }
 
     private boolean isExpired(Token token) {

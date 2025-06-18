@@ -14,7 +14,7 @@ import java.util.Map;
  * @author github.kloping
  */
 @HttpClient(Starter.NET_POINT)
-@Headers("io.github.kloping.qqbot.Start0.getV2Headers")
+@Headers("io.github.kloping.qqbot.Start0.getHeaders")
 public interface UserBaseV2 extends BaseV2 {
     /**
      * 发送私聊消息
