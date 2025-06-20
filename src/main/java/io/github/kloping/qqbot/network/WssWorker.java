@@ -1,16 +1,16 @@
 package io.github.kloping.qqbot.network;
 
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.network.hookauth.HookAuth;
-import io.github.kloping.spt.annotations.AutoStand;
-import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
-import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.http.BotBase;
 import io.github.kloping.qqbot.interfaces.OnCloseListener;
 import io.github.kloping.qqbot.interfaces.OnPackReceive;
+import io.github.kloping.qqbot.network.hookauth.HookAuth;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.interfaces.component.ContextManager;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.kloping.qqbot.Resource.GSON;
-import static io.github.kloping.qqbot.Starter.RECONNECT_K_ID;
 
 /**
  * @author github.kloping
@@ -125,7 +124,7 @@ public class WssWorker implements Runnable {
             };
             //两次心跳的时间
             webSocket.setConnectionLostTimeout(86);
-            webSocket.connectBlocking(10,TimeUnit.SECONDS);
+            webSocket.connectBlocking(10, TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.error("在WebSocketClient启动时失败");
             e.printStackTrace();
@@ -135,18 +134,13 @@ public class WssWorker implements Runnable {
             } catch (InterruptedException ex) {
                 e.printStackTrace();
             }
-            run();
+            closeListeners.forEach(ocl -> ocl.onClose(AuthAndHeartbeat.CODE_ERROR, webSocket));
         }
     }
 
     public List<OnCloseListener> closeListeners = new ArrayList<>();
 
     public List<OnPackReceive> onPackReceives = new LinkedList<>();
-
-    public Boolean getReconnect() {
-        Boolean k = contextManager.getContextEntity(Boolean.class, RECONNECT_K_ID);
-        return k == null ? false : k;
-    }
 
     public List<OnCloseListener> getCloseListeners() {
         return closeListeners;
@@ -156,10 +150,10 @@ public class WssWorker implements Runnable {
         return onPackReceives;
     }
 
-    private boolean preMethods(Object... objects) {
+    private boolean preMethods(Object... os0) {
         WebSocketListener listener = config.getWebSocketListener();
         if (listener == null) return false;
-        Object o1 = objects[0];
+        Object o1 = os0[0];
         if (o1 instanceof Exception) {
             return !listener.onError(webSocket, (Exception) o1);
         } else if (o1 instanceof String) {
@@ -167,7 +161,7 @@ public class WssWorker implements Runnable {
         } else if (o1 instanceof ServerHandshake) {
             return !listener.onOpen(webSocket, (ServerHandshake) o1);
         } else if (o1 instanceof Integer) {
-            return !listener.onClose(webSocket, (Integer) objects[0], (String) objects[1], (boolean) objects[2]);
+            return !listener.onClose(webSocket, (Integer) os0[0], (String) os0[1], (boolean) os0[2]);
         } else return false;
     }
 }

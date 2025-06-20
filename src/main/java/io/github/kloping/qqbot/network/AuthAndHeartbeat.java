@@ -32,6 +32,7 @@ import static io.github.kloping.qqbot.Starter.*;
 @Entity
 public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
 
+    public static final int CODE_ERROR = -10001;
     public static final int CODE_4006 = 4006;
     public static final int CODE_4007 = 4007;
     public static final int CODE_4008 = 4008;
@@ -66,7 +67,8 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
      */
     @Override
     public void onClose(int code, WebSocketClient wss) {
-        if (code == CODE_4006 || code == CODE_4007 || code == CODE_4008 || code == CODE_4009 || (code >= CODE_4900 && code <= CODE_4913)) {
+        if (code == CODE_ERROR || code == CODE_4006 || code == CODE_4007 ||
+                code == CODE_4008 || code == CODE_4009 || (code >= CODE_4900 && code <= CODE_4913)) {
             identifyConnect(code, wss);
         } else switch (code) {
             case 4013:
