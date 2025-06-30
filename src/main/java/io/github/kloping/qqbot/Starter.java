@@ -199,6 +199,10 @@ public class Starter implements Runnable {
         private Boolean anyCloseReconnect = false;
         private String wslink = null;
         private Integer webhookport = 0;
+        /**
+         * webhook服务路径 默认/webhook0
+         */
+        private String webhookpath = "/webhook0";
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private ImageUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;

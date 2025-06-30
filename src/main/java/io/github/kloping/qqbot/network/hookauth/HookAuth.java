@@ -56,7 +56,7 @@ public class HookAuth {
     public void webhookServerStart() {
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(config.getWebhookport()), 0);
-            server.createContext("/webhook0", exchange -> {
+            server.createContext(config.getWebhookpath(), exchange -> {
                 String body = ReadUtils.readAll(exchange.getRequestBody(), "UTF-8");
                 logger.log(String.format("webhook-r: %s", body));
                 Pack pack = GSON.fromJson(body, Pack.class);

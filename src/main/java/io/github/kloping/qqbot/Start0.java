@@ -17,19 +17,13 @@ import java.util.Map;
 public class Start0 {
 
     public Map<String, String> headers = new HashMap();
-    public Map<String, String> v2headers = new HashMap();
 
     @AutoStand
     ContextManager contextManager;
 
     //ALL req token header
     public synchronized Map<String, String> getHeaders() {
-        if (isExpired(token)) headers.clear();
-        if (headers.isEmpty()) {
-            headers.put("Authorization", String.format("QQBot %s", getV2Token()));
-            headers.put("Accept-Encoding", "application/json");
-            headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
-        }
+        if (headers.isEmpty() || isExpired(token)) updateToken();
         return headers;
     }
 
@@ -37,23 +31,29 @@ public class Start0 {
         return token == null || token.isExpired();
     }
 
+    private Token token;
+
+    public String getAccessToken() {
+        if (isExpired(token)) updateToken();
+        return token.getAccess_token();
+    }
+
+    public void updateToken() {
+        headers.clear();
+        String v2token = getV2Token();
+        headers.put("Authorization", String.format("QQBot %s", v2token));
+        headers.put("Accept-Encoding", "application/json");
+        headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
+    }
+
     @AutoStand
     AuthV2Base authV2Base;
-
-
-    private Token token;
 
     private String getV2Token() {
         String appid = contextManager.getContextEntity(String.class, Starter.APPID_ID);
         String secret = contextManager.getContextEntity(String.class, Starter.SECRET_ID);
-        token = authV2Base.auth(
-                String.format("{\"appId\": \"%s\",\"clientSecret\": \"%s\"}\n", appid, secret)
-                , Channel.SEND_MESSAGE_HEADERS);
-        token.setT0(System.currentTimeMillis());
+        token = authV2Base.auth(String.format("{\"appId\": \"%s\",\"clientSecret\": \"%s\"}\n", appid, secret)
+                , Channel.SEND_MESSAGE_HEADERS).setT0(System.currentTimeMillis());
         return token.getAccess_token();
-    }
-
-    public String getAccessToken() {
-        return isExpired(token) ? getV2Token() : token.getAccess_token();
     }
 }
