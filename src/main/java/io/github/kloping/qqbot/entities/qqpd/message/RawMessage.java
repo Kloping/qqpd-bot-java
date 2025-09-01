@@ -1,12 +1,11 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.spt.PartUtils;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.*;
 import io.github.kloping.qqbot.api.message.Pinsble;
 import io.github.kloping.qqbot.entities.Bot;
-import io.github.kloping.qqbot.entities.ex.Image;
+import io.github.kloping.qqbot.entities.ex.FileMsg;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.PinsMessage;
@@ -19,6 +18,7 @@ import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
+import io.github.kloping.spt.PartUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
         return send(text, this);
     }
 
-    public static void imagePrepare(Image msg, Bot bot) {
+    public static void filePrepare(FileMsg msg, Bot bot) {
         try {
             if (Judge.isEmpty(msg.getUrl())) {
                 if (msg.getBytes() != null) if (bot.getConfig().getInterceptor0() != null) {

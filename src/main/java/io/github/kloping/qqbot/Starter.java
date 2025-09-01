@@ -4,7 +4,7 @@ import io.github.kloping.common.Public;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
-import io.github.kloping.qqbot.interfaces.ImageUploadInterceptor;
+import io.github.kloping.qqbot.interfaces.FileUploadInterceptor;
 import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.qqbot.network.WebSocketListener;
 import io.github.kloping.qqbot.network.WssWorker;
@@ -204,7 +204,7 @@ public class Starter implements Runnable {
          */
         private String webhookpath = "/webhook0";
         private Set<ListenerHost> listenerHosts = new HashSet<>();
-        private ImageUploadInterceptor interceptor0;
+        private FileUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
 
         /**

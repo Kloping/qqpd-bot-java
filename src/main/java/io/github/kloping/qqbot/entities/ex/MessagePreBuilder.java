@@ -17,8 +17,8 @@ public class MessagePreBuilder {
         return this;
     }
 
-    public MessagePreBuilder append(Image image) {
-        pre.setImage(image);
+    public MessagePreBuilder append(FileMsg fileMsg) {
+        pre.setFileMsg(fileMsg);
         empty = false;
         return this;
     }

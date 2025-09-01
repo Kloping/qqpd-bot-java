@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.judge.Judge;
-import io.github.kloping.qqbot.entities.ex.Image;
-import io.github.kloping.qqbot.entities.exceptions.ImageUploadFailedException;
+import io.github.kloping.qqbot.entities.ex.FileMsg;
+import io.github.kloping.qqbot.entities.exceptions.FileMsgUploadFailedException;
 import lombok.Data;
 
 import java.text.ParseException;
@@ -45,9 +45,9 @@ public class V2Result {
         else return data.getString("file_uuid");
     }
 
-    public void logFileInfo(Logger logger, Image image) {
+    public void logFileInfo(Logger logger, FileMsg image) {
         if (file_uuid == null)
-            throw new ImageUploadFailedException(String.format("Failed to upload image(%s)", image.getUrl()));
+            throw new FileMsgUploadFailedException(String.format("Failed to upload image(%s)", image.getUrl()));
         logger.info("file uuid: " + file_uuid);
     }
 

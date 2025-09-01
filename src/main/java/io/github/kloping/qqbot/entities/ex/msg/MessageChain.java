@@ -41,8 +41,8 @@ public class MessageChain implements SendAble, List<SendAble> {
             builder.append((At) sendAble);
         } else if (sendAble instanceof AtAll) {
             builder.append((AtAll) sendAble);
-        } else if (sendAble instanceof Image) {
-            builder.append((Image) sendAble);
+        } else if (sendAble instanceof FileMsg) {
+            builder.append((FileMsg) sendAble);
         } else if (sendAble instanceof PlainText) {
             builder.append(((PlainText) sendAble).getText());
         } else if (sendAble instanceof Emoji) {
@@ -77,14 +77,14 @@ public class MessageChain implements SendAble, List<SendAble> {
             for (SendAble sendAble : data) {
                 if (sendAble instanceof PlainText) {
                     builder.append(sendAble.toString());
-                } else if (sendAble instanceof Image) {
+                } else if (sendAble instanceof FileMsg) {
                     if (!flag0) {
-                        builder.append((Image) sendAble);
+                        builder.append((FileMsg) sendAble);
                         flag0 = true;
                     } else {
                         er.send(builder.build());
                         builder.clear();
-                        builder.append((Image) sendAble);
+                        builder.append((FileMsg) sendAble);
                     }
                 } else if (sendAble instanceof At) {
                     builder.append((At) sendAble);
@@ -108,12 +108,12 @@ public class MessageChain implements SendAble, List<SendAble> {
             Result<V2Result> result = null;
             int sent = 0;
             for (SendAble e0 : this.data) {
-                if (e0 instanceof Image) {
-                    Image image = (Image) e0;
-                    RawMessage.imagePrepare(image, er.getBot());
+                if (e0 instanceof FileMsg) {
+                    FileMsg fileMsg = (FileMsg) e0;
+                    RawMessage.filePrepare(fileMsg, er.getBot());
                     if (!flag0) {
-                        if (image.getFile_type() != 1) {
-                            image.send(er);
+                        if (fileMsg.getFile_type() != 1) {
+                            fileMsg.send(er);
                             sent++;
                             continue;
                         }
@@ -124,14 +124,14 @@ public class MessageChain implements SendAble, List<SendAble> {
                         data = new V2MsgData();
                         if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
                     }
-                    if (Judge.isNotEmpty(image.getUrl())) {
+                    if (Judge.isNotEmpty(fileMsg.getUrl())) {
                         result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
-                                image.getFile_type(), image.getUrl()), Channel.SEND_MESSAGE_HEADERS));
+                                fileMsg.getFile_type(), fileMsg.getUrl()), Channel.SEND_MESSAGE_HEADERS));
                     } else {
                         result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}",
-                                image.getFile_type(), Base64.getEncoder().encodeToString(image.getBytes())), Channel.SEND_MESSAGE_HEADERS));
+                                fileMsg.getFile_type(), Base64.getEncoder().encodeToString(fileMsg.getBytes())), Channel.SEND_MESSAGE_HEADERS));
                     }
-                    result.getData().logFileInfo(er.getBot().logger, image);
+                    result.getData().logFileInfo(er.getBot().logger, fileMsg);
                     data.setMsg_type(7);
                     data.setMedia(new V2MsgData.Media(result.getData().getFile_info()));
                 } else if (e0 instanceof Markdown) {

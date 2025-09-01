@@ -6,7 +6,7 @@ import io.github.kloping.number.NumberUtils;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.ex.At;
 import io.github.kloping.qqbot.entities.ex.AtAll;
-import io.github.kloping.qqbot.entities.ex.Image;
+import io.github.kloping.qqbot.entities.ex.FileMsg;
 import io.github.kloping.qqbot.entities.ex.PlainText;
 import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
@@ -65,7 +65,9 @@ public class BaseUtils {
         dispose(content, chain);
         if (rawMessage.getAttachments() != null) {
             for (MessageAttachment attachment : rawMessage.getAttachments()) {
-                chain.append(new Image(attachment.getUrl()).setName(attachment.getFilename()).setType(attachment.getContent_type()));
+                FileMsg fileMsg = null;
+                fileMsg = new FileMsg(1, attachment.getContent_type(), attachment.getUrl(), null, attachment.getFilename()){};
+                chain.append(fileMsg);
             }
         }
         if (filter != null && filter.length > 0) {

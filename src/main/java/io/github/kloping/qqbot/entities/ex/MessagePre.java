@@ -22,13 +22,13 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_FORM_DATA_HEADE
 @Data
 public class MessagePre implements SendAble {
     private String content = "";
-    private Image image;
+    private FileMsg fileMsg;
     private String replyId;
 
     @Override
     public Result<ActionResult> send(SenderAndCidMidGetter er) {
-        if (image != null) {
-            if (image.getBytes() != null) {
+        if (fileMsg != null) {
+            if (fileMsg.getBytes() != null) {
                 BaseKeyVals keyVals = new BaseKeyVals();
                 if (er.getMid() != null) {
                     HttpConnection.KeyVal v0 = HttpConnection.KeyVal.create("msg_id", er.getMid());
@@ -40,8 +40,8 @@ public class MessagePre implements SendAble {
                     v1.contentType("text/plain");
                     keyVals.add(v1);
                 }
-                HttpConnection.KeyVal v1 = HttpConnection.KeyVal.create("file_image", image.getName(), new ByteArrayInputStream(image.getBytes()));
-                v1.contentType(image.getType());
+                HttpConnection.KeyVal v1 = HttpConnection.KeyVal.create("file_image", fileMsg.getName(), new ByteArrayInputStream(fileMsg.getBytes()));
+                v1.contentType(fileMsg.getType());
                 keyVals.add(v1);
                 if (er instanceof Dms) {
                     Dms dms = (Dms) er;
@@ -52,14 +52,14 @@ public class MessagePre implements SendAble {
                 } else return new Result<>(er.getBot().messageBase.send(er.getCid(), SEND_FORM_DATA_HEADERS, keyVals));
             }
         }
-        return getActionResult(er, image, content, replyId);
+        return getActionResult(er, fileMsg, content, replyId);
     }
 
-    public static Result<ActionResult> getActionResult(SenderAndCidMidGetter er, Image image, String content, String replyId) {
+    public static Result<ActionResult> getActionResult(SenderAndCidMidGetter er, FileMsg fileMsg, String content, String replyId) {
         MessagePacket packet = new MessagePacket();
         if (Judge.isNotEmpty(replyId)) packet.setReplyId(replyId);
         if (Judge.isNotEmpty(content)) packet.setContent(content);
-        if (image != null && Judge.isNotEmpty(image.getUrl())) packet.setImage(image.getUrl());
+        if (fileMsg != null && Judge.isNotEmpty(fileMsg.getUrl())) packet.setImage(fileMsg.getUrl());
         return er.send(packet);
     }
 }

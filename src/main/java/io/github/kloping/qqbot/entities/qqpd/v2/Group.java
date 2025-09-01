@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderV2;
+import io.github.kloping.qqbot.entities.ex.FileMsg;
 import io.github.kloping.qqbot.entities.ex.Image;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
@@ -44,8 +45,8 @@ public class Group extends Contact implements SenderV2 {
         return message.send(text);
     }
 
-    private V2Result sendImage(Image msg) {
-        RawMessage.imagePrepare(msg, bot);
+    private V2Result sendFileMsg(FileMsg msg) {
+        RawMessage.filePrepare(msg, bot);
         V2Result result = null;
         if (Judge.isNotEmpty(msg.getUrl())) {
             result = bot.groupBaseV2.sendFile(getOpenid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}", msg.getFile_type(), msg.getUrl()), Channel.SEND_MESSAGE_HEADERS);
@@ -61,7 +62,7 @@ public class Group extends Contact implements SenderV2 {
     @Override
     public Result send(SendAble msg) {
         if (msg instanceof Image) {
-            return new Result(sendImage((Image) msg));
+            return new Result(sendFileMsg((Image) msg));
         } else return msg.send(this);
     }
 
