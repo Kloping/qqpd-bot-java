@@ -9,9 +9,9 @@ import io.github.kloping.qqbot.entities.Bot;
  *
  * @author github.kloping
  */
-public class BaseConnectedEvent implements ConnectedEvent {
-    protected JSONObject metadata;
-    protected Bot bot;
+public final class BaseConnectedEvent implements ConnectedEvent {
+    private JSONObject metadata;
+    private Bot bot;
     private String sessionId;
 
     public BaseConnectedEvent(JSONObject metadata, Bot bot, String sessionId) {
