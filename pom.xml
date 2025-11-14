@@ -117,7 +117,11 @@
 
     <repositories>
         <repository>
-            <id>central</id>
+            <id>maven-central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>aliyun-central</id>
             <url>https://maven.aliyun.com/repository/central</url>
             <releases>
                 <enabled>true</enabled>
