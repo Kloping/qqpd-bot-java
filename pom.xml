@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.3-L1</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>io.github.kloping</groupId>
             <artifactId>SpringTool</artifactId>
-            <version>0.6.3-R4</version>
+            <version>0.6.3-R5</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.github.Kloping</groupId>
@@ -96,6 +96,11 @@
             <version>1.15.4</version>
         </dependency>
         <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -110,6 +115,18 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://maven.aliyun.com/repository/central</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>

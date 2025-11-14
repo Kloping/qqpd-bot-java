@@ -35,6 +35,8 @@ Gradle
  
     implementation 'io.github.kloping:bot-qqpd-java:1.5.2'
 
+> [AI生成简易文档](docs-ai.md)
+
 ### 使用前提
 
 1. 到https://q.qq.com/ 申请机器人 获得Bot 开发者ID(appid) 和 机器人令牌(token)

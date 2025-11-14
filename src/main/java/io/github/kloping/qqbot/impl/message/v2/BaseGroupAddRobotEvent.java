@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.impl.message.v2;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.api.v2.GroupEvent;
 import io.github.kloping.qqbot.api.v2.GroupOpRobotEvent;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;

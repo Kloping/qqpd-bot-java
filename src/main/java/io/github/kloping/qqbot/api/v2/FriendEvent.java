@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.api.v2;
 
-import io.github.kloping.qqbot.entities.qqpd.v2.Contact;
 import io.github.kloping.qqbot.entities.qqpd.v2.Friend;
 
 /**

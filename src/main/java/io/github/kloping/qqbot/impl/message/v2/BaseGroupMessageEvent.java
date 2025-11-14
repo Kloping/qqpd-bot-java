@@ -62,6 +62,7 @@ public class BaseGroupMessageEvent extends BaseMessageEvent<Group> implements Gr
 
     /**
      * 发送纯文本
+     *
      * @param text
      * @return
      */

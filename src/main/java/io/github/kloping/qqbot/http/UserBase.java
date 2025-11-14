@@ -1,9 +1,9 @@
 package io.github.kloping.qqbot.http;
 
+import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.spt.annotations.http.GetPath;
 import io.github.kloping.spt.annotations.http.Headers;
 import io.github.kloping.spt.annotations.http.HttpClient;
-import io.github.kloping.qqbot.entities.qqpd.User;
 
 import static io.github.kloping.qqbot.Starter.NET_POINT;
 

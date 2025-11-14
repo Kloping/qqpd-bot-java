@@ -1,12 +1,12 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.ex.ChannelData;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.Member;
 import io.github.kloping.qqbot.entities.qqpd.Roles;
+import io.github.kloping.spt.annotations.http.*;
 
 import java.util.Map;
 
@@ -80,5 +80,5 @@ public interface GuildBase {
      * @return
      */
     @PostPath("/guilds/{guild_id}/channels")
-    Channel create(@Headers Map<String, String> headers, @PathValue("guild_id") String gid, @RequestBody ChannelData data);
+    Channel create(@Headers Map<String, String> headers, @PathValue("guild_id") String gid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) ChannelData data);
 }

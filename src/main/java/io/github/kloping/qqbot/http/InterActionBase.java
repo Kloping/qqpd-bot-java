@@ -1,7 +1,7 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.spt.annotations.http.*;
 import org.jsoup.Connection;
 
 /**
@@ -18,5 +18,5 @@ public interface InterActionBase {
      * @param body
      */
     @RequestPath(value = "/interactions/{interaction_id}", method = Connection.Method.PUT)
-    void response(@PathValue("interaction_id") String interaction_id, @RequestBody String body);
+    void response(@PathValue("interaction_id") String interaction_id, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body);
 }

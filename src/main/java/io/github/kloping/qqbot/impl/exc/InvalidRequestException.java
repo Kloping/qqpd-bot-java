@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.impl.exc;
 
-import io.github.kloping.qqbot.Resource;
 import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.entities.exc.QBotError;
 

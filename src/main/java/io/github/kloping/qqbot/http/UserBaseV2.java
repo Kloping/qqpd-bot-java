@@ -1,8 +1,8 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.spt.annotations.http.*;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public interface UserBaseV2 extends BaseV2 {
      * @return msg
      */
     @PostPath("/v2/users/{openid}/messages")
-    V2Result send(@PathValue("openid") String uid, @RequestBody String body, @Headers Map<String, String> headers);
+    V2Result send(@PathValue("openid") String uid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body, @Headers Map<String, String> headers);
 
     /**
      * 发送私聊媒体
@@ -34,5 +34,5 @@ public interface UserBaseV2 extends BaseV2 {
      * @return 文件id
      */
     @PostPath("/v2/users/{openid}/files")
-    V2Result sendFile(@PathValue("openid") String uid, @RequestBody String body, @Headers Map<String, String> headers);
+    V2Result sendFile(@PathValue("openid") String uid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body, @Headers Map<String, String> headers);
 }

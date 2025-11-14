@@ -1,10 +1,10 @@
 package io.github.kloping.qqbot.http;
 
-import io.github.kloping.spt.annotations.http.*;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.entities.qqpd.PinsMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.MessagePack;
+import io.github.kloping.spt.annotations.http.*;
 import org.jsoup.Connection;
 
 /**

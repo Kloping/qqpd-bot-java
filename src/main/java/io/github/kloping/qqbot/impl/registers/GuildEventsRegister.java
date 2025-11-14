@@ -1,15 +1,15 @@
 package io.github.kloping.qqbot.impl.registers;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.spt.annotations.AutoStand;
-import io.github.kloping.spt.annotations.AutoStandAfter;
-import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.impl.BaseGuildUpdateEvent;
 import io.github.kloping.qqbot.network.Events;
+import io.github.kloping.spt.annotations.AutoStand;
+import io.github.kloping.spt.annotations.AutoStandAfter;
+import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.interfaces.Logger;
 
 /**
  * @author github.kloping

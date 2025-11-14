@@ -1,12 +1,14 @@
 package io.github.kloping.qqbot.http;
 
+import io.github.kloping.qqbot.Start0;
+import io.github.kloping.qqbot.http.data.Token;
 import io.github.kloping.spt.annotations.http.Headers;
 import io.github.kloping.spt.annotations.http.HttpClient;
 import io.github.kloping.spt.annotations.http.PostPath;
 import io.github.kloping.spt.annotations.http.RequestBody;
-import io.github.kloping.qqbot.http.data.Token;
 
 import java.util.Map;
+
 
 /**
  * @author github.kloping
@@ -19,5 +21,5 @@ public interface AuthV2Base {
      * @return
      */
     @PostPath("/app/getAppAccessToken")
-    Token auth(@RequestBody String body, @Headers Map<String, String> headers);
+    Token auth(@RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) Start0.AppidAndSecret aa, @Headers Map<String, String> headers);
 }

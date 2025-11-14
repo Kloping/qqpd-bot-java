@@ -11,11 +11,22 @@ import io.github.kloping.qqbot.impl.MessagePacket;
  */
 public class AtAll implements SendAble {
 
+    private boolean old;
+
+    public AtAll() {
+        this(false);
+    }
+
+    public AtAll(boolean old) {
+        this.old = old;
+    }
+
     @Override
     public Result send(SenderAndCidMidGetter er) {
         if (er.getEnvType() == EnvType.GUILD) {
             MessagePacket packet = new MessagePacket();
-            packet.setContent("@everyone");
+            if (old) packet.setContent("@everyone");
+            else packet.setContent("<qqbot-at-everyone/>");
             return er.send(packet);
         } else {
             return er.send("@所有人");

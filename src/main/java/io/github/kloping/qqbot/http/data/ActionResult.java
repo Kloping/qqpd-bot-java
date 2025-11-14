@@ -1,10 +1,8 @@
 package io.github.kloping.qqbot.http.data;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.entities.qqpd.message.audited.MessageAudited;
-import io.github.kloping.qqbot.utils.BaseUtils;
 import lombok.Getter;
 import lombok.ToString;
 

@@ -6,6 +6,7 @@ import io.github.kloping.qqbot.http.data.Token;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.ComponentScan;
 import io.github.kloping.spt.interfaces.component.ContextManager;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,8 +53,19 @@ public class Start0 {
     private String getV2Token() {
         String appid = contextManager.getContextEntity(String.class, Starter.APPID_ID);
         String secret = contextManager.getContextEntity(String.class, Starter.SECRET_ID);
-        token = authV2Base.auth(String.format("{\"appId\": \"%s\",\"clientSecret\": \"%s\"}\n", appid, secret)
-                , Channel.SEND_MESSAGE_HEADERS).setT0(System.currentTimeMillis());
+        token = authV2Base.auth(new AppidAndSecret(appid, secret),
+                Channel.SEND_MESSAGE_HEADERS).setT0(System.currentTimeMillis());
         return token.getAccess_token();
+    }
+
+    @Data
+    public static class AppidAndSecret {
+        public String appId;
+        public String clientSecret;
+
+        public AppidAndSecret(String appid, String secret) {
+            this.appId = appid;
+            this.clientSecret = secret;
+        }
     }
 }

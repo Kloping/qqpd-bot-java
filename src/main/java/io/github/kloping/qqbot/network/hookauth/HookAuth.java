@@ -11,7 +11,6 @@ import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.KeyGenerationParameters;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
