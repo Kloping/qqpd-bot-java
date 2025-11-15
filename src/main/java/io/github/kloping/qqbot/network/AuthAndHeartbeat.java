@@ -19,6 +19,7 @@ import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.interfaces.component.ContextManager;
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.framing.CloseFrame;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -33,6 +34,8 @@ import static io.github.kloping.qqbot.Starter.*;
 public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
 
     public static final int CODE_ERROR = -10001;
+    //Authentication fail
+    public static final int CODE_4004 = 4004;
     public static final int CODE_4006 = 4006;
     public static final int CODE_4007 = 4007;
     public static final int CODE_4008 = 4008;
@@ -71,16 +74,21 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
                 code == CODE_4008 || code == CODE_4009 || (code >= CODE_4900 && code <= CODE_4913)) {
             identifyConnect(code, wss);
         } else switch (code) {
+            case CloseFrame.NEVER_CONNECTED:
+            case CODE_1011:
+            case 1001:
+                delayIdentifyConnect(code, wss);
+                break;
+            case CODE_4004:
+                start0.updateToken();
+                identifyConnect(code, wss);
+                break;
             case 4013:
             case 4014:
                 logger.error("无权限订阅事件");
                 break;
             case 1006:
                 identifyConnect(code, wss);
-                break;
-            case CODE_1011:
-            case 1001:
-                delayIdentifyConnect(code, wss);
                 break;
             default:
                 logger.error(String.format("暂未处理的异常code(%s)", code));
@@ -117,6 +125,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
         }
         wssWorker.msgr = 0;
         wssWorker.msgs = 0;
+        wssWorker.webSocket.close();
         future = Public.EXECUTOR_SERVICE1.submit(wssWorker);
         contextManager.append(future, Starter.MAIN_FUTURE_ID);
     }

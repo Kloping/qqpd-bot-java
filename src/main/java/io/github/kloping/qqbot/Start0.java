@@ -2,7 +2,7 @@ package io.github.kloping.qqbot;
 
 import io.github.kloping.qqbot.entities.qqpd.Channel;
 import io.github.kloping.qqbot.http.AuthV2Base;
-import io.github.kloping.qqbot.http.data.Token;
+import io.github.kloping.qqbot.http.data.AccessToken;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.ComponentScan;
 import io.github.kloping.spt.interfaces.component.ContextManager;
@@ -24,19 +24,19 @@ public class Start0 {
 
     //ALL req token header
     public synchronized Map<String, String> getHeaders() {
-        if (headers.isEmpty() || isExpired(token)) updateToken();
+        if (headers.isEmpty() || isExpired(accessToken)) updateToken();
         return headers;
     }
 
-    private boolean isExpired(Token token) {
-        return token == null || token.isExpired();
+    private boolean isExpired(AccessToken accessToken) {
+        return accessToken == null || accessToken.isExpired();
     }
 
-    private Token token;
+    private AccessToken accessToken;
 
     public String getAccessToken() {
-        if (isExpired(token)) updateToken();
-        return token.getAccess_token();
+        if (isExpired(accessToken)) updateToken();
+        return accessToken.getAccess_token();
     }
 
     public void updateToken() {
@@ -53,9 +53,9 @@ public class Start0 {
     private String getV2Token() {
         String appid = contextManager.getContextEntity(String.class, Starter.APPID_ID);
         String secret = contextManager.getContextEntity(String.class, Starter.SECRET_ID);
-        token = authV2Base.auth(new AppidAndSecret(appid, secret),
+        accessToken = authV2Base.auth(new AppidAndSecret(appid, secret),
                 Channel.SEND_MESSAGE_HEADERS).setT0(System.currentTimeMillis());
-        return token.getAccess_token();
+        return accessToken.getAccess_token();
     }
 
     @Data

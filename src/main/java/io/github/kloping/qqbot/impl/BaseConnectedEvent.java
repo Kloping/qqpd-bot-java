@@ -50,7 +50,7 @@ public final class BaseConnectedEvent implements ConnectedEvent {
         return getMetadata().get("id").toString();
     }
 
-    public static final String VERSION = "1.5.3-L1";
+    public static final String VERSION = "1.5.3-R1";
     public static final String PROJECT_NAME = "qqpd-bot-java";
     public static final String AUTHOR = "kloping";
     public static final String FORMAT = "Bot(%s) connected! By " + AUTHOR + " of " + PROJECT_NAME + " v" + VERSION;

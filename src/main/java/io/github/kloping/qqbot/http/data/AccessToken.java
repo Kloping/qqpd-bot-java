@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class Token {
+public class AccessToken {
     private String access_token;
     private String expires_in;
 
