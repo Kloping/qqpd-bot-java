@@ -27,13 +27,13 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.3-R1</version>
+    <version>1.5.3-R2</version>
 </dependency>
 ```
 
 Gradle
  
-    implementation 'io.github.kloping:bot-qqpd-java:1.5.3-R1'
+    implementation 'io.github.kloping:bot-qqpd-java:1.5.3-R2'
 
 > [AI生成简易文档](docs-ai.md)
 
@@ -56,6 +56,9 @@ Gradle
     // webhook 链接方式
     //starter.getConfig().setWebhookport(81);
     starter.run();
+    // 设置日志前缀
+    //starter.APPLICATION.logger.setPrefix("[qgpd-bot]");
+    //
 ```
 
 > #### V1.5.0-Beta7+ 注册监听器主机方式 [荐]
@@ -95,6 +98,24 @@ import io.github.kloping.qqbot.api.Intents;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 import io.github.kloping.qqbot.impl.ListenerHost;
+```
+
+### 部分配置
+```java
+public class ConfigExample{
+    public static void main(String[] args) {
+        // on starter.run()... after
+        // 日志等级设置为0在控制台展示所有日志
+        starter.APPLICATION.logger.setLogLevel(0);
+        // 设置日志前缀
+        starter.APPLICATION.logger.setPrefix("[qgpd-bot]");
+        //日志文件路径
+        LoggerImpl.INSTANCE.logFileDir = "./logs/%s.log";
+        //日志文件格式
+        LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
+        
+    }
+}
 ```
 
 更多使用方式参考查看 [test](./src/test/java)
