@@ -11,6 +11,12 @@
 
 Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
 
+### ❤️ 赞助支持
+
+如果这个项目对你有帮助，欢迎赞助支持持续维护与更新：
+
+- 赞助链接：https://kloping.top/sponsors
+
 ### ✨ 特性
 - 支持QQ官方频道与Q群消息收发（私域/公域兼容）
 - 开箱即用的消息类型（文本/图片/Markdown/按钮交互）
