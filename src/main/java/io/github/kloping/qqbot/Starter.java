@@ -134,7 +134,8 @@ public class Starter implements Runnable {
         contextManager.append(token, TOKEN_ID);
         if (Judge.isNotEmpty(config.getSecret()))
             contextManager.append(secret, SECRET_ID);
-        contextManager.append(getConfig().getCode(), INTENTS_ID);
+        if (Judge.isNotNull(getConfig().getCode()))
+          contextManager.append(getConfig().getCode(), INTENTS_ID);
         contextManager.append(new Integer[]{0, 1}, SHARD_ID);
         contextManager.append("Bot " + appid + "." + token, AUTH_ID);
         contextManager.append(getConfig().getReconnect(), RECONNECT_K_ID);

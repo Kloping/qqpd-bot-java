@@ -43,6 +43,9 @@ public class Markdown implements SendAble {
         this.custom_template_id = custom_template_id;
     }
 
+    public Markdown() {
+    }
+
     public Markdown addParam(String key, String value) {
         if (params == null) params = new LinkedList<>();
         params.add(new Param(key, new String[]{value}));
