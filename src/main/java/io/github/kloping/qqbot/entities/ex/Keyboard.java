@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
+import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.entities.ex.enums.EnvType;
 import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.Result;
@@ -52,10 +53,12 @@ public class Keyboard implements SendAble {
             return null;
         }
         if (er.getEnvType() == EnvType.GROUP) {
+            SenderV2 v2 = (SenderV2) er;
             V2MsgData v2MsgData = new V2MsgData();
             v2MsgData.setMsg_type(2);
             v2MsgData.setKeyboard(this);
             v2MsgData.setMsg_id(er.getMid());
+            v2MsgData.setMsg_seq(v2.getMsgSeq());
             String d0 = JSON.toJSONString(v2MsgData);
             return new Result(er.getBot().groupBaseV2.send(er.getCid(), d0, SEND_MESSAGE_HEADERS));
         } else if (er.getEnvType() == EnvType.GUILD) {
