@@ -76,14 +76,15 @@ public class Markdown implements SendAble {
 
     @Override
     public Result<V2Result> send(SenderAndCidMidGetter er) {
-        return send(er, 1);
+        return send(er, null);
     }
 
     public Result<V2Result> send(SenderAndCidMidGetter er, Integer msgSeq) {
         if (er.getEnvType().isV2()) {
-            V2MsgData v2MsgData = new V2MsgData().setMarkdown(this).setMsg_type(2).setMsg_id(er.getMid());
-            if (keyboard != null) v2MsgData.setKeyboard(getKeyboard());
             SenderV2 senderV2 = (SenderV2) er;
+            if (msgSeq == null) msgSeq = senderV2.getMsgSeq();
+            V2MsgData v2MsgData = new V2MsgData().setMarkdown(this).setMsg_type(2).setMsg_id(er.getMid()).setMsg_seq(msgSeq);
+            if (keyboard != null) v2MsgData.setKeyboard(getKeyboard());
             return new Result(senderV2.getV2().send(er.getCid(), JSON.toJSONString(v2MsgData), SEND_MESSAGE_HEADERS));
         } else if (er.getEnvType() == EnvType.GUILD) {
             RawPreMessage preMessage = new RawPreMessage().setMarkdown(this).setMsgId(er.getMid());
