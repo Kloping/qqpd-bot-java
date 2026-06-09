@@ -17,10 +17,12 @@ import io.github.kloping.spt.interfaces.Logger;
 @Entity
 public class GroupEventsRegister implements Events.EventRegister {
     public static final String GROUP_AT_MESSAGE_CREATE = "GROUP_AT_MESSAGE_CREATE";
+    public static final String GROUP_MESSAGE_CREATE = "GROUP_MESSAGE_CREATE";
 
     @AutoStandAfter
     private void r4(Events events) {
         events.register(GROUP_AT_MESSAGE_CREATE, this);
+        events.register(GROUP_MESSAGE_CREATE, this);
     }
 
     @AutoStand
@@ -33,6 +35,8 @@ public class GroupEventsRegister implements Events.EventRegister {
     public Event handle(String t, JSONObject mateData, RawMessage message) {
         Event event = null;
         if (GROUP_AT_MESSAGE_CREATE.equals(t)) {
+            event = new BaseGroupMessageEvent(message, mateData, bot);
+        } else if (GROUP_MESSAGE_CREATE.equals(t)) {
             event = new BaseGroupMessageEvent(message, mateData, bot);
         } else {
         }
