@@ -9,7 +9,7 @@
 
 > 非官方 可用于 Java 8+
 
-Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api/)封装，提供给用户一种简单、高效的使用方式。
+Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api-v2/)封装，提供给用户一种简单、高效的使用方式。
 
 ### ❤️ 赞助支持
 
