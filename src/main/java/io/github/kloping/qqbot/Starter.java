@@ -162,6 +162,73 @@ public class Starter implements Runnable {
         getConfig().setReconnect(reconnect);
     }
 
+    /**
+     * 关闭机器人 并释放所有资源(WebSocket连接 心跳定时任务 线程池 WebHook服务)
+     * <p>
+     * 调用后进程将不会再被非守护线程阻塞 可以正常退出
+     * <p>
+     * 注意: 该方法不可逆 关闭后不可再发送消息或接收事件 如需重启请新建 Starter 实例
+     */
+    public void shutdown() {
+        //1. 先关闭自动重连 否则关 WebSocket 时 onClose 会触发自动重连
+        getConfig().setReconnect(false);
+        getConfig().setAnyCloseReconnect(false);
+
+        //2. 取消主线程任务
+        try {
+            if (contextManager != null) {
+                Future future = contextManager.getContextEntity(Future.class, MAIN_FUTURE_ID);
+                if (future != null && !future.isCancelled() && !future.isDone()) {
+                    future.cancel(true);
+                }
+            }
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: cancel main future failed: " + e.getMessage());
+        }
+
+        //3. 关闭 WebSocket 连接
+        try {
+            if (wssWorker != null && wssWorker.webSocket != null && !wssWorker.webSocket.isClosed()) {
+                wssWorker.webSocket.closeBlocking();
+            }
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: close websocket failed: " + e.getMessage());
+        }
+
+        //4. 关闭 WebHook 服务(如果开启了)
+        try {
+            if (contextManager != null && getConfig().getWebhookport() != null && getConfig().getWebhookport() > 0) {
+                io.github.kloping.qqbot.network.hookauth.HookAuth hookAuth = contextManager.getContextEntity(io.github.kloping.qqbot.network.hookauth.HookAuth.class);
+                if (hookAuth != null && hookAuth.getHttpServer() != null) {
+                    hookAuth.getHttpServer().stop(0);
+                }
+            }
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: stop webhook server failed: " + e.getMessage());
+        }
+
+        //5. 关闭心跳调度线程池 (io.github.kloping.date.FrameUtils.SERVICE)
+        try {
+            io.github.kloping.date.FrameUtils.SERVICE.shutdownNow();
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: FrameUtils.SERVICE shutdown failed: " + e.getMessage());
+        }
+
+        //6. 关闭公共线程池 (io.github.kloping.common.Public.EXECUTOR_SERVICE / EXECUTOR_SERVICE1)
+        try {
+            Public.EXECUTOR_SERVICE.shutdownNow();
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: Public.EXECUTOR_SERVICE shutdown failed: " + e.getMessage());
+        }
+        try {
+            Public.EXECUTOR_SERVICE1.shutdownNow();
+        } catch (Exception e) {
+            APPLICATION.logger.error("shutdown: Public.EXECUTOR_SERVICE1 shutdown failed: " + e.getMessage());
+        }
+
+        APPLICATION.logger.info("Bot shutdown complete");
+    }
+
     public void registerListenerHost(ListenerHost listenerHost) {
         getConfig().getListenerHosts().add(listenerHost);
     }

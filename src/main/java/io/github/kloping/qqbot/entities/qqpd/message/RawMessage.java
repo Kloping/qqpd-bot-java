@@ -45,9 +45,9 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     private String editedTimestamp;
     private Boolean mentionEveryone;
     private User author;
-    private MessageAttachment[] attachments;
+    private MessageAttachment[] attachments = new MessageAttachment[0];
     private Object embed;
-    private User[] mentions;
+    private User[] mentions = new User[0];
     private Member member;
     private Object ark;
     private Integer seq;

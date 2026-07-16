@@ -52,10 +52,16 @@ public class HookAuth {
     @AutoStand
     Starter.Config config;
 
+    private HttpServer httpServer;
+
+    public HttpServer getHttpServer() {
+        return httpServer;
+    }
+
     public void webhookServerStart() {
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(config.getWebhookport()), 0);
-            server.createContext(config.getWebhookpath(), exchange -> {
+            httpServer = HttpServer.create(new InetSocketAddress(config.getWebhookport()), 0);
+            httpServer.createContext(config.getWebhookpath(), exchange -> {
                 String body = ReadUtils.readAll(exchange.getRequestBody(), "UTF-8");
                 logger.log(String.format("webhook-r: %s", body));
                 Pack pack = GSON.fromJson(body, Pack.class);
@@ -81,7 +87,7 @@ public class HookAuth {
                 exchange.sendResponseHeaders(200, resp.length());
                 exchange.getResponseBody().write(resp.getBytes("UTF-8"));
             });
-            server.start();
+            httpServer.start();
             logger.info(String.format(BaseConnectedEvent.FORMAT_SERVER, config.getAppid()));
         } catch (IOException e) {
             logger.error("在WebHook服务启动时失败\n" + getExceptionLine(e));
