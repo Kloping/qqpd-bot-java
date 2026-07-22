@@ -27,14 +27,14 @@ QQ机器人 Java SDK 是一个非官方的 QQ 机器人开发工具包，支持 
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.3-L3</version>
+    <version>1.5.3-L4-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-implementation 'io.github.kloping:bot-qqpd-java:1.5.3-L3'
+implementation 'io.github.kloping:bot-qqpd-java:1.5.3-L4-SNAPSHOT'
 ```
 
 ## 快速开始

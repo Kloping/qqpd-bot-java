@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
+import lombok.Getter;
 import org.bouncycastle.crypto.KeyGenerationParameters;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
@@ -21,6 +22,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -28,6 +30,7 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static io.github.kloping.qqbot.Resource.GSON;
 import static io.github.kloping.spt.PartUtils.getExceptionLine;
@@ -52,45 +55,95 @@ public class HookAuth {
     @AutoStand
     Starter.Config config;
 
+    @Getter
     private HttpServer httpServer;
-
-    public HttpServer getHttpServer() {
-        return httpServer;
-    }
 
     public void webhookServerStart() {
         try {
             httpServer = HttpServer.create(new InetSocketAddress(config.getWebhookport()), 0);
-            httpServer.createContext(config.getWebhookpath(), exchange -> {
-                String body = ReadUtils.readAll(exchange.getRequestBody(), "UTF-8");
-                logger.log(String.format("webhook-r: %s", body));
-                Pack pack = GSON.fromJson(body, Pack.class);
-                String resp = null;
-                if (pack.getOp() == 13) {
-                    resp = auth(body, pack, exchange);
-                } else {
-                    try {
-                        List<String> sigs = exchange.getRequestHeaders().get("X-Signature-Ed25519");
-                        List<String> ts = exchange.getRequestHeaders().get("X-Signature-Timestamp");
+            // 显式设置线程池 避免默认单线程调度在高并发/慢处理时被占满导致"打不开"
+            httpServer.setExecutor(Executors.newFixedThreadPool(
+                    Math.max(4, Runtime.getRuntime().availableProcessors() * 2)));
+            httpServer.createContext(config.getWebhookpath(), this::handleWebhook);
+            // 健康检查端点 便于区分"端口死了"还是"业务path挂了"
+            httpServer.createContext("/health", exchange -> writeResponse(exchange, 200, "ok"));
+            httpServer.start();
+            logger.info(String.format(BaseConnectedEvent.FORMAT_SERVER, config.getAppid()));
+        } catch (IOException e) {
+            logger.error("在WebHook服务启动时失败\n" + getExceptionLine(e));
+        }
+    }
+
+    /**
+     * webhook 请求处理 保证:
+     * <br/>1. 无论成功失败 finally 中都会写响应并 close(exchange) 避免连接/线程泄漏
+     * <br/>2. resp 永不为 null 避免 resp.length() NPE
+     * <br/>3. body 非法 JSON / pack 为 null / op 为 null 时直接 400 不再 NPE
+     */
+    private void handleWebhook(HttpExchange exchange) {
+        String resp = "{}";
+        int status = 200;
+        try {
+            String body = ReadUtils.readAll(exchange.getRequestBody(), "UTF-8");
+            logger.log(String.format("webhook-r: %s", body));
+            Pack pack = null;
+            try {
+                if (body != null && !body.trim().isEmpty()) {
+                    pack = GSON.fromJson(body, Pack.class);
+                }
+            } catch (Exception e) {
+                logger.waring("WebHook请求体解析失败: " + getExceptionLine(e));
+            }
+            if (pack == null || pack.getOp() == null) {
+                // 空body / 浏览器直接GET / 非法JSON 直接返回 400 避免后续 NPE
+                status = 400;
+                resp = "{}";
+            } else if (pack.getOp() == 13) {
+                resp = auth(body, pack, exchange);
+            } else {
+                try {
+                    List<String> sigs = exchange.getRequestHeaders().get("X-Signature-Ed25519");
+                    List<String> ts = exchange.getRequestHeaders().get("X-Signature-Timestamp");
+                    if (sigs != null && !sigs.isEmpty() && ts != null && !ts.isEmpty()) {
                         String sig = sigs.get(0);
                         String timestamp = ts.get(0);
                         KeyPair keyPair = getKeyPair();
                         boolean isValid = verifySignature(sig, timestamp, body.getBytes(StandardCharsets.UTF_8), keyPair.getPublic().getEncoded());
                         resp = String.valueOf(isValid);
-                    } catch (Exception e) {
-                        logger.error("验证签名报错(不影响接收和发送)：\n" + getExceptionLine(e));
                     }
-                    wssWorker.getOnPackReceives().stream().filter(o -> !(o instanceof AuthAndHeartbeat))
-                            .forEach(p -> p.onReceive(pack));
+                } catch (Exception e) {
+                    logger.error("验证签名报错(不影响接收和发送)：\n" + getExceptionLine(e));
                 }
-                logger.log("WebHook服务响应: " + resp);
-                exchange.sendResponseHeaders(200, resp.length());
-                exchange.getResponseBody().write(resp.getBytes("UTF-8"));
-            });
-            httpServer.start();
-            logger.info(String.format(BaseConnectedEvent.FORMAT_SERVER, config.getAppid()));
-        } catch (IOException e) {
-            logger.error("在WebHook服务启动时失败\n" + getExceptionLine(e));
+                final Pack fpack = pack;
+                wssWorker.getOnPackReceives().stream().filter(o -> !(o instanceof AuthAndHeartbeat))
+                        .forEach(p -> p.onReceive(fpack));
+            }
+        } catch (Exception e) {
+            logger.error("WebHook服务处理请求异常：\n" + getExceptionLine(e));
+            status = 500;
+            resp = "{}";
+        } finally {
+            logger.log("WebHook服务响应: " + resp);
+            writeResponse(exchange, status, resp);
+        }
+    }
+
+    /**
+     * 统一写响应 使用 byte[] 长度 并在 finally 中无条件 close(exchange)
+     */
+    private void writeResponse(HttpExchange exchange, int status, String resp) {
+        if (resp == null) resp = "{}";
+        try {
+            byte[] bytes = resp.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+            exchange.sendResponseHeaders(status, bytes.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(bytes);
+            }
+        } catch (Exception e) {
+            logger.error("WebHook服务写响应失败：\n" + getExceptionLine(e));
+        } finally {
+            exchange.close();
         }
     }
 
