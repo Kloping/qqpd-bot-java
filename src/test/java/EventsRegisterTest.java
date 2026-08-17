@@ -21,8 +21,8 @@ public class EventsRegisterTest extends ListenerHost {
     @Test
     public void testBefore() throws Throwable {
 //        String appid = System.getProperty("appid");
-//        String token = System.getProperty("token");
-//        starter = new Starter(appid, token);
+//        String secret = System.getProperty("secret");
+//        starter = new Starter(appid, secret);
 //        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 //        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 //        starter.setReconnect(true);

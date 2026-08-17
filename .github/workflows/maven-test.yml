@@ -36,8 +36,8 @@ jobs:
       env:
         test: ${{ secrets.SIMPLESECRET }}
         appid: ${{ secrets.APPID }}
-        token: ${{ secrets.TOKEN }}
-      run: mvn test --file pom.xml -Dappid=${appid} -Dtoken=${token}
+        secret: ${{ secrets.SECRET }}
+      run: mvn test --file pom.xml -Dappid=${appid} -Dsecret=${secret}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph

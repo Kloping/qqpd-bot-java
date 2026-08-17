@@ -45,7 +45,7 @@ Gradle
 
 ### 使用前提
 
-1. 到https://q.qq.com/ 申请机器人 获得Bot 开发者ID(appid) 和 机器人令牌(token)
+1. 到https://q.qq.com/ 申请机器人 获得Bot 开发者ID(appid) 和机器人密钥(secret)
 
 ~~2. 发布审核 发布后为公域~~
 
@@ -56,8 +56,7 @@ Gradle
 启动方式
 
 ```java 
-    Starter starter = new Starter("appid","token");
-    //如果使用q群 则 new Starter("appid", "token", "secret");
+    Starter starter = new Starter("appid", "secret");
     starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
     // webhook 链接方式
     //starter.getConfig().setWebhookport(81);

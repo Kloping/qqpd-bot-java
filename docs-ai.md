@@ -44,8 +44,9 @@ implementation 'io.github.kloping:bot-qqpd-java:1.5.3-L4'
 在开始使用 SDK 之前，您需要到 [QQ机器人官方平台](https://q.qq.com/) 申请机器人，获得以下信息：
 
 - Bot 开发者ID (appid)
-- 机器人令牌 (token)
-- （可选）机器人密钥 (secret) - 用于 Q 群功能
+- 机器人密钥 (secret)
+
+SDK 会使用 appid 和 secret 自动获取 Access Token，并在 OpenAPI 请求的 `Authorization` 请求头中使用 `QQBot ACCESS_TOKEN` 完成鉴权。
 
 ### 2. 基础使用
 
@@ -56,7 +57,7 @@ import io.github.kloping.qqbot.api.Intents;
 public class MyBot {
     public static void main(String[] args) {
         // 创建 Starter 实例
-        Starter starter = new Starter("your_appid", "your_token");
+        Starter starter = new Starter("your_appid", "your_secret");
         
         // 设置事件订阅（私域机器人示例）
         starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
@@ -100,11 +101,7 @@ starter.registerListenerHost(new ListenerHost(){
 #### 构造函数
 
 ```java
-// 用于频道机器人
-Starter starter = new Starter("appid", "token");
-
-// 用于 Q 群机器人（需要 secret）
-Starter starter = new Starter("appid", "token", "secret");
+Starter starter = new Starter("appid", "secret");
 ```
 
 #### 主要方法
@@ -207,7 +204,7 @@ chain.text("文本消息")
 除了默认的 WebSocket 连接方式，SDK 还支持 Webhook 模式：
 
 ```java
-Starter starter = new Starter("appid", "token");
+Starter starter = new Starter("appid", "secret");
 starter.getConfig().setWebhookport(8080); // 设置 Webhook 端口
 starter.run();
 ```
@@ -215,7 +212,7 @@ starter.run();
 ### 沙箱环境
 
 ```java
-Starter starter = new Starter("appid", "token");
+Starter starter = new Starter("appid", "secret");
 starter.getConfig().sandbox(); // 切换到沙箱环境
 starter.run();
 ```
@@ -247,7 +244,7 @@ import io.github.kloping.qqbot.entities.ex.msg.MessageChain;
 public class MyBot {
     public static void main(String[] args) {
         // 初始化
-        Starter starter = new Starter("your_appid", "your_token");
+        Starter starter = new Starter("your_appid", "your_secret");
         
         // 设置事件订阅
         starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
@@ -280,7 +277,7 @@ public class MyBot {
    - 私域机器人可以接收频道内的所有消息
 
 2. **如何处理 Q 群消息？**
-   - 需要在构造 [Starter](./src/main/java/io/github/kloping/qqbot/Starter.java) 时提供 secret 参数
+   - 使用 appid 和 secret 构造 [Starter](./src/main/java/io/github/kloping/qqbot/Starter.java)
    - 使用 `Intents.GROUP_INTENTS` 订阅群聊事件
 
 3. **如何调试机器人？**

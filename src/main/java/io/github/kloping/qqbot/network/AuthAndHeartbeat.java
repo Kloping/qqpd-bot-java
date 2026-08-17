@@ -33,6 +33,7 @@ import static io.github.kloping.qqbot.Starter.*;
 @Entity
 public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.EventRegister {
 
+    private static final String GATEWAY_TOKEN_FIELD = "token";
     public static final int CODE_ERROR = -10001;
     //Authentication fail
     public static final int CODE_4004 = 4004;
@@ -139,7 +140,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
                 "    \"session_id\": \"%s\",\n" +
                 "    \"seq\": %s\n" +
                 "  }\n" +
-                "}", contextManager.getContextEntity(String.class, TOKEN_ID), sessionId, newstId));
+                "}", "QQBot " + start0.getAccessToken(), sessionId, newstId));
     }
 
     private Pack jumpPack = null;
@@ -158,7 +159,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
             authPack = new Pack();
             authPack.setOp(2);
             JSONObject jo = new JSONObject();
-            jo.put(TOKEN_ID, "QQBot " + start0.getAccessToken());
+            jo.put(GATEWAY_TOKEN_FIELD, "QQBot " + start0.getAccessToken());
             jo.put(INTENTS_ID, contextManager.getContextEntity(Integer.class, INTENTS_ID));
             jo.put(SHARD_ID, contextManager.getContextEntity(Integer[].class, SHARD_ID));
             jo.put(PROPERTIES_ID, new Object());

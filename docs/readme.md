@@ -33,12 +33,11 @@
 
 > step-1
 
- 登录q.qq开发者平台获得appid token 等参数
+ 登录q.qq开发者平台获得 appid 和 secret 等参数
 
 > step0 启动程序
 ```java
-// 启动类新建 一般启动方法 不可接收发送 群聊消息 见v2群文档
-Starter starter = new Starter("appid", "token");
+Starter starter = new Starter("appid", "secret");
 // 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
 // 切换沙箱与正式环境

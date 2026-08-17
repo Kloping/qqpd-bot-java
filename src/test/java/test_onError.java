@@ -25,7 +25,7 @@ public class test_onError implements WebSocketListener {
     }
 
     public static void main(String[] args) throws Exception {
-        Starter starter = new Starter("xxx", "xxx");
+        Starter starter = new Starter("appid", "secret");
         starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
         //设置websocket 监听
         starter.getConfig().setWebSocketListener(new test_onError());
