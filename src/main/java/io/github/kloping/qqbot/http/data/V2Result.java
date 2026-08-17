@@ -25,6 +25,9 @@ public class V2Result {
     private String id;
     private Long timestamp;
 
+    /** 流式单聊消息剩余可发送长度（字符数）。 */
+    private Integer remain_msg_len;
+
     private String group_code;
     private Integer ret = 200;
     private String msg;

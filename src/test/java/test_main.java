@@ -11,7 +11,7 @@ public class test_main {
         Starter starter = factory();
         //事件订阅 私域机器人
         // 推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
-        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
+        starter.getConfig().setCode(Intents.PUBLIC_INTENTS.and(Intents.GROUP_INTENTS));
         //重连
         starter.setReconnect(true);
         starter.run();
@@ -21,7 +21,7 @@ public class test_main {
 
     public static Starter factory() {
         Starter starter = new Starter("appid", "secret");
-        starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
+        starter.getConfig().setCode(Intents.PUBLIC_INTENTS.and(Intents.GROUP_INTENTS));
         return starter;
     }
 }

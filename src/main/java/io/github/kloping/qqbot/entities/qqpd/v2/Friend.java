@@ -12,6 +12,7 @@ import io.github.kloping.qqbot.http.BaseV2;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.qqbot.http.data.StreamMessageData;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -24,7 +25,7 @@ public class Friend extends Contact implements SenderAndCidMidGetter, SenderV2 {
         if (getMeta().containsKey("openid")) {
             String id = getMeta().getString("openid");
             this.setId(id);
-            this.setOpenid(openid);
+            this.setOpenid(id);
         } else {
             this.setId(this.getMeta().getString("id"));
             this.setOpenid(this.getMeta().getString("user_openid"));
@@ -40,6 +41,18 @@ public class Friend extends Contact implements SenderAndCidMidGetter, SenderV2 {
     @Override
     public Result<V2Result> send(String text, RawMessage message) {
         return message.send(text);
+    }
+
+    /**
+     * 发送一个单聊流式消息分片。
+     *
+     * <p>首片返回的 ID 需设置到后续分片的 {@code stream_msg_id} 中。</p>
+     *
+     * @param data 分片数据
+     * @return 当前分片的结果
+     */
+    public Result<V2Result> sendStream(StreamMessageData data) {
+        return new Result<V2Result>(bot.userBaseV2.sendStream(getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS));
     }
 
     @Override

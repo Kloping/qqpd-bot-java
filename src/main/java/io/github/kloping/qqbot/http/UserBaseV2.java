@@ -27,6 +27,20 @@ public interface UserBaseV2 extends BaseV2 {
     V2Result send(@PathValue("openid") String uid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body, @Headers Map<String, String> headers);
 
     /**
+     * 流式发送单聊消息。
+     *
+     * <p>首个分片返回的 {@code id} 为 {@code stream_msg_id}，调用方应将它
+     * 填入后续分片；同一条流中的 {@code index} 必须从 0 开始递增。</p>
+     *
+     * @param uid 单聊用户的 openid
+     * @param body 流式消息请求体
+     * @param headers 请求头
+     * @return 当前分片的发送结果
+     */
+    @PostPath("/v2/users/{openid}/stream_messages")
+    V2Result sendStream(@PathValue("openid") String uid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body, @Headers Map<String, String> headers);
+
+    /**
      * 发送私聊媒体
      * @param uid
      * @param body

@@ -15,6 +15,7 @@ import io.github.kloping.qqbot.http.BaseV2;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.qqbot.http.data.StreamMessageData;
 import io.github.kloping.qqbot.network.Events;
 import lombok.Setter;
 
@@ -79,6 +80,14 @@ public class BaseFriendMessageEvent extends BaseMessageEvent<Friend> implements 
     public V2Result sendMessage(String text, int seq) {
         V2MsgData data = new V2MsgData().setMsg_id(getMsgId()).setContent(text).setMsg_seq(seq);
         return getV2().send(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
+    }
+
+    @Override
+    public V2Result sendStreamMessage(StreamMessageData data) {
+        if (data.getMsg_id() == null && data.getEvent_id() == null) {
+            data.setMsg_id(getMsgId());
+        }
+        return bot.userBaseV2.sendStream(getSubject().getOpenid(), JSON.toJSONString(data), Channel.SEND_MESSAGE_HEADERS);
     }
 
     @Override
