@@ -1,3 +1,4 @@
+.codegraph
 logs/*
 temp*
 # Project exclude paths
