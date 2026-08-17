@@ -58,11 +58,18 @@ public class V2Result {
     public static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
     public void setTimestamp(String timestamp) {
+        // 部分接口（例如流式消息）在响应中会返回空的 timestamp。
+        // 此时表示服务端未提供时间，不应尝试解析空字符串。
+        if (timestamp == null || timestamp.trim().isEmpty()) {
+            this.timestamp = null;
+            return;
+        }
         try {
-            Long t0 = format.parse(timestamp).getTime();
+            Long t0 = format.parse(timestamp.trim()).getTime();
             this.timestamp = t0;
         } catch (ParseException e) {
-            e.printStackTrace();
+            // 保持与缺少 timestamp 相同的语义，避免响应反序列化被无效时间字段干扰。
+            this.timestamp = null;
         }
     }
 }
