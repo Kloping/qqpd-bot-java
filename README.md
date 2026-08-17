@@ -41,15 +41,13 @@ Gradle
  
     implementation 'io.github.kloping:bot-qqpd-java:1.5.3'
 
-> [详细文档目录](./docs)
-
 ### 使用前提
 
 1. 到https://q.qq.com/ 申请机器人 获得Bot 开发者ID(appid) 和机器人密钥(secret)
 
 ~~2. 发布审核 发布后为公域~~
 
-### [开发文档](./docs/readme.md) / [q群使用说明](./docs/v2.md)
+## [开发者详细文档目录](./docs/readme.md) / [q群使用说明](./docs/v2.md)
 
 ### 使用示例
 
