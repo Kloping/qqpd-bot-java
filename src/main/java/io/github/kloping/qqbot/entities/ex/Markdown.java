@@ -24,6 +24,10 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
  */
 @Getter
 public class Markdown implements SendAble {
+    /**
+     * @deprecated Markdown 模板已被平台废弃，请改用 {@link #content}。
+     */
+    @Deprecated
     private String custom_template_id;
     private List<Param> params = null;
 
@@ -35,15 +39,25 @@ public class Markdown implements SendAble {
     private Keyboard keyboard;
 
     /**
-     * 需要再<a href="https://q.qq.com/qqbot/#/developer/advanced-features">QQ机器人管理平台</a> 申请并审核通过后使用
-     *
-     * @param custom_template_id
+     * @param custom_template_id 已废弃的自定义模板 ID
+     * @deprecated Markdown 自定义模板已被平台废弃，请使用 {@link #Markdown()} 配合 {@link #setContent(String)}。
      */
+    @Deprecated
     public Markdown(String custom_template_id) {
         this.custom_template_id = custom_template_id;
     }
 
     public Markdown() {
+    }
+
+    private static final Markdown EMPTY = new Markdown().setContent("> markdown is empty");
+
+    public static Markdown ofEmpty() {
+        return EMPTY;
+    }
+
+    public static Markdown ofText(String text) {
+        return new Markdown().setContent(text);
     }
 
     public Markdown addParam(String key, String value) {
@@ -54,6 +68,11 @@ public class Markdown implements SendAble {
 
     public Markdown setContent(String content) {
         this.content = content;
+        return this;
+    }
+
+    public Markdown appendContent(String content) {
+        this.content = this.content + content;
         return this;
     }
 

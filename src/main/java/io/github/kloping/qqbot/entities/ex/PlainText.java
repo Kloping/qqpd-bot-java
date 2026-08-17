@@ -24,7 +24,7 @@ public class PlainText implements SendAble {
             MessagePacket packet = new MessagePacket();
             packet.setContent(toString());
             return er.send(packet);
-        } else if (er.getEnvType() == EnvType.GROUP) {
+        } else if (er.getEnvType().isV2()) {
             return er.send(text);
         } else return null;
     }

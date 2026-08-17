@@ -79,23 +79,56 @@ source: [Emoji 列表](https://bot.q.qq.com/wiki/develop/api/openapi/emoji/model
 ### 关于markdown与按钮
 
 ```java
-event.send(new Markdown("custom_template_id")
-        //申请的模板 参数填充
-        .addParam("key", "value")
-        .setKeyboard("id"));
+public class DemoMarkdownSend{
+    public static void main(String[] args) {
+        //有模版 已经弃用
+      //event.send(new Markdown("custom_template_id")
+      //        //申请的模板 参数填充
+      //        .addParam("key", "value")
+      //        .setKeyboard("id"));
+      // 原生发送
+      Markdown markdown = new Markdown();
+      markdown.setContent("### 测试");
+      event.send(markdown);
+    }
+}
 ```
 
-- [md模板申请 与 按钮组件申请](https://q.qq.com/qqbot/#/developer/advanced-features) 
-- [按钮配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/msg-btn.html#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8D%8F%E8%AE%AE)
-- [md配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/type/markdown.html#%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F)
+- ~~[md模板申请 与 按钮组件申请](https://q.qq.com/qqbot/#/developer/advanced-features)~~ 
+- ~~[按钮配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/msg-btn.html#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%8D%8F%E8%AE%AE)~~
+- ~~[md配置参考](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/type/markdown.html#%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F)~~
 > 当前仅支持群聊发送md 按钮组件不能单独发送 须与md消息组合发送
 
 ### 按钮发送
-> 按钮发送说明 24/3/20 v1.5.0
+```java
+/**
+ * 发送案例
+ */
+public class DemoButtonGroupSend{
+    public static void main(String[] args) {
+      MessageAsyncBuilder builder = new MessageAsyncBuilder();
+      Markdown markdown = Markdown.ofText("### 测试markdown大标题");
+      builder.append(markdown); // event.send(builder.build()); //也可单独发送
 
+      Keyboard.KeyboardBuilder keyboardBuilder = new Keyboard.KeyboardBuilder();
 
-![img_1.png](./imgs/img_1.png)
-> 效果如  24/3/21 补充目前可搭配md模板使用
+      Keyboard keyboard =
+              keyboardBuilder
+                      .addRow()//添加一个行
+                        .addButton()//在这个行添加一个按钮
+                          .setLabel("测试标题")//设置这个按钮的标题
+                          .setVisitedLabel("测试标题.")
+                          .setStyle(1)
+                          .setActionData("123")
+                          .setActionEnter(false)
+                          .setActionReply(true)
+                          .setActionType(2)
+                      .build()//构建按钮
+                      .build()//构建行
+              .build();//构建按钮组
+      builder.append(keyboard); // event.send(keyboard); //也可单独发送
+      event.send(builder.build());
+    }
+}
 
-
-![img_2.png](./imgs/img_2.png)
+```

@@ -92,8 +92,8 @@ public class MessageChain implements SendAble, List<SendAble> {
                     builder.append((AtAll) sendAble);
                 } else if (sendAble instanceof Emoji) {
                     builder.append((Emoji) sendAble);
-                } else if (sendAble instanceof Markdown) {
-                    result = ((Markdown) sendAble).send(er);
+                } else if (sendAble instanceof Markdown || sendAble instanceof Keyboard) {
+                    result = sendAble.send(er);
                 }
             }
             if (!builder.isEmpty()) {
@@ -102,52 +102,44 @@ public class MessageChain implements SendAble, List<SendAble> {
             return result;
         } else {
             SenderV2 v2 = (SenderV2) er;
-            boolean flag0 = false;
-            V2MsgData data = new V2MsgData();
-            if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
-            Result<V2Result> result = null;
-            int sent = 0;
+            V2MsgData message = new V2MsgData();
+            if (Judge.isNotEmpty(er.getMid())) message.setMsg_id(er.getMid());
+            boolean hasMessage = false;
             for (SendAble e0 : this.data) {
                 if (e0 instanceof FileMsg) {
                     FileMsg fileMsg = (FileMsg) e0;
                     RawMessage.filePrepare(fileMsg, er.getBot());
-                    if (!flag0) {
-                        if (fileMsg.getFile_type() != 1) {
-                            fileMsg.send(er);
-                            sent++;
-                            continue;
-                        }
-                        flag0 = true;
-                    } else {
-                        data.setMsg_seq(v2.getMsgSeq());
-                        v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS);
-                        data = new V2MsgData();
-                        if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());
-                    }
+                    V2Result fileResult;
                     if (Judge.isNotEmpty(fileMsg.getUrl())) {
-                        result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
-                                fileMsg.getFile_type(), fileMsg.getUrl()), Channel.SEND_MESSAGE_HEADERS));
+                        fileResult = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"url\": \"%s\",\"srv_send_msg\": false}",
+                                fileMsg.getFile_type(), fileMsg.getUrl()), Channel.SEND_MESSAGE_HEADERS);
                     } else {
-                        result = new Result<>(v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}",
-                                fileMsg.getFile_type(), Base64.getEncoder().encodeToString(fileMsg.getBytes())), Channel.SEND_MESSAGE_HEADERS));
+                        fileResult = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}",
+                                fileMsg.getFile_type(), Base64.getEncoder().encodeToString(fileMsg.getBytes())), Channel.SEND_MESSAGE_HEADERS);
                     }
-                    result.getData().logFileInfo(er.getBot().logger, fileMsg);
-                    data.setMsg_type(7);
-                    data.setMedia(new V2MsgData.Media(result.getData().getFile_info()));
+                    fileResult.logFileInfo(er.getBot().logger, fileMsg);
+                    message.setMsg_type(7);
+                    message.setMedia(new V2MsgData.Media(fileResult.getFile_info()));
+                    hasMessage = true;
                 } else if (e0 instanceof Markdown) {
-                    result = ((Markdown) e0).send(er, v2.getMsgSeq());
-                    sent++;
+                    Markdown markdown = (Markdown) e0;
+                    message.setMarkdown(markdown);
+                    if (markdown.getKeyboard() != null) message.setKeyboard(markdown.getKeyboard());
+                    message.setMsg_type(2);
+                    hasMessage = true;
                 } else if (e0 instanceof Keyboard) {
-                    data.setKeyboard(e0);
-                    data.setMsg_type(2);
+                    message.setKeyboard(e0);
+                    if (message.getMarkdown() == null) message.setMarkdown(Markdown.ofEmpty());
+                    message.setMsg_type(2);
+                    hasMessage = true;
                 } else {
-                    data.setContent(data.getContent() + e0.toString());
+                    message.setContent(message.getContent() + e0.toString());
+                    hasMessage = true;
                 }
             }
-            if (sent < this.data.size()) {
-                data.setMsg_seq(v2.getMsgSeq());
-                return result = new Result<V2Result>(v2.getV2().send(er.getCid(), data.toString(), SEND_MESSAGE_HEADERS));
-            } else return result;
+            if (!hasMessage) return null;
+            message.setMsg_seq(v2.getMsgSeq());
+            return new Result<V2Result>(v2.getV2().send(er.getCid(), message.toString(), SEND_MESSAGE_HEADERS));
         }
     }
 

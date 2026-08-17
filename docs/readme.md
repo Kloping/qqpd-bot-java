@@ -19,9 +19,9 @@
 #### 相关部分文档指引
 
 - **[事件 event](event.md)**
-- **[消息 message](message.md)**
+- **[消息发送 message](message.md)**
 - **[网络相关配置](network.md)**
-- **[V2群](v2.md)**
+- **[V2群相关](v2.md)**
 
 <hr>
 
