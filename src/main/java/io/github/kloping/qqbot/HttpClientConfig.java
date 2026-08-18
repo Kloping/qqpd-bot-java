@@ -2,18 +2,17 @@ package io.github.kloping.qqbot;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.common.Public;
 import io.github.kloping.qqbot.api.BotContent;
 import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.entities.exc.QBotError;
 import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.ActionResult;
+import io.github.kloping.qqbot.utils.LoggerImpl;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.impls.HttpStatusReceiver;
-import io.github.kloping.spt.impls.LoggerImpl;
 import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.interfaces.component.HttpClientManager;
 import org.fusesource.jansi.Ansi;
@@ -40,6 +39,9 @@ public class HttpClientConfig implements HttpStatusReceiver {
     @AutoStand
     Bot bot;
 
+    @AutoStand
+    Starter.Config config;
+
     private final Color methodColor = new Color(111, 167, 241, 219);
     private final Color interfaceColor = new Color(114, 225, 158, 219);
     private final Color dataColor = new Color(232, 135, 180, 179);
@@ -62,7 +64,7 @@ public class HttpClientConfig implements HttpStatusReceiver {
                 Ansi.ansi().fgRgb(LoggerImpl.NORMAL_LOW_COLOR.getRGB()).a(o).reset().toString()
         ));
         fillAll(cla, o);
-        Public.EXECUTOR_SERVICE.submit(() -> {
+        config.getEventExecutor().submit(() -> {
             if (o instanceof ActionResult) {
                 ActionResult result = (ActionResult) o;
                 if (result.getSent()) {

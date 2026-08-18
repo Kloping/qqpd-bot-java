@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.network;
 
-import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.http.BotBase;
@@ -11,6 +10,7 @@ import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.interfaces.component.ContextManager;
+import io.github.kloping.spt.util.Judge;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.kloping.qqbot.Resource.GSON;
+
+;
 
 /**
  * @author github.kloping
@@ -46,6 +48,7 @@ public class WssWorker implements Runnable {
     Starter.Config config;
 
     public WebSocketClient webSocket;
+    volatile boolean reconnecting;
 
     protected Integer msgr = 0;
     protected Integer msgs = 0;
@@ -78,7 +81,7 @@ public class WssWorker implements Runnable {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     if (preMethods(serverHandshake)) return;
-                    logger.info("wss opened");
+                    if (!reconnecting) logger.info("wss opened");
                 }
 
                 @Override

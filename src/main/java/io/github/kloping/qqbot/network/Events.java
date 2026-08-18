@@ -2,9 +2,8 @@ package io.github.kloping.qqbot.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.common.Public;
-import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.event.ConnectedEvent;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.api.message.MessageEvent;
@@ -18,6 +17,7 @@ import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.util.MapUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,7 +46,7 @@ public class Events implements OnPackReceive {
         if (t == null) return false;
         JSONObject jo = JSON.parseObject(JSON.toJSONString(pack.getD()));
         jo.put(EXTEND_ID, pack.getId());
-        Public.EXECUTOR_SERVICE.submit(() -> {
+        config.getEventExecutor().submit(() -> {
             try {
                 onEvent(t, jo);
             } catch (Exception e) {
@@ -86,7 +86,7 @@ public class Events implements OnPackReceive {
                 ListenerHost l = getM2L().get(method);
                 if (method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
                     invokeBefore(l, event, method, Events.this);
-                    Public.EXECUTOR_SERVICE.submit(() -> {
+                    config.getEventExecutor().submit(() -> {
                         try {
                             method.invoke(l, event);
                         } catch (IllegalAccessException e) {
@@ -112,11 +112,15 @@ public class Events implements OnPackReceive {
                     });
                 }
             }
-            logger.info(String.format("Bot(%s) post(%s) from %s", bot.getInfo().getUsername(), event, event.getClassName()));
+            if (!(event instanceof ConnectedEvent && connectedEventLogged)) {
+                logger.info(String.format("Bot(%s) post(%s) from %s", bot.getInfo().getUsername(), event, event.getClassName()));
+                if (event instanceof ConnectedEvent) connectedEventLogged = true;
+            }
         }
     }
 
     private final Map<Method, ListenerHost> m2l = new HashMap<>();
+    private volatile boolean connectedEventLogged;
     private int cap = 0;
 
     private Map<Method, ListenerHost> getM2L() {

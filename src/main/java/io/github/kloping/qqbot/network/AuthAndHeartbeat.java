@@ -2,8 +2,6 @@ package io.github.kloping.qqbot.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.common.Public;
-import io.github.kloping.date.FrameUtils;
 import io.github.kloping.qqbot.Start0;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.event.Event;
@@ -100,9 +98,8 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     }
 
     private void delayIdentifyConnect(int code, WebSocketClient wss) {
-        Public.EXECUTOR_SERVICE.execute(() -> {
-            logger.error("websocket closed with code 1011,server internal exception");
-            logger.error("reconnect in 3 seconds");
+        config.getEventExecutor().execute(() -> {
+            logger.info("websocket reconnect scheduled in 3 seconds (code " + code + ")");
             try {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
@@ -120,6 +117,8 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
 
     public void identifyConnect(int code, WebSocketClient wss) {
         if (!config.getReconnect()) return;
+        wssWorker.reconnecting = true;
+        logger.info("websocket reconnecting (code " + code + ")");
         Future future = contextManager.getContextEntity(Future.class, Starter.MAIN_FUTURE_ID);
         if (future != null && !future.isCancelled()) {
             future.cancel(true);
@@ -127,7 +126,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
         wssWorker.msgr = 0;
         wssWorker.msgs = 0;
         wssWorker.webSocket.close();
-        future = Public.EXECUTOR_SERVICE1.submit(wssWorker);
+        future = config.getWebSocketExecutor().submit(wssWorker);
         contextManager.append(future, Starter.MAIN_FUTURE_ID);
     }
 
@@ -155,7 +154,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @Override
     public boolean onReceive(Pack pack) {
         if (pack.getOp() == 10) {
-            logger.info("Authentication");
+            if (!wssWorker.reconnecting) logger.info("Authentication");
             authPack = new Pack();
             authPack.setOp(2);
             JSONObject jo = new JSONObject();
@@ -170,7 +169,7 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
             jumpPack = new Pack();
             jumpPack.setOp(1);
             if (scheduledFuture != null && !scheduledFuture.isCancelled()) scheduledFuture.cancel(true);
-            scheduledFuture = FrameUtils.SERVICE.scheduleAtFixedRate(() -> {
+            scheduledFuture = config.getScheduledExecutor().scheduleAtFixedRate(() -> {
                 if (newstId != -1) {
                     jumpPack.setD(newstId);
                 }
@@ -197,7 +196,12 @@ public class AuthAndHeartbeat implements OnPackReceive, OnCloseListener, Events.
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage message) {
         sessionId = mateData.getString("session_id");
-        logger.info("Ready!");
+        if (wssWorker.reconnecting) {
+            logger.info("websocket reconnected");
+            wssWorker.reconnecting = false;
+        } else {
+            logger.info("Ready!");
+        }
         return new BaseConnectedEvent(mateData, bot, sessionId);
     }
 }

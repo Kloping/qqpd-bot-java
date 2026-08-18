@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.impl.registers;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.map.MapUtils;
 import io.github.kloping.qqbot.api.event.Event;
 import io.github.kloping.qqbot.api.event.MemberUpdateEvent;
 import io.github.kloping.qqbot.entities.Bot;
@@ -14,6 +13,7 @@ import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
+import io.github.kloping.spt.util.MapUtils;
 
 /**
  * @author github.kloping

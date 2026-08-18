@@ -2,7 +2,6 @@ package io.github.kloping.qqbot.network.hookauth;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import io.github.kloping.io.ReadUtils;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.Pack;
 import io.github.kloping.qqbot.impl.BaseConnectedEvent;
@@ -11,6 +10,7 @@ import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.Logger;
+import io.github.kloping.spt.util.IoUtils;
 import lombok.Getter;
 import org.bouncycastle.crypto.KeyGenerationParameters;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
@@ -84,7 +84,7 @@ public class HookAuth {
         String resp = "{}";
         int status = 200;
         try {
-            String body = ReadUtils.readAll(exchange.getRequestBody(), "UTF-8");
+            String body = new String(IoUtils.readAll(exchange.getRequestBody()), StandardCharsets.UTF_8);
             logger.log(String.format("webhook-r: %s", body));
             Pack pack = null;
             try {

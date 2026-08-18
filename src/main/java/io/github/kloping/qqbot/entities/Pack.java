@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.entities;
 
-import io.github.kloping.object.ObjectUtils;
 import lombok.Data;
 
 import java.util.Map;
@@ -20,11 +19,30 @@ public class Pack {
 
     public <T> T dAsMapGet(Object key, Class<T> cla) {
         if (d instanceof Map) {
-            Map<Object, T> map = (Map<Object, T>) d;
+            Map<?, ?> map = (Map<?, ?>) d;
             Object obj = map.get(key);
-            T t = ObjectUtils.asPossible(cla, obj);
-            return t;
+            return asPossible(cla, obj);
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T asPossible(Class<T> cla, Object obj) {
+        if (cla == null || obj == null) return null;
+        if (cla.isInstance(obj)) return cla.cast(obj);
+        if (obj instanceof Number) {
+            Number number = (Number) obj;
+            if (cla == Byte.class) return (T) Byte.valueOf(number.byteValue());
+            if (cla == Short.class) return (T) Short.valueOf(number.shortValue());
+            if (cla == Integer.class) return (T) Integer.valueOf(number.intValue());
+            if (cla == Long.class) return (T) Long.valueOf(number.longValue());
+            if (cla == Float.class) return (T) Float.valueOf(number.floatValue());
+            if (cla == Double.class) return (T) Double.valueOf(number.doubleValue());
+        }
+        try {
+            return (T) cla.getMethod("valueOf", String.class).invoke(null, obj.toString());
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 }

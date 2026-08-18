@@ -2,7 +2,7 @@ package io.github.kloping.qqbot.entities.qqpd.v2;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.judge.Judge;
+import io.github.kloping.spt.util.Judge;;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderV2;
 import io.github.kloping.qqbot.entities.ex.FileMsg;

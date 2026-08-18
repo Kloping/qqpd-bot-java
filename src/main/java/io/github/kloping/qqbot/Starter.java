@@ -1,7 +1,5 @@
 package io.github.kloping.qqbot;
 
-import io.github.kloping.common.Public;
-import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.entities.Bot;
 import io.github.kloping.qqbot.impl.ListenerHost;
 import io.github.kloping.qqbot.interfaces.FileUploadInterceptor;
@@ -14,12 +12,18 @@ import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.AutomaticWiringValue;
 import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.spt.interfaces.component.HttpClientManager;
+import io.github.kloping.spt.util.Judge;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static io.github.kloping.spt.PartUtils.getExceptionLine;
 
@@ -89,6 +93,7 @@ public class Starter implements Runnable {
     public final StarterObjectApplication APPLICATION = new StarterObjectApplication(Resource.class);
 
     private ContextManager contextManager;
+    private boolean started;
 
     /**
      * 使用 appid 和 secret 获取 Access Token 完成鉴权。
@@ -103,13 +108,19 @@ public class Starter implements Runnable {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
+        if (started) {
+            APPLICATION.logger.info("Bot already started, ignore duplicate start");
+            return;
+        }
+        started = true;
         APPLICATION.PRE_SCAN_RUNNABLE.add(() -> {
             APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
             APPLICATION.INSTANCE.getContextManager().append(APPLICATION.INSTANCE);
             APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
         });
-        APPLICATION.logger.setLogLevel(1);
+        LoggerImpl.INSTANCE.setLogLevel(config.getLogLevel());
+        LoggerImpl.INSTANCE.setOutFile(config.isLogToFile() ? config.getLogFileDir() : null);
         APPLICATION.logger.setPrefix("[qgpd-bot]");
         APPLICATION.run0(Start0.class);
         after();
@@ -143,7 +154,7 @@ public class Starter implements Runnable {
                 APPLICATION.logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
             }
         }
-        Future future = Public.EXECUTOR_SERVICE1.submit(wssWorker);
+        Future future = config.getWebSocketExecutor().submit(wssWorker);
         APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
     }
 
@@ -196,24 +207,8 @@ public class Starter implements Runnable {
             APPLICATION.logger.error("shutdown: stop webhook server failed: " + e.getMessage());
         }
 
-        //5. 关闭心跳调度线程池 (io.github.kloping.date.FrameUtils.SERVICE)
-        try {
-            io.github.kloping.date.FrameUtils.SERVICE.shutdownNow();
-        } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: FrameUtils.SERVICE shutdown failed: " + e.getMessage());
-        }
-
-        //6. 关闭公共线程池 (io.github.kloping.common.Public.EXECUTOR_SERVICE / EXECUTOR_SERVICE1)
-        try {
-            Public.EXECUTOR_SERVICE.shutdownNow();
-        } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: Public.EXECUTOR_SERVICE shutdown failed: " + e.getMessage());
-        }
-        try {
-            Public.EXECUTOR_SERVICE1.shutdownNow();
-        } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: Public.EXECUTOR_SERVICE1 shutdown failed: " + e.getMessage());
-        }
+        //5. 关闭 SDK 自己创建的线程池，用户传入的线程池由用户管理
+        config.shutdownExecutors();
 
         APPLICATION.logger.info("Bot shutdown complete");
     }
@@ -259,6 +254,57 @@ public class Starter implements Runnable {
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private FileUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
+        /** 是否启用 SDK 自己的日志文件，默认开启；关闭后由宿主日志框架管理输出。 */
+        private boolean logToFile = true;
+        /** 日志文件路径，必须包含一个用于日期的 %s。 */
+        private String logFileDir = "./logs/%s.log";
+        /** 日志级别：1 默认过滤 Normal；0 输出 Normal；2 仅输出 Debug 和 Error；-1 输出全部。 */
+        private int logLevel = 1;
+        private transient ExecutorService eventExecutor = Executors.newFixedThreadPool(8);
+        private transient ExecutorService webSocketExecutor = Executors.newSingleThreadExecutor();
+        private transient ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+
+        @Getter(AccessLevel.NONE)
+        @Setter(AccessLevel.NONE)
+        private transient boolean eventExecutorOwned = true;
+
+        @Getter(AccessLevel.NONE)
+        @Setter(AccessLevel.NONE)
+        private transient boolean webSocketExecutorOwned = true;
+
+        @Getter(AccessLevel.NONE)
+        @Setter(AccessLevel.NONE)
+        private transient boolean scheduledExecutorOwned = true;
+
+        public void setEventExecutor(ExecutorService eventExecutor) {
+            if (eventExecutor == null) throw new IllegalArgumentException("eventExecutor cannot be null");
+            if (this.eventExecutor == eventExecutor) return;
+            if (eventExecutorOwned) this.eventExecutor.shutdownNow();
+            this.eventExecutor = eventExecutor;
+            this.eventExecutorOwned = false;
+        }
+
+        public void setWebSocketExecutor(ExecutorService webSocketExecutor) {
+            if (webSocketExecutor == null) throw new IllegalArgumentException("webSocketExecutor cannot be null");
+            if (this.webSocketExecutor == webSocketExecutor) return;
+            if (webSocketExecutorOwned) this.webSocketExecutor.shutdownNow();
+            this.webSocketExecutor = webSocketExecutor;
+            this.webSocketExecutorOwned = false;
+        }
+
+        public void setScheduledExecutor(ScheduledExecutorService scheduledExecutor) {
+            if (scheduledExecutor == null) throw new IllegalArgumentException("scheduledExecutor cannot be null");
+            if (this.scheduledExecutor == scheduledExecutor) return;
+            if (scheduledExecutorOwned) this.scheduledExecutor.shutdownNow();
+            this.scheduledExecutor = scheduledExecutor;
+            this.scheduledExecutorOwned = false;
+        }
+
+        private void shutdownExecutors() {
+            if (eventExecutorOwned) eventExecutor.shutdownNow();
+            if (webSocketExecutorOwned) webSocketExecutor.shutdownNow();
+            if (scheduledExecutorOwned) scheduledExecutor.shutdownNow();
+        }
 
         /**
          * 在沙箱环境与正式环境 之前切换 默认正式环境

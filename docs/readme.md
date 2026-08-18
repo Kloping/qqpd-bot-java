@@ -86,17 +86,88 @@ sender.send(image);
 
 #### 日志设置
 
+日志通过 SLF4J 输出，SDK 默认同时输出到控制台和日志文件。
+所有日志配置都需要在 `starter.run()` 之前设置。
+
+| 配置 | 默认值 | 说明 |
+| --- | --- | --- |
+| `logLevel` | `1` | 默认不输出 `Normal`，输出 `Info`、`Debug` 和 `Error` |
+| `logToFile` | `true` | 是否由 SDK 自己写日志文件 |
+| `logFileDir` | `./logs/%s.log` | 日志文件路径，`%s` 会替换为日期 |
+
+日志级别说明：
+
+- `-1`：输出全部日志
+- `0`：输出 `Normal`、`Info`、`Debug` 和 `Error`
+- `1`：默认设置，不输出 `Normal`
+- `2`：只输出 `Debug` 和 `Error`
+
 ```java
-public class LogDemo {
-    public static void main(String[] args) {
-        //默认方式
-        //日志文件路径 设置为null 时不输出文件
-        starter.APPLICATION.logger.setOutFile("./logs/%s.log");
-        //日志文件格式
-        LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
-    }
+Starter starter = new Starter("appid", "secret");
+
+// 默认：控制台 + ./logs/yyyy-MM-dd.log，Normal 不输出
+starter.getConfig().setLogLevel(1);
+
+// 输出 Normal 日志，例如 logger.log("...") 产生的日志
+starter.getConfig().setLogLevel(0);
+
+// 自定义日志文件路径
+starter.getConfig().setLogFileDir("./logs/qqbot-%s.log");
+
+// 关闭 SDK 自己的文件输出，只通过 SLF4J/Logback 输出
+starter.getConfig().setLogToFile(false);
+
+starter.run();
+```
+
+如果需要在运行过程中调整全局日志对象，可以直接使用 SDK 的日志对象：
+
+```java
+starter.run();
+
+LoggerImpl.INSTANCE.setLogLevel(0); // 开启 Normal
+LoggerImpl.INSTANCE.setOutFile("./logs/%s.log");
+LoggerImpl.INSTANCE.setPrefix("[my-bot]");
+LoggerImpl.INSTANCE.setFormat(new SimpleDateFormat("MM/dd-HH:mm:ss:SSS"));
+LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
+```
+
+其中 `setFormat` 控制日志行中的时间格式，`dfn` 控制日志文件名中的日期格式。
+
+#### Spring Boot 项目中的日志配置
+
+在 Spring Boot 项目中，建议关闭 SDK 自己的文件输出，由 Spring Boot 的 Logback 统一管理文件和控制台：
+
+`application.yml`：
+
+```yaml
+qqbot:
+  log-level: 1       # 0 开启 Normal，1 默认过滤 Normal，2 仅 Debug/Error，-1 全部
+  log-to-file: false # 交给 Spring Boot 管理文件输出
+
+logging:
+  level:
+    io.github.kloping.qqbot: INFO # 输出 Info/Error；需要 Debug 时改为 DEBUG
+  file:
+    name: logs/qqbot.log
+```
+
+读取配置并应用到 SDK：
+
+```java
+@Bean
+public Starter qqBot(Environment environment) {
+    Starter starter = new Starter("appid", "secret");
+    starter.getConfig().setLogLevel(
+            environment.getProperty("qqbot.log-level", Integer.class, 1));
+    starter.getConfig().setLogToFile(
+            environment.getProperty("qqbot.log-to-file", Boolean.class, false));
+    starter.run();
+    return starter;
 }
 ```
+
+如果希望 Spring Boot 同时输出 `Normal`，除了将 `qqbot.log-level` 设置为 `0`，还需要保证 `io.github.kloping.qqbot` 的 Logback 级别允许输出 `INFO`。
 <hr>
 
 

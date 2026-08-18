@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.entities.qqpd.message;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.*;
 import io.github.kloping.qqbot.api.message.Pinsble;
 import io.github.kloping.qqbot.entities.Bot;
@@ -19,6 +18,7 @@ import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.qqbot.impl.MessagePacket;
 import io.github.kloping.qqbot.utils.BaseUtils;
 import io.github.kloping.spt.PartUtils;
+import io.github.kloping.spt.util.Judge;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

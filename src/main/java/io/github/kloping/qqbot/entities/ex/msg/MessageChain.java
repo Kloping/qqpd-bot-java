@@ -1,6 +1,5 @@
 package io.github.kloping.qqbot.entities.ex.msg;
 
-import io.github.kloping.judge.Judge;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.api.SenderV2;
@@ -12,6 +11,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawMessage;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
+import io.github.kloping.spt.util.Judge;
 
 import java.util.*;
 import java.util.function.Consumer;

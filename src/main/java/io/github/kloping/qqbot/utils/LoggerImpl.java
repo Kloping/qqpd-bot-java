@@ -2,6 +2,7 @@ package io.github.kloping.qqbot.utils;
 
 import io.github.kloping.spt.interfaces.Logger;
 import org.fusesource.jansi.Ansi;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.BufferedWriter;
@@ -18,13 +19,16 @@ import java.util.Date;
 public class LoggerImpl implements Logger {
     public static final LoggerImpl INSTANCE = new LoggerImpl();
 
+    private final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger("io.github.kloping.qqbot");
+
     public static final Color NORMAL_LOW_COLOR = new Color(116, 117, 116, 224);
     public static final Color NORMAL_COLOR = new Color(202, 206, 199, 247);
     public static final Color INFO_COLOR = new Color(24, 220, 85, 247);
     public static final Color DEBUG_COLOR = new Color(234, 213, 103, 247);
     public static final Color ERROR_COLOR = new Color(224, 17, 106, 247);
 
-    private int logLevel = 0;
+    /** 默认过滤 Normal，只输出 Info、Debug 和 Error。 */
+    private int logLevel = 1;
 
     private SimpleDateFormat df = new SimpleDateFormat("MM/dd-HH:mm:ss:SSS");
     private String prefix = "[github.kloping.ST]";
@@ -69,7 +73,16 @@ public class LoggerImpl implements Logger {
      * @param path
      */
     @Override
-    public void setOutFile(String path) {
+    public synchronized void setOutFile(String path) {
+        if (writer != null) {
+            try {
+                writer.close();
+            } catch (IOException ignored) {
+            }
+            writer = null;
+        }
+        file = null;
+        updd = null;
         this.logFileDir = path;
     }
 
@@ -114,6 +127,7 @@ public class LoggerImpl implements Logger {
             if (level != -1 && level < logLevel) {
             } else e.printStackTrace();
         }
+        if (level != -1 && level < logLevel) return;
         if (logFileDir != null) {
             try {
                 BufferedWriter writer = getWriter();
@@ -131,8 +145,20 @@ public class LoggerImpl implements Logger {
                 e.printStackTrace();
             }
         }
-        if (level != -1 && level < logLevel) return;
-        System.out.println(out);
+        String consoleLog = out == null ? log : out;
+        if (level == -1) slf4jLogger.error(consoleLog);
+        else if (level == 2) slf4jLogger.debug(consoleLog);
+        else slf4jLogger.info(consoleLog);
+        // SDK 自己管理文件时保留控制台输出；关闭文件后交给宿主 SLF4J/Logback 管理。
+        if (logFileDir != null) System.out.println(consoleLog);
+    }
+
+    /**
+     * 设置日志级别：-1 输出全部，0 输出 Normal 及以上，1 默认，2 仅输出 Debug 和 Error。
+     */
+    public int setLogLevel(int level) {
+        if (level < -1 || level > 2) throw new IllegalArgumentException("logLevel must be between -1 and 2");
+        return logLevel = level;
     }
 
     private BufferedWriter writer = null;
@@ -148,16 +174,11 @@ public class LoggerImpl implements Logger {
     private void setWriter(File f0) {
         try {
             if (writer != null) writer.close();
-            if (!f0.exists()) f0.getParentFile().mkdirs();
+            if (!f0.exists() && f0.getParentFile() != null) f0.getParentFile().mkdirs();
             writer = new BufferedWriter(new FileWriter(f0, true));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public int setLogLevel(int level) {
-        return logLevel = level;
     }
 
     @Override

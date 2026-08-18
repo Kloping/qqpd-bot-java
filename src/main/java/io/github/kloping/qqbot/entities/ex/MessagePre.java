@@ -1,6 +1,6 @@
 package io.github.kloping.qqbot.entities.ex;
 
-import io.github.kloping.judge.Judge;
+ import io.github.kloping.spt.util.Judge;;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderAndCidMidGetter;
 import io.github.kloping.qqbot.entities.qqpd.Dms;
