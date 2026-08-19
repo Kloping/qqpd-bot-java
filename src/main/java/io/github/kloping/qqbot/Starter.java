@@ -122,6 +122,7 @@ public class Starter implements Runnable {
         LoggerImpl.INSTANCE.setLogLevel(config.getLogLevel());
         LoggerImpl.INSTANCE.setOutFile(config.isLogToFile() ? config.getLogFileDir() : null);
         APPLICATION.logger.setPrefix("[qgpd-bot]");
+        APPLICATION.logger.info("Bot starting");
         APPLICATION.run0(Start0.class);
         after();
     }
@@ -156,6 +157,7 @@ public class Starter implements Runnable {
         }
         Future future = config.getWebSocketExecutor().submit(wssWorker);
         APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
+        APPLICATION.logger.info("WebSocket connection task submitted");
     }
 
     public void setReconnect(Boolean reconnect) {

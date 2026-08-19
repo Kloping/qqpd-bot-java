@@ -114,7 +114,7 @@ starter.getConfig().setLogLevel(0);
 // 自定义日志文件路径
 starter.getConfig().setLogFileDir("./logs/qqbot-%s.log");
 
-// 关闭 SDK 自己的文件输出，只通过 SLF4J/Logback 输出
+// 关闭 SDK 自己的文件输出；控制台始终通过 SLF4J/Logback 输出
 starter.getConfig().setLogToFile(false);
 
 starter.run();
@@ -136,7 +136,7 @@ LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
 
 #### Spring Boot 项目中的日志配置
 
-在 Spring Boot 项目中，建议关闭 SDK 自己的文件输出，由 Spring Boot 的 Logback 统一管理文件和控制台：
+在 Spring Boot 项目中，控制台日志始终由 Spring Boot 的 Logback 输出，因此 `logging.pattern.console` 会生效。建议关闭 SDK 自己的文件输出，由 Spring Boot 统一管理文件：
 
 `application.yml`：
 

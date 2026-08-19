@@ -146,11 +146,29 @@ public class LoggerImpl implements Logger {
             }
         }
         String consoleLog = out == null ? log : out;
+        if (!isSpringBootPresent() || isSlf4jUnavailable()) {
+            System.out.println(consoleLog);
+            return;
+        }
         if (level == -1) slf4jLogger.error(consoleLog);
         else if (level == 2) slf4jLogger.debug(consoleLog);
         else slf4jLogger.info(consoleLog);
-        // SDK 自己管理文件时保留控制台输出；关闭文件后交给宿主 SLF4J/Logback 管理。
-        if (logFileDir != null) System.out.println(consoleLog);
+        // 控制台统一由宿主 SLF4J/Logback 管理，以便应用配置日志格式。
+    }
+
+    private boolean isSlf4jUnavailable() {
+        return LoggerFactory.getILoggerFactory().getClass().getName()
+                .equals("org.slf4j.helpers.NOPLoggerFactory");
+    }
+
+    private boolean isSpringBootPresent() {
+        try {
+            Class.forName("org.springframework.boot.SpringApplication", false,
+                    LoggerImpl.class.getClassLoader());
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            return false;
+        }
     }
 
     /**
