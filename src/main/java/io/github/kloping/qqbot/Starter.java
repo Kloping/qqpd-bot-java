@@ -6,7 +6,7 @@ import io.github.kloping.qqbot.interfaces.FileUploadInterceptor;
 import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.qqbot.network.WebSocketListener;
 import io.github.kloping.qqbot.network.WssWorker;
-import io.github.kloping.qqbot.utils.LoggerImpl;
+import io.github.kloping.qqbot.utils.StandaloneLogging;
 import io.github.kloping.spt.StarterObjectApplication;
 import io.github.kloping.spt.annotations.Entity;
 import io.github.kloping.spt.interfaces.AutomaticWiringValue;
@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +25,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
-
-import static io.github.kloping.spt.PartUtils.getExceptionLine;
 
 /**
  * <h3>一般启动方式</h3>
@@ -70,7 +69,12 @@ import static io.github.kloping.spt.PartUtils.getExceptionLine;
  *
  * @author github.kloping
  */
+@Slf4j
 public class Starter implements Runnable {
+    static {
+        StandaloneLogging.configure();
+    }
+
     public static final String SANDBOX_NET_MAIN = "https://sandbox.api.sgroup.qq.com/";
     public static final String NET_MAIN = "https://api.sgroup.qq.com/";
     public String net = NET_MAIN;
@@ -104,25 +108,20 @@ public class Starter implements Runnable {
     public Starter(String appid, String secret) {
         this.getConfig().setAppid(appid);
         this.getConfig().setSecret(secret);
-        APPLICATION.logger = LoggerImpl.INSTANCE;
     }
 
     @Override
     public synchronized void run() {
         if (started) {
-            APPLICATION.logger.info("Bot already started, ignore duplicate start");
+            log.info("Bot already started, ignore duplicate start");
             return;
         }
         started = true;
         APPLICATION.PRE_SCAN_RUNNABLE.add(() -> {
-            APPLICATION.INSTANCE.getContextManager().append(APPLICATION.logger);
             APPLICATION.INSTANCE.getContextManager().append(APPLICATION.INSTANCE);
             APPLICATION.INSTANCE.getContextManager().append(getConfig(), CONFIG_ID);
         });
-        LoggerImpl.INSTANCE.setLogLevel(config.getLogLevel());
-        LoggerImpl.INSTANCE.setOutFile(config.isLogToFile() ? config.getLogFileDir() : null);
-        APPLICATION.logger.setPrefix("[qgpd-bot]");
-        APPLICATION.logger.info("Bot starting");
+        log.info("Bot starting");
         APPLICATION.run0(Start0.class);
         after();
     }
@@ -152,12 +151,12 @@ public class Starter implements Runnable {
             try {
                 automaticWiringValue.wiring(config.getWebSocketListener(), contextManager);
             } catch (Exception e) {
-                APPLICATION.logger.error(e.getMessage() + "\n\tat " + getExceptionLine(e));
+                log.error("WebSocket listener wiring failed", e);
             }
         }
         Future future = config.getWebSocketExecutor().submit(wssWorker);
         APPLICATION.INSTANCE.getContextManager().append(future, MAIN_FUTURE_ID);
-        APPLICATION.logger.info("WebSocket connection task submitted");
+        log.info("WebSocket connection task submitted");
     }
 
     public void setReconnect(Boolean reconnect) {
@@ -185,7 +184,7 @@ public class Starter implements Runnable {
                 }
             }
         } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: cancel main future failed: " + e.getMessage());
+            log.error("shutdown: cancel main future failed", e);
         }
 
         //3. 关闭 WebSocket 连接
@@ -194,7 +193,7 @@ public class Starter implements Runnable {
                 wssWorker.webSocket.closeBlocking();
             }
         } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: close websocket failed: " + e.getMessage());
+            log.error("shutdown: close websocket failed", e);
         }
 
         //4. 关闭 WebHook 服务(如果开启了)
@@ -206,13 +205,13 @@ public class Starter implements Runnable {
                 }
             }
         } catch (Exception e) {
-            APPLICATION.logger.error("shutdown: stop webhook server failed: " + e.getMessage());
+            log.error("shutdown: stop webhook server failed", e);
         }
 
         //5. 关闭 SDK 自己创建的线程池，用户传入的线程池由用户管理
         config.shutdownExecutors();
 
-        APPLICATION.logger.info("Bot shutdown complete");
+        log.info("Bot shutdown complete");
     }
 
     public void registerListenerHost(ListenerHost listenerHost) {
@@ -230,8 +229,7 @@ public class Starter implements Runnable {
             try {
                 APPLICATION.INSTANCE.getClassManager().add(cla);
             } catch (Exception e) {
-                APPLICATION.logger.error("An error occurred in the registration class " + cla.getSimpleName());
-                APPLICATION.logger.error("\n\tat " + getExceptionLine(e));
+                log.error("An error occurred in the registration class {}", cla.getSimpleName(), e);
             }
         });
     }
@@ -256,12 +254,6 @@ public class Starter implements Runnable {
         private Set<ListenerHost> listenerHosts = new HashSet<>();
         private FileUploadInterceptor interceptor0;
         private WebSocketListener webSocketListener;
-        /** 是否启用 SDK 自己的日志文件，默认开启；关闭后由宿主日志框架管理输出。 */
-        private boolean logToFile = true;
-        /** 日志文件路径，必须包含一个用于日期的 %s。 */
-        private String logFileDir = "./logs/%s.log";
-        /** 日志级别：1 默认过滤 Normal；0 输出 Normal；2 仅输出 Debug 和 Error；-1 输出全部。 */
-        private int logLevel = 1;
         private transient ExecutorService eventExecutor = Executors.newFixedThreadPool(8);
         private transient ExecutorService webSocketExecutor = Executors.newSingleThreadExecutor();
         private transient ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();

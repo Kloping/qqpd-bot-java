@@ -21,6 +21,7 @@
 - **[事件 event](event.md)**
 - **[消息发送 message](message.md)**
 - **[网络相关配置](network.md)**
+- **[日志相关配置](logging.md)**
 - **[V2群相关](v2.md)**
 
 <hr>
@@ -86,88 +87,43 @@ sender.send(image);
 
 #### 日志设置
 
-日志通过 SLF4J 输出，SDK 默认同时输出到控制台和日志文件。
-所有日志配置都需要在 `starter.run()` 之前设置。
+SDK 全部日志通过 SLF4J 输出，源码使用类级 `@Slf4j` 生成的 `log.trace`、`log.debug`、`log.info`、`log.warn` 和 `log.error`。日志等级、格式、文件输出和颜色由宿主日志实现管理。
 
-| 配置 | 默认值 | 说明 |
-| --- | --- | --- |
-| `logLevel` | `1` | 默认不输出 `Normal`，输出 `Info`、`Debug` 和 `Error` |
-| `logToFile` | `true` | 是否由 SDK 自己写日志文件 |
-| `logFileDir` | `./logs/%s.log` | 日志文件路径，`%s` 会替换为日期 |
+旧版 `LoggerImpl`、`starter.APPLICATION.logger`、`Config.logLevel`、`logToFile` 与 `logFileDir` 已删除，不能再用于配置日志。
 
-日志级别说明：
+#### 独立运行
 
-- `-1`：输出全部日志
-- `0`：输出 `Normal`、`Info`、`Debug` 和 `Error`
-- `1`：默认设置，不输出 `Normal`
-- `2`：只输出 `Debug` 和 `Error`
+直接运行 SDK 时，使用可选的 Logback provider 输出到标准输出。默认等级为 `INFO`，默认控制台格式为：
 
-```java
-Starter starter = new Starter("appid", "secret");
-
-// 默认：控制台 + ./logs/yyyy-MM-dd.log，Normal 不输出
-starter.getConfig().setLogLevel(1);
-
-// 输出 Normal 日志，例如 logger.log("...") 产生的日志
-starter.getConfig().setLogLevel(0);
-
-// 自定义日志文件路径
-starter.getConfig().setLogFileDir("./logs/qqbot-%s.log");
-
-// 关闭 SDK 自己的文件输出；控制台始终通过 SLF4J/Logback 输出
-starter.getConfig().setLogToFile(false);
-
-starter.run();
+```text
+%clr([%thread]){blue} %clr(%-32.32logger{48}){magenta} %clr(%d{yyyy-MM-dd HH:mm:ss}){red} %clr(%-5p): %clr(%msg){light_green}%n
 ```
 
-如果需要在运行过程中调整全局日志对象，可以直接使用 SDK 的日志对象：
+可使用 JVM 参数覆盖默认设置：
 
-```java
-starter.run();
-
-LoggerImpl.INSTANCE.setLogLevel(0); // 开启 Normal
-LoggerImpl.INSTANCE.setOutFile("./logs/%s.log");
-LoggerImpl.INSTANCE.setPrefix("[my-bot]");
-LoggerImpl.INSTANCE.setFormat(new SimpleDateFormat("MM/dd-HH:mm:ss:SSS"));
-LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
+```text
+-Dqqbot.logging.level=DEBUG
+-Dqqbot.logging.color=false
+-Dqqbot.logging.pattern="[%thread] %-32.32logger{32} %d{yyyy-MM-dd HH:mm:ss} %-5p: %msg%n"
 ```
 
-其中 `setFormat` 控制日志行中的时间格式，`dfn` 控制日志文件名中的日期格式。
+`qqbot.logging.level` 支持 `TRACE`、`DEBUG`、`INFO`、`WARN`、`ERROR`、`OFF` 等 Logback 标准等级。设置 `qqbot.logging.color=false` 可禁用 ANSI 颜色。未指定颜色的 `%clr(...)` 会按级别着色：`ERROR` 红、`WARN` 黄、`INFO` 绿、`DEBUG` 青。自定义模式支持 `black`、`red`、`green`、`light_green`、`yellow`、`blue`、`magenta`、`cyan` 和 `white`。
 
 #### Spring Boot 项目中的日志配置
 
-在 Spring Boot 项目中，控制台日志始终由 Spring Boot 的 Logback 输出，因此 `logging.pattern.console` 会生效。建议关闭 SDK 自己的文件输出，由 Spring Boot 统一管理文件：
+检测到 Spring Boot 后，SDK 不会创建或修改 appender，也不会修改日志等级、颜色或输出格式。SDK 的默认 Logback provider 为 Maven 可选依赖，不会传递到 Spring Boot 用户项目。
 
-`application.yml`：
+请使用 Spring Boot 标准日志配置：
 
 ```yaml
-qqbot:
-  log-level: 1       # 0 开启 Normal，1 默认过滤 Normal，2 仅 Debug/Error，-1 全部
-  log-to-file: false # 交给 Spring Boot 管理文件输出
-
 logging:
   level:
-    io.github.kloping.qqbot: INFO # 输出 Info/Error；需要 Debug 时改为 DEBUG
-  file:
-    name: logs/qqbot.log
+    io.github.kloping.qqbot: DEBUG
+  pattern:
+    console: "%clr([%thread]){blue} %clr(%-32.32logger{48}){magenta} %clr(%d{yyyy-MM-dd HH:mm:ss}){red} %clr(%-5p): %clr(%msg){light_green}%n"
 ```
 
-读取配置并应用到 SDK：
-
-```java
-@Bean
-public Starter qqBot(Environment environment) {
-    Starter starter = new Starter("appid", "secret");
-    starter.getConfig().setLogLevel(
-            environment.getProperty("qqbot.log-level", Integer.class, 1));
-    starter.getConfig().setLogToFile(
-            environment.getProperty("qqbot.log-to-file", Boolean.class, false));
-    starter.run();
-    return starter;
-}
-```
-
-如果希望 Spring Boot 同时输出 `Normal`，除了将 `qqbot.log-level` 设置为 `0`，还需要保证 `io.github.kloping.qqbot` 的 Logback 级别允许输出 `INFO`。
+也可在 `logback-spring.xml` 中配置 `io.github.kloping.qqbot` logger、控制台 appender 和文件 appender。Spring Boot 的配置优先，且不会被 SDK 覆盖。
 <hr>
 
 

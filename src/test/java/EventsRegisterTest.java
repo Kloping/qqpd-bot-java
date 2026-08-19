@@ -9,15 +9,15 @@ import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
  * @author github.kloping
  */
+@Slf4j
 public class EventsRegisterTest extends ListenerHost {
     private Starter starter;
-    private Logger logger;
     @Test
     public void testBefore() throws Throwable {
 //        String appid = System.getProperty("appid");
@@ -31,10 +31,11 @@ public class EventsRegisterTest extends ListenerHost {
 //        starter.run();
 //        logger = starter.APPLICATION.logger;
 //        TimeUnit.SECONDS.sleep(8);
-        System.out.println("测试通过.");
+        log.info("测试通过.");
     }
 
     @Entity
+    @Slf4j
     public static class TestEventsRegister implements Events.EventRegister {
 
         public static final String TEST_EVENT = "TEST_EVENT";
@@ -50,8 +51,8 @@ public class EventsRegisterTest extends ListenerHost {
         @Override
         public Event handle(String t, JSONObject mateData, RawMessage message) {
             if (TEST_EVENT.equals(TEST_EVENT)) {
-                bot.logger.info("=====================================");
-                bot.logger.waring(TEST_EVENT + " handle for raw " + mateData);
+                log.info("=====================================");
+                log.warn("{} handle for raw {}", TEST_EVENT, mateData);
             }
             return null;
         }
@@ -63,7 +64,7 @@ public class EventsRegisterTest extends ListenerHost {
 
     @EventReceiver
     public void online(ConnectedEvent event) {
-        logger.info("bot online start test");
+        log.info("bot online start test");
         test();
     }
 

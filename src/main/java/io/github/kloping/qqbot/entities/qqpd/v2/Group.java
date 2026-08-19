@@ -53,7 +53,7 @@ public class Group extends Contact implements SenderV2 {
         } else {
             result = bot.groupBaseV2.sendFile(getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}", msg.getFile_type(), Base64.getEncoder().encodeToString(msg.getBytes())), Channel.SEND_MESSAGE_HEADERS);
         }
-        result.logFileInfo(bot.logger, msg);
+        result.logFileInfo(msg);
         V2MsgData data = new V2MsgData();
         data.setMedia(new V2MsgData.Media(result.getFile_info()));
         return bot.groupBaseV2.send(getOpenid(), data.toString(), SEND_MESSAGE_HEADERS);

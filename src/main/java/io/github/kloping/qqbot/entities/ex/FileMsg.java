@@ -118,7 +118,7 @@ public abstract class FileMsg implements SendAble {
             } else {
                 result = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}", getFile_type(), Base64.getEncoder().encodeToString(bytes)), Channel.SEND_MESSAGE_HEADERS);
             }
-            result.logFileInfo(er.getBot().logger, this);
+            result.logFileInfo(this);
             V2MsgData data = new V2MsgData();
             data.setMsg_type(7);
             if (Judge.isNotEmpty(er.getMid())) data.setMsg_id(er.getMid());

@@ -9,7 +9,6 @@ import io.github.kloping.qqbot.network.Events;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.AutoStandAfter;
 import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
 
 /**
  * @author github.kloping
@@ -29,9 +28,6 @@ public class InterActionEventRegister implements Events.EventRegister {
 
     @AutoStand
     Bot bot;
-
-    @AutoStand
-    Logger logger;
 
     @Override
     public Event handle(String t, JSONObject mateData, RawMessage message) {

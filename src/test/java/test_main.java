@@ -16,7 +16,6 @@ public class test_main {
         starter.setReconnect(true);
         starter.run();
         // 设置日志等级 一般情况无需设置
-        // starter.APPLICATION.logger.setLogLevel(0);
     }
 
     public static Starter factory() {

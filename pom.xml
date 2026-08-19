@@ -6,7 +6,7 @@
 
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.4-R1-SNAPSHOT</version>
+    <version>1.5.4-L2-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>bot-qqpd-java</name>
@@ -39,23 +39,28 @@
         </developer>
     </developers>
     <properties>
-        <java.version>8</java.version>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
             <groupId>io.github.kloping</groupId>
             <artifactId>SpringTool</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.2-L1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.13</version>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.20</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.java-websocket</groupId>
@@ -76,11 +81,6 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>4.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>2.4.0</version>
         </dependency>
         <dependency>
             <!-- Bouncy Castle for Ed25519 support q.qq校验 -->

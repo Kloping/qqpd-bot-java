@@ -8,9 +8,9 @@ import io.github.kloping.qqbot.interfaces.OnPackReceive;
 import io.github.kloping.qqbot.network.hookauth.HookAuth;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.interfaces.component.ContextManager;
 import io.github.kloping.spt.util.Judge;
+import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -30,6 +30,7 @@ import static io.github.kloping.qqbot.Resource.GSON;
  * @author github.kloping
  */
 @Entity
+@Slf4j
 public class WssWorker implements Runnable {
 
     @AutoStand
@@ -37,9 +38,6 @@ public class WssWorker implements Runnable {
 
     @AutoStand
     private BotBase botBase;
-
-    @AutoStand
-    private Logger logger;
 
     @AutoStand
     HookAuth hookAuth;
@@ -69,19 +67,19 @@ public class WssWorker implements Runnable {
                     else uri = new URI(config.getWslink());
                 }
             } catch (NullPointerException ex) {
-                logger.error(String.format("%s Probably The APPID or TOKEN is incorrect", ex.getClass().getName()));
+                log.error("{} Probably The APPID or TOKEN is incorrect", ex.getClass().getName());
                 return;
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                log.error("Invalid WebSocket URI", e);
             }
-            logger.log("ws url:" + uri);
+            log.debug("ws url: {}", uri);
             if (webSocket != null && !webSocket.isClosed()) webSocket.close();
             webSocket = new WebSocketClient(uri) {
 
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     if (preMethods(serverHandshake)) return;
-                    if (!reconnecting) logger.info("wss opened");
+                    if (!reconnecting) log.info("wss opened");
                 }
 
                 @Override
@@ -90,9 +88,9 @@ public class WssWorker implements Runnable {
                         if (!config.getWebSocketListener().onMessage(webSocket, s))
                             return;
                     Pack pack = GSON.fromJson(s, Pack.class);
-                    logger.log(String.format("websocket-r: %s", s));
+                    log.debug("websocket-r: {}", s);
                     if (pack == null) {
-                        logger.error(String.format("message pack parse error (%s)", s));
+                        log.error("message pack parse error ({})", s);
                     } else {
                         for (OnPackReceive onPackReceive : onPackReceives) {
                             if (onPackReceive.onReceive(pack)) break;
@@ -105,14 +103,14 @@ public class WssWorker implements Runnable {
                 public void send(String msg) throws NotYetConnectedException {
                     if (preMethods(msg)) return;
                     super.send(msg);
-                    logger.log("wss send: " + msg);
+                    log.debug("wss send: {}", msg);
                     msgs++;
                 }
 
                 @Override
                 public void onClose(int i, String s, boolean b) {
                     if (preMethods(i, s, b)) return;
-                    logger.waring("wss closed with code " + i + " " + s);
+                    log.warn("wss closed with code {} {}", i, s);
                     for (OnCloseListener onCloseListener : closeListeners) {
                         onCloseListener.onClose(i, webSocket);
                     }
@@ -121,21 +119,19 @@ public class WssWorker implements Runnable {
                 @Override
                 public void onError(Exception e) {
                     if (preMethods(e)) return;
-                    logger.error("wss error");
-                    e.printStackTrace();
+                    log.error("wss error", e);
                 }
             };
             //两次心跳的时间
             webSocket.setConnectionLostTimeout(86);
             webSocket.connectBlocking(10, TimeUnit.SECONDS);
         } catch (Exception e) {
-            logger.error("在WebSocketClient启动时失败");
-            e.printStackTrace();
+            log.error("WebSocketClient startup failed", e);
             if (!config.getReconnect()) return;
             try {
                 TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException ex) {
-                e.printStackTrace();
+                log.warn("WebSocket reconnect wait interrupted", ex);
             }
             closeListeners.forEach(ocl -> ocl.onClose(AuthAndHeartbeat.CODE_ERROR, webSocket));
         }

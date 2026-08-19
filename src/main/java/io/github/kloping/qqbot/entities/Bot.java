@@ -6,7 +6,6 @@ import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.http.*;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
 import lombok.Getter;
 
 import java.util.Collection;
@@ -18,9 +17,6 @@ import java.util.Map;
  */
 @Entity
 public class Bot {
-    @AutoStand
-    public Logger logger;
-
     @AutoStand
     public InterActionBase interActionBase;
 

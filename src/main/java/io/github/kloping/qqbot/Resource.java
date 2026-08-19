@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.github.kloping.qqbot.api.exc.RequestException;
 import io.github.kloping.qqbot.impl.exc.InvalidRequestException;
 import io.github.kloping.spt.annotations.Entity;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
  * @author github.kloping
  */
 @Entity
+@Slf4j
 public class Resource {
     public static final Gson GSON = new Gson();
 
@@ -23,7 +25,7 @@ public class Resource {
     }
 
     public static void print() {
-        System.out.println("\n" +
+        log.info("\n" +
                 "                                 __               __                 __                                                    \n" +
                 "                                /\\ \\             /\\ \\               /\\ \\__             __                                  \n" +
                 "   __         __       _____    \\_\\ \\            \\ \\ \\____    ___   \\ \\ ,_\\           /\\_\\       __      __  __     __     \n" +
@@ -32,6 +34,6 @@ public class Resource {
                 "\\ \\___, \\  \\ \\___, \\   \\ \\ ,__/\\ \\___,_\\\\/______/   \\ \\_,__/\\ \\____/   \\ \\__\\\\/______/ _\\ \\ \\ \\ \\__/.\\_\\ \\ \\___/ \\ \\__/.\\_\\\n" +
                 " \\/___/\\ \\  \\/___/\\ \\   \\ \\ \\/  \\/__,_ /             \\/___/  \\/___/     \\/__/         /\\ \\_\\ \\ \\/__/\\/_/  \\/__/   \\/__/\\/_/\n" +
                 "      \\ \\_\\      \\ \\_\\   \\ \\_\\                                                        \\ \\____/                             \n" +
-                "       \\/_/       \\/_/    \\/_/                                                         \\/___/               v1.5.4-R1-SNAPSHOT           \n");
+                "       \\/_/       \\/_/    \\/_/                                                         \\/___/               v1.5.4-L2-SNAPSHOT           \n");
     }
 }

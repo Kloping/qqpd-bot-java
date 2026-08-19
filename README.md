@@ -7,7 +7,7 @@
 
 ## QQ机器人 Java/JVM/kotlin SDK
 
-> 非官方 可用于 Java 8+
+> 非官方 可用于 Java 11+
 
 Java SDK主要基于[基础 API (opens new window)](https://bot.q.qq.com/wiki/develop/api-v2/)封装，提供给用户一种简单、高效的使用方式。
 
@@ -33,13 +33,13 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.4-R1-SNAPSHOT</version>
+    <version>1.5.4-L2-SNAPSHOT</version>
 </dependency>
 ```
 
 Gradle
  
-    implementation 'io.github.kloping:bot-qqpd-java:1.5.4-R1-SNAPSHOT'
+    implementation 'io.github.kloping:bot-qqpd-java:1.5.4-L2-SNAPSHOT'
 
 ### 使用前提
 
@@ -59,9 +59,6 @@ Gradle
     // webhook 链接方式
     //starter.getConfig().setWebhookport(81);
     starter.run();
-    // 设置日志前缀
-    //starter.APPLICATION.logger.setPrefix("[qgpd-bot]");
-    //
 ```
 
 > #### V1.5.0-Beta7+ 注册监听器主机方式 [荐]
@@ -101,24 +98,6 @@ import io.github.kloping.qqbot.api.Intents;
 import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
 import io.github.kloping.qqbot.api.message.MessageDirectReceiveEvent;
 import io.github.kloping.qqbot.impl.ListenerHost;
-```
-
-### 部分配置
-```java
-public class ConfigExample{
-    public static void main(String[] args) {
-        // on starter.run()... after
-        // 日志等级设置为0在控制台展示所有日志
-        starter.APPLICATION.logger.setLogLevel(0);
-        // 设置日志前缀
-        starter.APPLICATION.logger.setPrefix("[qgpd-bot]");
-        //日志文件路径
-        LoggerImpl.INSTANCE.logFileDir = "./logs/%s.log";
-        //日志文件格式
-        LoggerImpl.INSTANCE.dfn = new SimpleDateFormat("/yyyy-MM-dd");
-        
-    }
-}
 ```
 
 更多使用方式参考查看 [test](./src/test/java)

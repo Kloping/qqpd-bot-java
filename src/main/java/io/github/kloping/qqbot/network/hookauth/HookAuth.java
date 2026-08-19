@@ -9,9 +9,9 @@ import io.github.kloping.qqbot.network.AuthAndHeartbeat;
 import io.github.kloping.qqbot.network.WssWorker;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
-import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.util.IoUtils;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.KeyGenerationParameters;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
@@ -40,14 +40,12 @@ import static io.github.kloping.spt.PartUtils.getExceptionLine;
  * @date 2025/4/18-10:02
  */
 @Entity
+@Slf4j
 public class HookAuth {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
-
-    @AutoStand
-    private Logger logger;
 
     @AutoStand
     WssWorker wssWorker;
@@ -68,9 +66,9 @@ public class HookAuth {
             // 健康检查端点 便于区分"端口死了"还是"业务path挂了"
             httpServer.createContext("/health", exchange -> writeResponse(exchange, 200, "ok"));
             httpServer.start();
-            logger.info(String.format(BaseConnectedEvent.FORMAT_SERVER, config.getAppid()));
+            log.info(BaseConnectedEvent.FORMAT_SERVER, config.getAppid());
         } catch (IOException e) {
-            logger.error("在WebHook服务启动时失败\n" + getExceptionLine(e));
+            log.error("在WebHook服务启动时失败", e);
         }
     }
 
@@ -85,14 +83,14 @@ public class HookAuth {
         int status = 200;
         try {
             String body = new String(IoUtils.readAll(exchange.getRequestBody()), StandardCharsets.UTF_8);
-            logger.log(String.format("webhook-r: %s", body));
+            log.debug("webhook-r: {}", body);
             Pack pack = null;
             try {
                 if (body != null && !body.trim().isEmpty()) {
                     pack = GSON.fromJson(body, Pack.class);
                 }
             } catch (Exception e) {
-                logger.waring("WebHook请求体解析失败: " + getExceptionLine(e));
+                log.warn("WebHook请求体解析失败", e);
             }
             if (pack == null || pack.getOp() == null) {
                 // 空body / 浏览器直接GET / 非法JSON 直接返回 400 避免后续 NPE
@@ -112,18 +110,18 @@ public class HookAuth {
                         resp = String.valueOf(isValid);
                     }
                 } catch (Exception e) {
-                    logger.error("验证签名报错(不影响接收和发送)：\n" + getExceptionLine(e));
+                    log.error("验证签名报错（不影响接收和发送）", e);
                 }
                 final Pack fpack = pack;
                 wssWorker.getOnPackReceives().stream().filter(o -> !(o instanceof AuthAndHeartbeat))
                         .forEach(p -> p.onReceive(fpack));
             }
         } catch (Exception e) {
-            logger.error("WebHook服务处理请求异常：\n" + getExceptionLine(e));
+            log.error("WebHook服务处理请求异常", e);
             status = 500;
             resp = "{}";
         } finally {
-            logger.log("WebHook服务响应: " + resp);
+            log.debug("WebHook服务响应: {}", resp);
             writeResponse(exchange, status, resp);
         }
     }
@@ -141,7 +139,7 @@ public class HookAuth {
                 os.write(bytes);
             }
         } catch (Exception e) {
-            logger.error("WebHook服务写响应失败：\n" + getExceptionLine(e));
+            log.error("WebHook服务写响应失败", e);
         } finally {
             exchange.close();
         }
@@ -153,7 +151,7 @@ public class HookAuth {
 
     private String auth(String body, Pack pack, HttpExchange exchange) {
         try {
-            logger.info("验证有效性...");
+            log.info("验证有效性...");
             KeyPair keyPair = getKeyPair();
             Map<String, String> packD = (Map<String, String>) pack.getD();
             String plain_token = packD.get("plain_token");
@@ -162,7 +160,7 @@ public class HookAuth {
             byte[] signature = signMessage(keyPair.getPrivate(), message);
             return String.format("{\"plain_token\": \"%s\", \"signature\": \"%s\"}", plain_token, bytesToHex(signature));
         } catch (Exception e) {
-            logger.error("验证失败：\n" + getExceptionLine(e));
+            log.error("验证失败", e);
             return "{}";
         }
     }
@@ -172,7 +170,7 @@ public class HookAuth {
         try {
             byte[] sig = Hex.decode(signatureHex);
             if (sig.length != 64 || (sig[63] & 0xE0) != 0) {
-                logger.waring("Invalid signature format");
+                log.warn("Invalid signature format");
                 return false;
             }
             ByteArrayOutputStream msg = new ByteArrayOutputStream();
@@ -183,7 +181,7 @@ public class HookAuth {
             verifier.update(msg.toByteArray(), 0, msg.size());
             return verifier.verifySignature(sig);
         } catch (Exception e) {
-            logger.error("验证签名报错：\n" + getExceptionLine(e));
+            log.error("验证签名报错", e);
             return false;
         }
     }

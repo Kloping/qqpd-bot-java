@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.github.kloping.qqbot.entities.ex.FileMsg;
 import io.github.kloping.qqbot.entities.exceptions.FileMsgUploadFailedException;
-import io.github.kloping.spt.interfaces.Logger;
 import io.github.kloping.spt.util.Judge;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
  * @author github.kloping
  */
 @Data
+@Slf4j
 public class V2Result {
     private String id;
     private Long timestamp;
@@ -48,10 +49,10 @@ public class V2Result {
         else return data.getString("file_uuid");
     }
 
-    public void logFileInfo(Logger logger, FileMsg image) {
+    public void logFileInfo(FileMsg image) {
         if (file_uuid == null)
             throw new FileMsgUploadFailedException(String.format("Failed to upload image(%s)", image.getUrl()));
-        logger.info("file uuid: " + file_uuid);
+        log.info("file uuid: {}", file_uuid);
     }
 
     @JSONField(deserialize = false, serialize = false)

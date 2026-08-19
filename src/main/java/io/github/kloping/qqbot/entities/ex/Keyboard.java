@@ -11,6 +11,7 @@ import io.github.kloping.qqbot.entities.qqpd.message.RawPreMessage;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +26,7 @@ import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS
  *
  * @author github.kloping
  */
+@Slf4j
 public class Keyboard implements SendAble {
     @Getter
     private String id = null;
@@ -48,7 +50,7 @@ public class Keyboard implements SendAble {
     @Override
     public Result send(SenderAndCidMidGetter er) {
         if (id != null) {
-            er.getBot().logger.error("keyboard id is not null.");
+            log.error("keyboard id is not null.");
             return null;
         }
         if (er.getEnvType().isV2()) {

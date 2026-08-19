@@ -117,7 +117,7 @@ public class MessageChain implements SendAble, List<SendAble> {
                         fileResult = v2.getV2().sendFile(er.getCid(), String.format("{\"file_type\": %s,\"file_data\": \"%s\",\"srv_send_msg\": false}",
                                 fileMsg.getFile_type(), Base64.getEncoder().encodeToString(fileMsg.getBytes())), Channel.SEND_MESSAGE_HEADERS);
                     }
-                    fileResult.logFileInfo(er.getBot().logger, fileMsg);
+                    fileResult.logFileInfo(fileMsg);
                     message.setMsg_type(7);
                     message.setMedia(new V2MsgData.Media(fileResult.getFile_info()));
                     hasMessage = true;
