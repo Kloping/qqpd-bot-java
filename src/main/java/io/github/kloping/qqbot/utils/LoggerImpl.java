@@ -145,15 +145,14 @@ public class LoggerImpl implements Logger {
                 e.printStackTrace();
             }
         }
-        String consoleLog = out == null ? log : out;
         if (!isSpringBootPresent() || isSlf4jUnavailable()) {
-            System.out.println(consoleLog);
+            System.out.println(out == null ? log : out);
             return;
         }
-        if (level == -1) slf4jLogger.error(consoleLog);
-        else if (level == 2) slf4jLogger.debug(consoleLog);
-        else slf4jLogger.info(consoleLog);
-        // 控制台统一由宿主 SLF4J/Logback 管理，以便应用配置日志格式。
+        if (level == -1) slf4jLogger.error(log);
+        else if (level == 2) slf4jLogger.debug(log);
+        else slf4jLogger.info(log);
+        // Spring Boot 交由宿主 SLF4J/Logback 负责颜色与格式，避免 SDK ANSI 颜色覆盖宿主配置。
     }
 
     private boolean isSlf4jUnavailable() {
