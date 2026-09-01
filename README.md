@@ -33,13 +33,13 @@ Maven
 <dependency>
     <groupId>io.github.kloping</groupId>
     <artifactId>bot-qqpd-java</artifactId>
-    <version>1.5.4-L1</version>
+    <version>1.5.4-R1-SNAPSHOT</version>
 </dependency>
 ```
 
 Gradle
  
-    implementation 'io.github.kloping:bot-qqpd-java:1.5.4-L1'
+    implementation 'io.github.kloping:bot-qqpd-java:1.5.4-R1-SNAPSHOT'
 
 ### 使用前提
 

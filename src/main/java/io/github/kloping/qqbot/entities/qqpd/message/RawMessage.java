@@ -171,11 +171,13 @@ public class RawMessage implements SenderAndCidMidGetter, DeleteAble, Reactive, 
     }
 
     @Override
+    @JSONField(serialize = false, deserialize = false)
     public PinsMessage getPins() {
         return getBot().channelBase.getPins(getChannelId());
     }
 
     @Override
+    @JSONField(serialize = false, deserialize = false)
     public BaseV2 getV2() {
         return envType == EnvType.GROUP ? bot.groupBaseV2 : envType == EnvType.GROUP_USER ? bot.userBaseV2 : null;
     }
