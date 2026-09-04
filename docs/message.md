@@ -116,7 +116,6 @@ public class DemoButtonGroupSend{
 
 ### 流式私聊发送
 
-
 about: [测试文件](../src/test/java/test_sendFriendStreamMessage.java)
 
 ```java

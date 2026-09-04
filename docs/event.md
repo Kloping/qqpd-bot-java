@@ -8,10 +8,7 @@
 
 事件注册是通过 `Starter` 类的 `registerListenerHost` 方法完成的。开发者需要创建一个实现了 `ListenerHost` 接口的类，并在其中使用 `@EventReceiver` 注解标记事件处理方法。
 
-
-**_待完善.._**
-
-- [Event](../src/main/java/io/github/kloping/qqbot/api/event/Event.java) 所有事件顶级接口
+- [Event](../src/main/java/io/github/kloping/qqbot/api/event/Event.java) 所有事件顶级接口; 自行使用idea 查看所有实现
 
 <hr>
 以下事件可直接写入 ↓
