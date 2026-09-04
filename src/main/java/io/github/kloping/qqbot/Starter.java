@@ -303,6 +303,7 @@ public class Starter implements Runnable {
         /**
          * 在沙箱环境与正式环境 之前切换 默认正式环境
          */
+        @Deprecated
         public void sandbox() {
             sandbox = !sandbox;
         }
