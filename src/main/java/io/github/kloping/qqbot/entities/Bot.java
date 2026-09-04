@@ -3,6 +3,7 @@ package io.github.kloping.qqbot.entities;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApprovalStrategyList;
 import io.github.kloping.qqbot.http.*;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
@@ -98,5 +99,25 @@ public class Bot {
 
     public String getId() {
         return getInfo().getId();
+    }
+
+    /**
+     * 查询当前生效中的入群自动审批策略列表。
+     *
+     * @param cursor 分页游标，首次请求可传空
+     * @param limit 单页数量，默认 20，最大 50
+     * @return 入群自动审批策略分页结果
+     */
+    public JoinApprovalStrategyList getJoinApprovalStrategyList(String cursor, Integer limit) {
+        return groupBaseV2.getJoinApprovalStrategyList(cursor, limit);
+    }
+
+    /**
+     * 查询当前生效中的入群自动审批策略的第一页。
+     *
+     * @return 入群自动审批策略分页结果
+     */
+    public JoinApprovalStrategyList getJoinApprovalStrategyList() {
+        return getJoinApprovalStrategyList(null, null);
     }
 }

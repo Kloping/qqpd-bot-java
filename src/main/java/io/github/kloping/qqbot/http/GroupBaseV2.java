@@ -5,12 +5,15 @@ import io.github.kloping.qqbot.entities.qqpd.v2.Member;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupBotState;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupInfo;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApproval;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApprovalStrategyList;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinRequestList;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMemberList;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMuteSetting;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersRequest;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersResult;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.MemberBlacklist;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.MemberBlacklistRequest;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.MemberBlacklistResult;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.spt.annotations.http.*;
 
@@ -59,27 +62,6 @@ public interface GroupBaseV2 extends BaseV2 {
     @GetPath("/v2/groups/{group_openid}/bot_state")
     GroupBotState getBotState(@PathValue("group_openid") String gid);
 
-    /** 该能力正在内邀接入中，敬请期待。 */
-    @GetPath("/v2/groups/{group_openid}/members")
-    GroupMemberList getMembers(@PathValue("group_openid") String gid,
-                               @ParamName("cursor") @DefaultValue("") String cursor);
-
-    /** 该能力正在内邀接入中，敬请期待。 */
-    @PostPath("/v2/groups/{group_openid}/batch_remove_members")
-    BatchRemoveMembersResult batchRemoveMembers(@PathValue("group_openid") String gid,
-                                                @RequestBody(type = RequestBody.type.json) BatchRemoveMembersRequest request);
-
-    /** 该能力正在内邀接入中，敬请期待。 */
-    @GetPath("/v2/groups/{group_openid}/member_blacklist")
-    MemberBlacklist getMemberBlacklist(@PathValue("group_openid") String gid,
-                                       @ParamName("cursor") @DefaultValue("") String cursor,
-                                       @ParamName("limit") @DefaultValue("20") Integer limit);
-
-    /** 该能力正在内邀接入中，敬请期待。 */
-    @GetPath("/v2/groups/{group_openid}/members/{member_openid}")
-    Member getMember(@PathValue("group_openid") String gid,
-                     @PathValue("member_openid") String memberOpenid);
-
     @GetPath("/v2/groups/{group_openid}/restrict_chat_setting")
     GroupMuteSetting getMuteSetting(@PathValue("group_openid") String gid);
 
@@ -113,6 +95,18 @@ public interface GroupBaseV2 extends BaseV2 {
                              @RequestBody(type = RequestBody.type.json) JoinApproval approval);
 
     /**
+     * 查询入群自动审批策略列表。
+     *
+     * @param cursor 分页游标，首次请求可传空
+     * @param limit 单页数量，默认 20，最大 50
+     * @return 入群自动审批策略分页结果
+     */
+    @GetPath("/v2/groups/join_approval_strategy")
+    JoinApprovalStrategyList getJoinApprovalStrategyList(
+            @ParamName("cursor") @DefaultValue("") String cursor,
+            @ParamName("limit") @DefaultValue("20") Integer limit);
+
+    /**
      * 发送群聊消息
      *
      * @param gid
@@ -134,4 +128,37 @@ public interface GroupBaseV2 extends BaseV2 {
      */
     @PostPath("/v2/groups/{group_openid}/files")
     V2Result sendFile(@PathValue("group_openid") String gid, @RequestBody(type = io.github.kloping.spt.annotations.http.RequestBody.type.json) String body, @Headers Map<String, String> headers);
+
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/members")
+    GroupMemberList getMembers(@PathValue("group_openid") String gid,
+                               @ParamName("cursor") @DefaultValue("") String cursor);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @PostPath("/v2/groups/{group_openid}/batch_remove_members")
+    BatchRemoveMembersResult batchRemoveMembers(@PathValue("group_openid") String gid,
+                                                @RequestBody(type = RequestBody.type.json) BatchRemoveMembersRequest request);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/member_blacklist")
+    MemberBlacklist getMemberBlacklist(@PathValue("group_openid") String gid,
+                                       @ParamName("cursor") @DefaultValue("") String cursor,
+                                       @ParamName("limit") @DefaultValue("20") Integer limit);
+
+    /**
+     * 操作群黑名单，单次最多 20 个成员。
+     *
+     * @param gid 群 OpenID
+     * @param request 黑名单操作请求
+     * @return 操作失败的成员 OpenID 列表
+     */
+    @PostPath("/v2/groups/{group_openid}/member_blacklist")
+    MemberBlacklistResult operateMemberBlacklist(@PathValue("group_openid") String gid,
+                                                  @RequestBody(type = RequestBody.type.json) MemberBlacklistRequest request);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/members/{member_openid}")
+    Member getMember(@PathValue("group_openid") String gid,
+                     @PathValue("member_openid") String memberOpenid);
 }
