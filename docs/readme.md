@@ -101,8 +101,6 @@ group.muteMember(memberOpenid, Mute.Add, 60);
 ```
 `getJoinRequestList(cursor, limit)` 返回 `JoinRequestList`，可通过 `getList()` 获取申请列表、`getNextCursor()` 获取下一页游标。审批支持 `ifApprove` / `ifDecline` 条件方法；`muteMember` 支持 `Mute.Add`、`Mute.Update`，群禁言可通过 `setMuteSetting(...)` 设置。
 
-## 主动发送
-```
 ### 主动发送群消息
 ```java
 MessageAsyncBuilder builder = new MessageAsyncBuilder();

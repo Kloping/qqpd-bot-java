@@ -61,7 +61,7 @@ Gradle
     starter.run();
 ```
 
-> #### V1.5.0-Beta7+ 注册监听器主机方式 [荐]
+> #### 注册监听器主机方式 [荐]
 
 ```java
 starter.registerListenerHost(new ListenerHost(){
