@@ -26,25 +26,6 @@
   - PlainText
   - Markdown
   - Keyboard
-- 消息发送者 Sender
-  - BaseMessageChannelReceiveEvent
-  - BaseMessageContainsAtEvent
-  - BaseMessageDeleteEvent
-  - BaseMessageDirectReceiveEvent
-  - BaseMessageEvent
-  - BaseMessageReactionEvent
-  - BaseMessageReceiveEvent
-  - Channel
-  - DirectMessage
-  - DirectSender
-  - Dms
-  - MessageChannelReceiveEvent
-  - MessageContainsAtEvent
-  - MessageDeleteEvent
-  - MessageDirectReceiveEvent
-  - MessageReceiveEvent
-  - RawMessage
-  - SenderAndCidMidGetter
 
 消息构造:
 

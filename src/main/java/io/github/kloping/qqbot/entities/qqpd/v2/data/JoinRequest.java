@@ -52,6 +52,8 @@ public class JoinRequest {
     private Boolean bot;
     @JSONField(name = "verify_info")
     private VerifyInfo verifyInfo;
+    @JSONField(name = "auto_approved")
+    private AutoApproved autoApproved;
 
     /** 返回申请中的验证答案。问答验证取所有答案，普通验证取验证消息。 */
     public List<String> getAnswers() {
@@ -126,5 +128,13 @@ public class JoinRequest {
         private String question;
         @JSONField(name = "answer")
         private String answer;
+    }
+
+    /** 自动审批通过的扩展信息。 */
+    @Data
+    @Accessors(chain = true)
+    public static class AutoApproved {
+        @JSONField(name = "strategy_id")
+        private String strategyId;
     }
 }

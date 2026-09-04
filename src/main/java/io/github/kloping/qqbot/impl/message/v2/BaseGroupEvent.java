@@ -20,6 +20,7 @@ public abstract class BaseGroupEvent implements GroupEvent {
         this.rawData = jo;
         this.bot = bot;
         this.group = new Group(getMetadata());
+        this.group.setBot(bot);
     }
 
     @Override

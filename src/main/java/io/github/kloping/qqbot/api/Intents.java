@@ -89,6 +89,7 @@ public enum Intents {
     /**
      * 群聊事件
      */
+    GROUP_MEMBER_EVENT (1<<24),
     GROUP_INTENTS(1 << 25),
     INTERACTION(1 << 26),
     MESSAGE_AUDIT(1 << 27),
@@ -109,8 +110,8 @@ public enum Intents {
     /**
      * 公域机器人订阅推荐
      */
-    PUBLIC_INTENTS(2114715651),
-    PUBLIC_GROUP_INTENTS(1812468739 | 1 << 25),
+    PUBLIC_INTENTS(2131492867),
+    PUBLIC_GROUP_INTENTS(1812468739 | 1 << 24 | 1 << 25),
     /**
      * 私域机器人订阅推荐
      */
