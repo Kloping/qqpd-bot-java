@@ -15,8 +15,7 @@ import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.data.V2MsgData;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.spt.util.Judge;
-import lombok.Getter;
-import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -27,11 +26,105 @@ import java.util.List;
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
 
 /**
+ *
+ * <table><thead><tr><th>名称</th> <th>类型</th> <th>描述</th></tr></thead> <tbody><tr><td>group_openid</td> <td>string</td> <td>群 OpenID</td></tr> <tr><td>group_name</td> <td>string</td> <td>群名称</td></tr> <tr><td>group_finger_memo</td> <td>string</td> <td>群简介</td></tr> <tr><td>group_class_text</td> <td>string</td> <td>群分类</td></tr> <tr><td>group_tags</td> <td>[]string</td> <td>群标签列表</td></tr> <tr><td>group_member_num</td> <td>integer</td> <td>群成员人数</td></tr></tbody></table>
  * @author github.kloping
  */
-@Getter
-@Accessors(chain = true)
+@Slf4j
 public class Group extends Contact implements SenderV2 {
+    private String group_openid;
+    private String group_name;
+    private String group_finger_memo;
+    private String group_class_text;
+    private List<String> group_tags;
+    private Integer group_member_num;
+
+    private transient GroupInfo groupInfo;
+
+    private void loadInfoIfNecessary() {
+        loadInfoIfNecessary(null);
+    }
+
+    private void loadInfoIfNecessary(GroupInfo info) {
+        if (group_openid != null && group_name != null && group_finger_memo != null && group_class_text != null && group_tags != null && group_member_num != null) {
+            return;
+        }
+        if (info != null) {
+            this.groupInfo = info;
+        } else {
+            this.groupInfo = getInfo();
+        }
+        if (groupInfo == null) {
+            log.error("get group info failed on loadInfoIfNecessary.");
+            return;
+        }
+        if (group_openid == null) group_openid = groupInfo.getGroupOpenid();
+        if (group_name == null) group_name = groupInfo.getGroupName();
+        if (group_finger_memo == null) group_finger_memo = groupInfo.getGroupFingerMemo();
+        if (group_class_text == null) group_class_text = groupInfo.getGroupClassText();
+        if (group_tags == null) group_tags = groupInfo.getGroupTags();
+        if (group_member_num == null) group_member_num = groupInfo.getGroupMemberNum();
+    }
+
+    /**
+     * 获取群 OpenID。
+     *
+     * @return 群 OpenID
+     */
+    public String getGroupOpenid() {
+        loadInfoIfNecessary();
+        return group_openid;
+    }
+
+    /**
+     * 获取群名称。
+     *
+     * @return 群名称
+     */
+    public String getGroupName() {
+        loadInfoIfNecessary();
+        return group_name;
+    }
+
+    /**
+     * 获取群简介。
+     *
+     * @return 群简介
+     */
+    public String getGroupFingerMemo() {
+        loadInfoIfNecessary();
+        return group_finger_memo;
+    }
+
+    /**
+     * 获取群分类。
+     *
+     * @return 群分类
+     */
+    public String getGroupClassText() {
+        loadInfoIfNecessary();
+        return group_class_text;
+    }
+
+    /**
+     * 获取群标签列表。
+     *
+     * @return 群标签列表
+     */
+    public List<String> getGroupTags() {
+        loadInfoIfNecessary();
+        return group_tags;
+    }
+
+    /**
+     * 获取群成员人数。
+     *
+     * @return 群成员人数
+     */
+    public Integer getGroupMemberNum() {
+        loadInfoIfNecessary();
+        return group_member_num;
+    }
 
     public Group(JSONObject mate) {
         super(mate);
@@ -41,11 +134,16 @@ public class Group extends Contact implements SenderV2 {
 
     /**
      * 获取当前群的基本信息
+     * 若存在缓存 可刷新
      *
      * @return 群基本信息
      */
     public GroupInfo getInfo() {
-        return bot.groupBaseV2.getGroupInfo(getOpenid());
+        try {
+            return this.groupInfo = bot.groupBaseV2.getGroupInfo(getOpenid());
+        } finally {
+            loadInfoIfNecessary(this.groupInfo);
+        }
     }
 
     /**
@@ -95,10 +193,7 @@ public class Group extends Contact implements SenderV2 {
     public void muteMember(String memberOpenid, Mute operation, long seconds) {
         if (operation == null) throw new IllegalArgumentException("禁言操作不能为空");
         String expireAt = OffsetDateTime.now(ZoneOffset.UTC).plusSeconds(seconds).toString();
-        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(
-                new SetMemberMuteState().setOp(operation.getValue())
-                        .setMemberOpenid(memberOpenid)
-                        .setMuteExpireAt(expireAt))));
+        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(new SetMemberMuteState().setOp(operation.getValue()).setMemberOpenid(memberOpenid).setMuteExpireAt(expireAt))));
     }
 
     /**
@@ -107,10 +202,7 @@ public class Group extends Contact implements SenderV2 {
      * @param memberOpenid 成员 OpenID
      */
     public void unmuteMember(String memberOpenid) {
-        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(
-                new SetMemberMuteState().setOp("del")
-                        .setMemberOpenid(memberOpenid)
-                        .setMuteExpireAt(""))));
+        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(new SetMemberMuteState().setOp("del").setMemberOpenid(memberOpenid).setMuteExpireAt(""))));
     }
 
     /**
@@ -165,9 +257,7 @@ public class Group extends Contact implements SenderV2 {
      * 批量移除当前群成员，单次最多 20 个。
      */
     public BatchRemoveMembersResult batchRemoveMembers(List<String> memberOpenids, boolean addToMemberBlacklist) {
-        return bot.groupBaseV2.batchRemoveMembers(getOpenid(), new BatchRemoveMembersRequest()
-                .setMemberOpenids(memberOpenids)
-                .setAddToMemberBlacklist(addToMemberBlacklist));
+        return bot.groupBaseV2.batchRemoveMembers(getOpenid(), new BatchRemoveMembersRequest().setMemberOpenids(memberOpenids).setAddToMemberBlacklist(addToMemberBlacklist));
     }
 
     /**
@@ -216,9 +306,7 @@ public class Group extends Contact implements SenderV2 {
      * 该能力正在内邀接入中，敬请期待
      */
     public MemberBlacklistResult addToMemberBlacklist(List<String> memberOpenids) {
-        return operateMemberBlacklist(new MemberBlacklistRequest()
-                .setOp("add")
-                .setMemberOpenids(memberOpenids));
+        return operateMemberBlacklist(new MemberBlacklistRequest().setOp("add").setMemberOpenids(memberOpenids));
     }
 
     /**
@@ -227,9 +315,7 @@ public class Group extends Contact implements SenderV2 {
      * 该能力正在内邀接入中，敬请期待
      */
     public MemberBlacklistResult removeFromMemberBlacklist(List<String> memberOpenids) {
-        return operateMemberBlacklist(new MemberBlacklistRequest()
-                .setOp("del")
-                .setMemberOpenids(memberOpenids));
+        return operateMemberBlacklist(new MemberBlacklistRequest().setOp("del").setMemberOpenids(memberOpenids));
     }
 
     /**

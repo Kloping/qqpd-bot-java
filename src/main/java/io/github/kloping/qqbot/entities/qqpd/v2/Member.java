@@ -54,6 +54,11 @@ public class Member extends Contact implements SenderAndCidMidGetter, SenderV2 {
         this.setId(this.getMeta().getString("id"));
         this.setOpenid(this.getMeta().getString("member_openid"));
         this.setMemberOpenid(this.getOpenid());
+        this.setUsername(this.getMeta().getString("username"));
+        this.setMemberRole(this.getMeta().getString("member_role"));
+        // this.setJoinedAt(this.getMeta().getString("joined_at")); //无
+        this.setUnionOpenid(this.getMeta().getString("union_openid"));
+        this.setBotAccount(this.getMeta().getBoolean("bot"));
     }
 
     @Override

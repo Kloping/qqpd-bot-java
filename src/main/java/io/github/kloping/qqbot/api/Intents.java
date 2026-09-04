@@ -109,7 +109,7 @@ public enum Intents {
     /**
      * 公域机器人订阅推荐
      */
-    PUBLIC_INTENTS(1812468739),
+    PUBLIC_INTENTS(2114715651),
     PUBLIC_GROUP_INTENTS(1812468739 | 1 << 25),
     /**
      * 私域机器人订阅推荐
