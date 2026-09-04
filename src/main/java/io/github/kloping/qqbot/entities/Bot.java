@@ -1,9 +1,13 @@
 package io.github.kloping.qqbot.entities;
 
+import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
+import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApprovalStrategyList;
+import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.*;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
@@ -99,6 +103,32 @@ public class Bot {
 
     public String getId() {
         return getInfo().getId();
+    }
+
+    /**
+     * 主动向指定群发送消息。
+     *
+     * <p>该方法使用群 OpenID 作为目标标识，并复用 {@link Group#send(SendAble)}
+     * 的消息编码逻辑，支持文本、图片及其他 {@link SendAble} 消息类型。</p>
+     *
+     * @param groupId 群 OpenID
+     * @param message 要发送的消息
+     * @return QQ 开放平台返回的消息结果
+     * @throws IllegalArgumentException 当群 OpenID 或消息为空时抛出
+     */
+    public Result sendMessage(String groupId, SendAble message) {
+        if (groupId == null || groupId.trim().isEmpty()) {
+            throw new IllegalArgumentException("群 OpenID 不能为空");
+        }
+        if (message == null) {
+            throw new IllegalArgumentException("消息不能为空");
+        }
+        JSONObject meta = new JSONObject();
+        meta.put("group_id", groupId);
+        meta.put("group_openid", groupId);
+        Group group = new Group(meta);
+        group.setBot(this);
+        return group.send(message);
     }
 
     /**

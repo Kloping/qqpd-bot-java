@@ -22,7 +22,6 @@
 - **[消息发送 message](message.md)**
 - **[网络相关配置](network.md)**
 - **[日志相关配置](logging.md)**
-- **[V2群相关](v2.md)**
 
 <hr>
 
@@ -41,6 +40,7 @@
 Starter starter = new Starter("appid", "secret");
 // 私域推荐Intents.PRIVATE_INTENTS 公域机器人推荐 Intents.PUBLIC_INTENTS
 starter.getConfig().setCode(Intents.PRIVATE_INTENTS.getCode());
+// starter.getConfig().setCode(Intents.PUBLIC_INTENTS.getCode());
 // 切换沙箱与正式环境
 // starter.getConfig().sandbox();
 // 启动
@@ -59,7 +59,7 @@ starter.registerListenerHost(new ListenerHost(){
 ```
 
 ### 消息发送
-> step2 发送消息   tips: MessageEvent exts Sender
+> step2 发送消息   tips: MessageEvent extends Sender
 - 发送文本`sender.send("文本");`
 - 发送图片
 ```java
@@ -83,47 +83,114 @@ sender.send(image);
 
 <hr>
 
-### 其他设置项
+### 此处为qq机器人在群里中使用的说明
 
-#### 日志设置
+v2 使用条件(必须) 当前(23.11.16)
 
-SDK 全部日志通过 SLF4J 输出，源码使用类级 `@Slf4j` 生成的 `log.trace`、`log.debug`、`log.info`、`log.warn` 和 `log.error`。日志等级、格式、文件输出和颜色由宿主日志实现管理。
+- 机器人必须为公域
+- 必须有 **_[在QQ群配置](https://q.qq.com/qqbot/#/developer/sandbox)_**  的权限
+- 配置完成后，群主可从沙箱群“设置-群机器人”打开机器人列表页添加测试机器人
 
-旧版 `LoggerImpl`、`starter.APPLICATION.logger`、`Config.logLevel`、`logToFile` 与 `logFileDir` 已删除，不能再用于配置日志。
+<hr>
 
-#### 独立运行
+> 以下为 必要启动代码
 
-直接运行 SDK 时，使用可选的 Logback provider 输出到标准输出。默认等级为 `INFO`，默认控制台格式为：
 
-```text
-%clr([%thread]){blue} %clr(%-32.32logger{48}){magenta} %clr(%d{yyyy-MM-dd HH:mm:ss}){red} %clr(%-5p): %clr(%msg){light_green}%n
+<details>
+<summary>展开查看</summary>
+
+```java
+import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.api.Intents;
+import io.github.kloping.qqbot.api.message.MessageChannelReceiveEvent;
+import io.github.kloping.qqbot.api.v2.GroupMessageEvent;
+import io.github.kloping.qqbot.entities.ex.Image;
+import io.github.kloping.qqbot.entities.ex.MessageAsyncBuilder;
+import io.github.kloping.qqbot.entities.qqpd.data.Emoji;
+import io.github.kloping.qqbot.impl.BaseConnectedEvent;
+import io.github.kloping.qqbot.impl.EventReceiver;
+import io.github.kloping.qqbot.impl.ListenerHost;
+
+public class demo {
+    public static void main(String[] args) {
+        //==============================================必要↓↓↓↓↓↓↓
+        Starter starter = new Starter("appid", "secret");
+        //===================================公域推荐订阅===============↓群聊/好友 事件订阅
+        starter.getConfig().setCode(Intents.PUBLIC_INTENTS);
+        starter.run();
+        starter.registerListenerHost(new ListenerHost() {
+
+            @EventReceiver
+            public void onMessage(MessageChannelReceiveEvent event) {
+                MessageAsyncBuilder builder = new MessageAsyncBuilder();
+                builder.append("测试发图!");
+                builder.append(new Image("https://kloping.top/icon.jpg"));
+                builder.append(Emoji.K歌);
+                event.send(builder.build());
+            }
+
+            /**
+             * 因为是公域 所以仅当bot被at时才能触发事件
+             * @param event
+             */
+            @EventReceiver
+            public void onMessage(GroupMessageEvent event) {
+                MessageAsyncBuilder builder = new MessageAsyncBuilder();
+                builder.append("测试发图!");
+                //目前仅支持 以url发送图片 https://bot.q.qq.com/wiki/develop/api-231017/server-inter/message/send-receive/rich-text-media.html#%E5%8F%91%E9%80%81%E5%88%B0%E7%BE%A4%E8%81%8A
+                builder.append(new Image("https://kloping.top/icon.jpg"));
+                builder.append(Emoji.K歌);
+                event.sendMessage(builder.build());
+            }
+        });
+    }
+}
 ```
 
-可使用 JVM 参数覆盖默认设置：
+</details>
 
-```text
--Dqqbot.logging.level=DEBUG
--Dqqbot.logging.color=false
--Dqqbot.logging.pattern="[%thread] %-32.32logger{32} %d{yyyy-MM-dd HH:mm:ss} %-5p: %msg%n"
+
+## v1.5.4-R2 群管理 API
+
+以下方法通过 `Group` 对象调用。事件中可直接使用 `GroupEvent#getGroup()` 或
+`GroupMessageEvent#getSubject()` 获取当前群对象。
+
+```java
+import io.github.kloping.qqbot.api.v2.GroupEvent;
+import io.github.kloping.qqbot.entities.qqpd.v2.Group;
+import io.github.kloping.qqbot.entities.qqpd.v2.Mute;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApproval;
+
+public void handle(GroupEvent event) {
+    Group group = event.getGroup();
+    String cursor = null;
+    String memberOpenid = "member-openid";
+
+    // 获取群基本信息
+    System.out.println(group.getInfo());
+    // 获取机器人在群内的状态
+    System.out.println(group.getBotState());
+    // 入群申请列表：默认获取第一页；也可传 cursor 和 limit（最大 50）
+    System.out.println(group.getJoinRequestList());
+    System.out.println(group.getJoinRequestList(cursor, 50));
+//    for (JoinRequest joinRequest : group.getJoinRequestList().getList()) {
+//        joinRequest.ifApprove(p -> p.getAnswer().contains("没"));
+//    }
+    // 审批入群申请：op 可填写 approve / decline
+    group.approvalJoinRequest(memberOpenid, new JoinApproval().setOp("approve"));
+    // 查询群禁言状态
+    System.out.println(group.getMuteSetting());
+    // 设置成员禁言，时长单位为秒；解除禁言使用 group.unmuteMember(memberOpenid)
+    group.muteMember(memberOpenid, Mute.Add, 60);
+}
 ```
 
-`qqbot.logging.level` 支持 `TRACE`、`DEBUG`、`INFO`、`WARN`、`ERROR`、`OFF` 等 Logback 标准等级。设置 `qqbot.logging.color=false` 可禁用 ANSI 颜色。未指定颜色的 `%clr(...)` 会按级别着色：`ERROR` 红、`WARN` 黄、`INFO` 绿、`DEBUG` 青。自定义模式支持 `black`、`red`、`green`、`light_green`、`yellow`、`blue`、`magenta`、`cyan` 和 `white`。
+`getJoinRequestList(cursor, limit)` 返回 `JoinRequestList`，可通过 `getList()` 获取申请列表、
+`getNextCursor()` 获取下一页游标。审批也可使用申请对象提供的 `ifApprove` / `ifDecline` 条件方法。
+`muteMember` 支持 `Mute.Add`、`Mute.Update`，解除成员禁言请调用 `unmuteMember`。
 
-#### Spring Boot 项目中的日志配置
+群禁言也可以通过 `setMuteSetting(...)` 传入 `GroupMuteSetting.GroupMuteSettingRequest` 进行批量或细粒度设置。
 
-检测到 Spring Boot 后，SDK 不会创建或修改 appender，也不会修改日志等级、颜色或输出格式。SDK 的默认 Logback provider 为 Maven 可选依赖，不会传递到 Spring Boot 用户项目。
-
-请使用 Spring Boot 标准日志配置：
-
-```yaml
-logging:
-  level:
-    io.github.kloping.qqbot: DEBUG
-  pattern:
-    console: "%clr([%thread]){blue} %clr(%-32.32logger{48}){magenta} %clr(%d{yyyy-MM-dd HH:mm:ss}){red} %clr(%-5p): %clr(%msg){light_green}%n"
-```
-
-也可在 `logback-spring.xml` 中配置 `io.github.kloping.qqbot` logger、控制台 appender 和文件 appender。Spring Boot 的配置优先，且不会被 SDK 覆盖。
 <hr>
 
 
@@ -139,16 +206,13 @@ starter.APPLICATION.INSTANCE.getContextManager().getContextEntity(Start0.class).
 
 ```
 
-//其中主动发送qq群
+#### 其中主动发送qq群
 
-    starter.registerListenerHost(new ListenerHost() {
-        @EventReceiver
-        public void onEvent(ConnectedEvent event) {
-            V2MsgData data = new V2MsgData().setContent("测试主动消息");
-            starter.getBot().groupBaseV2.send("groupOpenId", data.toString(), SEND_MESSAGE_HEADERS);
-        }
-    });
-![img.png](./imgs/img.png)
+                 MessageAsyncBuilder builder = new MessageAsyncBuilder();
+                builder.image("https://kloping.top/icon.jpg");
+                builder.text("主动消息测试");
+                bot.sendMessage("474905EE5C4F5199A1EC08E1C04BF077", builder.build());
+
 
 ### 依赖排斥
 
