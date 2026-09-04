@@ -48,6 +48,7 @@ public class BaseGroupMessageEvent extends BaseMessageEvent<Group> implements Gr
 
         this.subject.setBot(bot);
         this.sender.setBot(bot);
+        this.sender.setGroup(this.subject);
     }
 
     @Override

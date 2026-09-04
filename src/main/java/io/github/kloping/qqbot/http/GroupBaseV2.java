@@ -1,10 +1,16 @@
 package io.github.kloping.qqbot.http;
 
 import io.github.kloping.qqbot.Starter;
+import io.github.kloping.qqbot.entities.qqpd.v2.Member;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupBotState;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupInfo;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApproval;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinRequestList;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMemberList;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMuteSetting;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersRequest;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersResult;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.MemberBlacklist;
 import io.github.kloping.qqbot.http.data.V2Result;
 import io.github.kloping.spt.annotations.http.*;
 
@@ -52,6 +58,34 @@ public interface GroupBaseV2 extends BaseV2 {
      */
     @GetPath("/v2/groups/{group_openid}/bot_state")
     GroupBotState getBotState(@PathValue("group_openid") String gid);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/members")
+    GroupMemberList getMembers(@PathValue("group_openid") String gid,
+                               @ParamName("cursor") @DefaultValue("") String cursor);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @PostPath("/v2/groups/{group_openid}/batch_remove_members")
+    BatchRemoveMembersResult batchRemoveMembers(@PathValue("group_openid") String gid,
+                                                @RequestBody(type = RequestBody.type.json) BatchRemoveMembersRequest request);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/member_blacklist")
+    MemberBlacklist getMemberBlacklist(@PathValue("group_openid") String gid,
+                                       @ParamName("cursor") @DefaultValue("") String cursor,
+                                       @ParamName("limit") @DefaultValue("20") Integer limit);
+
+    /** 该能力正在内邀接入中，敬请期待。 */
+    @GetPath("/v2/groups/{group_openid}/members/{member_openid}")
+    Member getMember(@PathValue("group_openid") String gid,
+                     @PathValue("member_openid") String memberOpenid);
+
+    @GetPath("/v2/groups/{group_openid}/restrict_chat_setting")
+    GroupMuteSetting getMuteSetting(@PathValue("group_openid") String gid);
+
+    @PostPath("/v2/groups/{group_openid}/restrict_chat_setting")
+    void setMuteSetting(@PathValue("group_openid") String gid,
+                        @RequestBody(type = RequestBody.type.json) GroupMuteSetting.GroupMuteSettingRequest request);
 
     /**
      * 拉取入群申请列表。

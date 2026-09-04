@@ -6,6 +6,12 @@ import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupBotState;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupInfo;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApproval;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinRequestList;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMemberList;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.GroupMuteSetting;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.SetMemberMuteState;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersRequest;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.BatchRemoveMembersResult;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.MemberBlacklist;
 import io.github.kloping.spt.util.Judge;;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.api.SenderV2;
@@ -22,6 +28,10 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static io.github.kloping.qqbot.entities.qqpd.Channel.SEND_MESSAGE_HEADERS;
 
@@ -55,6 +65,129 @@ public class Group extends Contact implements SenderV2 {
     public GroupBotState getBotState() {
         return bot.groupBaseV2.getBotState(getOpenid());
     }
+
+    /**
+     * 分页获取当前群成员列表。
+     *
+     * @param cursor 分页游标，首次请求可传空字符串
+     * @return 群成员分页结果
+     */
+    public GroupMemberList getMembers(String cursor) {
+        return bot.groupBaseV2.getMembers(getOpenid(), cursor);
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待
+     * <hr/>
+     * 获取当前群第一页成员列表。
+     *
+     * @return 群成员分页结果
+     */
+    public GroupMemberList getMembers() {
+        return getMembers("");
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待。
+     * <hr/>
+     * 批量移除当前群成员，单次最多 20 个。
+     */
+    public BatchRemoveMembersResult batchRemoveMembers(List<String> memberOpenids, boolean addToMemberBlacklist) {
+        return bot.groupBaseV2.batchRemoveMembers(getOpenid(), new BatchRemoveMembersRequest()
+                .setMemberOpenids(memberOpenids)
+                .setAddToMemberBlacklist(addToMemberBlacklist));
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待。
+     * <hr/>
+     * 批量移除当前群成员，默认不加入群黑名单。
+     */
+    public BatchRemoveMembersResult batchRemoveMembers(List<String> memberOpenids) {
+        return batchRemoveMembers(memberOpenids, false);
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待。
+     * <hr/>
+     * 查询当前群黑名单。
+     */
+    public MemberBlacklist getMemberBlacklist(String cursor, Integer limit) {
+        MemberBlacklist result = bot.groupBaseV2.getMemberBlacklist(getOpenid(), cursor, limit);
+        if (result != null && result.getUsers() != null) {
+            result.getUsers().forEach(member -> member.setGroup(this));
+        }
+        return result;
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待。
+     * <hr/>
+     * 获取当前群第一页黑名单成员。
+     */
+    public MemberBlacklist getMemberBlacklist() {
+        return getMemberBlacklist("", 20);
+    }
+
+    /**
+     * 该能力正在内邀接入中，敬请期待
+     * <hr/>
+     * 获取指定群成员的详细信息。
+     * @param memberOpenid 成员 OpenID
+     * @return 群成员信息
+     */
+    public Member getMember(String memberOpenid) {
+        Member member = bot.groupBaseV2.getMember(getOpenid(), memberOpenid);
+        member.setGroup(this);
+        return member;
+    }
+
+    /**
+     * 查询当前群的全员禁言规则及成员禁言列表。
+     *
+     * @return 群禁言状态
+     */
+    public GroupMuteSetting getMuteSetting() {
+        return bot.groupBaseV2.getMuteSetting(getOpenid());
+    }
+
+    /**
+     * 设置当前群成员级禁言状态。
+     *
+     * @param request 禁言操作请求，支持 add、update、del
+     */
+    public void setMuteSetting(GroupMuteSetting.GroupMuteSettingRequest request) {
+        bot.groupBaseV2.setMuteSetting(getOpenid(), request);
+    }
+
+    /**
+     * 设置指定群成员的禁言状态，时长单位为秒。
+     *
+     * @param memberOpenid 成员 OpenID
+     * @param operation 禁言操作类型
+     * @param seconds 禁言时长（秒）
+     */
+    public void muteMember(String memberOpenid, Mute operation, long seconds) {
+        if (operation == null) throw new IllegalArgumentException("禁言操作不能为空");
+        String expireAt = OffsetDateTime.now(ZoneOffset.UTC).plusSeconds(seconds).toString();
+        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(
+                new SetMemberMuteState().setOp(operation.getValue())
+                        .setMemberOpenid(memberOpenid)
+                        .setMuteExpireAt(expireAt))));
+    }
+
+    /**
+     * 解除指定群成员的禁言状态。
+     *
+     * @param memberOpenid 成员 OpenID
+     */
+    public void unmuteMember(String memberOpenid) {
+        setMuteSetting(new GroupMuteSetting.GroupMuteSettingRequest().setMembers(Collections.singletonList(
+                new SetMemberMuteState().setOp("del")
+                        .setMemberOpenid(memberOpenid)
+                        .setMuteExpireAt(""))));
+    }
+
 
     /**
      * 拉取当前群的入群申请列表。

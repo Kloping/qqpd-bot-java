@@ -57,7 +57,7 @@ public class BaseUtils {
         String content = rawMessage.getContent();
         MessageChain chain = new MessageChain();
         dispose(content, chain);
-        if (rawMessage.getAttachments() != null) {
+        if (rawMessage.getAttachments() != null && rawMessage.getAttachments().length > 0) {
             for (MessageAttachment attachment : rawMessage.getAttachments()) {
                 FileMsg fileMsg = null;
                 fileMsg = new FileMsg(1, attachment.getContent_type(), attachment.getUrl(), null, attachment.getFilename()){};

@@ -17,9 +17,10 @@ import java.util.regex.Pattern;
 public class PdCode {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile(
-            "<at:([^>]+)>|<atAll>|<emoji:(\\d+)>|<image:([^>]+)>|<@!?(\\d+)>|<#(\\d+)>|" +
-                    "<qqbot-at-user\\s+id=\"([^\"]+)\"\\s*/>|<faceType=([^>]+)>|@everyone|<qqbot-at-everyone\\s*/>");
-    private static final Pattern FACE_ID_PATTERN = Pattern.compile("faceId\\s*=\\s*([0-9]+)");
+            "<at:([^>]+)>|<atAll\\s*/?>|<emoji:(\\d+)>|<image:([^>]+)>|<@!?([^>\\s]+)>|<#([0-9]+)>|" +
+                    "<qqbot-at-user\\s+id\\s*=\\s*\"([^\"]+)\"\\s*/?>|<faceType\\s*=\\s*([^>]+)>|" +
+                    "@everyone|<qqbot-at-everyone\\s*/?>");
+    private static final Pattern FACE_ID_PATTERN = Pattern.compile("\\bfaceId\\s*=\\s*\"?([0-9]+)\"?", Pattern.CASE_INSENSITIVE);
 
     public static String serializeToPdCode(SendAble e) {
         if (e == null) return "";
@@ -83,20 +84,28 @@ public class PdCode {
 
     private static SendAble deserializeToken(Matcher matcher) {
         if (matcher.group(1) != null) return new At(At.MEMBER_TYPE, matcher.group(1));
-        if (matcher.group(2) != null) return Emoji.valueOf(Integer.parseInt(matcher.group(2)));
+        if (matcher.group(2) != null) return parseEmoji(matcher.group(2));
         if (matcher.group(3) != null) return new Image(matcher.group(3));
         if (matcher.group(4) != null) return new At(At.MEMBER_TYPE, matcher.group(4));
         if (matcher.group(5) != null) return new At(At.CHANNEL_TYPE, matcher.group(5));
         if (matcher.group(6) != null) return new At(At.MEMBER_TYPE, matcher.group(6));
         if (matcher.group(7) != null) {
             Matcher faceId = FACE_ID_PATTERN.matcher(matcher.group(7));
-            if (faceId.find()) return Emoji.valueOf(Integer.parseInt(faceId.group(1)));
+            if (faceId.find()) return parseEmoji(faceId.group(1));
             return null;
         }
         String token = matcher.group();
-        if ("<atAll>".equals(token) || "@everyone".equals(token) || token.startsWith("<qqbot-at-everyone")) {
+        if (token.startsWith("<atAll") || "@everyone".equals(token) || token.startsWith("<qqbot-at-everyone")) {
             return new AtAll();
         }
         return null;
+    }
+
+    private static SendAble parseEmoji(String id) {
+        try {
+            return Emoji.valueOf(Integer.parseInt(id));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
