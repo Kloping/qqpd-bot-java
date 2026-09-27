@@ -47,6 +47,17 @@ public class Start0 {
         headers.put("X-Union-Appid", contextManager.getContextEntity(String.class, Starter.APPID_ID));
     }
 
+    /**
+     * 获取当前环境的基础请求地址，与 {@code @HttpClient} 接口解析出的 host 保持一致。
+     *
+     * @return 以 {@code /} 结尾的基础地址
+     */
+    public String getNet() {
+        Starter starter = contextManager == null ? null : contextManager.getContextEntity(Starter.class);
+        String net = starter == null || starter.net == null ? Starter.NET_MAIN : starter.net;
+        return net.endsWith("/") ? net : net + "/";
+    }
+
     @AutoStand
     AuthV2Base authV2Base;
 

@@ -9,6 +9,7 @@
 - [事件监听](#事件监听)
 - [消息发送](#消息发送)
 - [QQ 群机器人](#qq-群机器人)
+- [自定义菜单与指令面板](#自定义菜单与指令面板)
 - [自定义消息与主动发送](#自定义消息与主动发送)
 - [配置连接方式](#配置连接方式)
 - [依赖兼容性](#依赖兼容性)
@@ -108,6 +109,51 @@ builder.image("https://kloping.top/icon.jpg");
 builder.text("主动消息测试");
 bot.sendMessage("474905EE5C4F5199A1EC08E1C04BF077", builder.build());
 ```
+
+## 自定义菜单与指令面板
+以下能力均为应用级配置，通过 `Bot` 对象调用。对应接口 [自定义菜单与指令面板](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/)。
+
+### 自定义菜单（仅 C2C 单聊）
+```java
+Bot bot = starter.getBot();
+// 查询当前菜单
+MenuData data = bot.getMenu();
+// 修改菜单（覆盖原有完整配置）
+bot.setMenu(new Menu().setItems(Arrays.asList(
+        new Menu.MenuItem().setType(Menu.TYPE_SEND_MESSAGE).setName("帮助").setSendMessage("/help"),
+        new Menu.MenuItem().setType(Menu.TYPE_LINK).setName("官网").setLink("https://example.com"),
+        new Menu.MenuItem().setType(Menu.TYPE_SWITCH).setName("搜索")
+                .setSwitchConfig(new Menu.SwitchConfig().setSwitchId("search").setDefaultOn(true)))));
+```
+
+### 指令面板
+支持 `c2c`（单聊）、`group`（群聊）、`channel`（文字子频道）、`dm`（频道私信）四种场景，其中 `c2c`/`group` 支持按指定用户/群生效。
+```java
+// 创建 group 指定群面板
+Panel.Created created = bot.createPanel(new Panel.CreateRequest()
+        .setScope(Panel.SCOPE_GROUP)
+        .setTargetType(Panel.TARGET_SPECIFIC)
+        .setGroupOpenids(Collections.singletonList("group-openid"))
+        .setPanel(new Panel().setItems(Collections.singletonList(
+                new Panel.PanelItem().setType(Panel.TYPE_COMMAND).setName("群签到").setDesc("每日签到")))));
+String panelId = created.getPanelId();
+
+// 分页查询面板列表 / 查询详情
+bot.getPanels(Panel.SCOPE_GROUP);            // 第一页
+bot.getPanels(Panel.SCOPE_GROUP, null, 50);  // 指定游标与条数
+bot.getPanel(panelId);
+
+// 修改面板配置（不影响已关联的用户/群）
+bot.updatePanel(panelId, new Panel().setRemark("更新备注"));
+
+// 增删面板关联对象（仅 c2c/group 的 specific 面板）
+bot.updatePanelTarget(panelId, new Panel.TargetRequest()
+        .setOp(Panel.OP_ADD).setGroupOpenids(Collections.singletonList("another-group")));
+
+// 删除面板
+bot.deletePanel(panelId);
+```
+> `Bot#deletePanel` 直接发送 DELETE 请求：底层 SpringTool 的注解代理会把 DELETE 错误地发送为 GET，详见 `MenuPanelBase` 类注释。
 
 ## 配置连接方式
 ### 自定义 WebSocket 地址

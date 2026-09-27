@@ -1,14 +1,22 @@
 package io.github.kloping.qqbot.entities;
 
 import com.alibaba.fastjson.JSONObject;
+import io.github.kloping.qqbot.Start0;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
 import io.github.kloping.qqbot.entities.qqpd.User;
 import io.github.kloping.qqbot.entities.qqpd.v2.Group;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.JoinApprovalStrategyList;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.Menu;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.MenuData;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.Panel;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.PanelDetail;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.PanelRecordPage;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.VersionData;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.*;
+import io.github.kloping.qqbot.utils.HttpUtils;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import lombok.Getter;
@@ -51,6 +59,12 @@ public class Bot {
 
     @AutoStand
     public AuthV2Base authV2Base;
+
+    @AutoStand
+    public MenuPanelBase menuPanelBase;
+
+    @AutoStand
+    public Start0 start0;
 
     @Getter
     @AutoStand
@@ -149,5 +163,102 @@ public class Bot {
      */
     public JoinApprovalStrategyList getJoinApprovalStrategyList() {
         return getJoinApprovalStrategyList(null, null);
+    }
+
+    /**
+     * 查询全局自定义菜单。
+     *
+     * @return 当前菜单配置，未设置过菜单时 {@code menu} 为空
+     */
+    public MenuData getMenu() {
+        return menuPanelBase.getMenu();
+    }
+
+    /**
+     * 修改全局自定义菜单，会覆盖原有完整配置。
+     *
+     * @param menu 菜单配置
+     * @return 修改后的菜单版本号
+     */
+    public VersionData setMenu(Menu menu) {
+        return menuPanelBase.setMenu(new MenuData().setMenu(menu));
+    }
+
+    /**
+     * 分页拉取指定场景下已生效的指令面板列表。
+     *
+     * @param scope  生效场景，见 {@link Panel#SCOPE_C2C} 等
+     * @param cursor 分页游标，首次请求可传空
+     * @param limit  每页条数，默认 20，最大 50
+     * @return 面板列表分页结果
+     */
+    public PanelRecordPage getPanels(String scope, String cursor, Integer limit) {
+        return menuPanelBase.getPanels(scope, cursor, limit);
+    }
+
+    /**
+     * 查询指定场景指令面板列表的第一页。
+     *
+     * @param scope 生效场景，见 {@link Panel#SCOPE_C2C} 等
+     * @return 面板列表分页结果
+     */
+    public PanelRecordPage getPanels(String scope) {
+        return getPanels(scope, null, null);
+    }
+
+    /**
+     * 创建指令面板。
+     *
+     * @param request 创建请求
+     * @return 新创建的面板 ID
+     */
+    public Panel.Created createPanel(Panel.CreateRequest request) {
+        return menuPanelBase.createPanel(request);
+    }
+
+    /**
+     * 查询指定指令面板的完整配置详情。
+     *
+     * @param panelId 面板 ID
+     * @return 面板详情
+     */
+    public PanelDetail getPanel(String panelId) {
+        return menuPanelBase.getPanel(panelId);
+    }
+
+    /**
+     * 修改指定指令面板的配置内容，不影响已关联的用户/群列表。
+     *
+     * @param panelId 面板 ID
+     * @param panel   面板配置
+     * @return 修改后的面板版本号
+     */
+    public VersionData updatePanel(String panelId, Panel panel) {
+        return menuPanelBase.updatePanel(panelId, new Panel.UpdateRequest().setPanel(panel));
+    }
+
+    /**
+     * 修改指定指令面板关联的用户或群。
+     *
+     * @param panelId 面板 ID
+     * @param request 关联对象操作，channel 与 dm 场景不支持
+     */
+    public void updatePanelTarget(String panelId, Panel.TargetRequest request) {
+        menuPanelBase.updatePanelTarget(panelId, request);
+    }
+
+    /**
+     * 删除指定指令面板，删除后不再对任何用户或群生效。
+     *
+     * <p>底层 {@code @HttpClient} 代理无法正确发送 DELETE 请求（详见 {@link MenuPanelBase}），
+     * 故此处直接发送。</p>
+     *
+     * @param panelId 面板 ID
+     */
+    public void deletePanel(String panelId) {
+        if (panelId == null || panelId.trim().isEmpty()) {
+            throw new IllegalArgumentException("面板 ID 不能为空");
+        }
+        HttpUtils.delete(start0.getNet() + "v2/panels/" + panelId, start0.getHeaders());
     }
 }
