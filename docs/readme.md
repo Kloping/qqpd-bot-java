@@ -144,7 +144,8 @@ bot.getPanels(Panel.SCOPE_GROUP, null, 50);  // 指定游标与条数
 bot.getPanel(panelId);
 
 // 修改面板配置（不影响已关联的用户/群）
-bot.updatePanel(panelId, new Panel().setRemark("更新备注"));
+bot.updatePanel(panelId, new Panel().setRemark("更新备注").setItems(Collections.singletonList(
+        new Panel.PanelItem().setType(Panel.TYPE_COMMAND).setName("群签到").setDesc("每日签到"))));
 
 // 增删面板关联对象（仅 c2c/group 的 specific 面板）
 bot.updatePanelTarget(panelId, new Panel.TargetRequest()
