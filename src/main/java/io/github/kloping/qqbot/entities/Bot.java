@@ -1,7 +1,6 @@
 package io.github.kloping.qqbot.entities;
 
 import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.qqbot.Start0;
 import io.github.kloping.qqbot.Starter;
 import io.github.kloping.qqbot.api.SendAble;
 import io.github.kloping.qqbot.entities.qqpd.Guild;
@@ -16,7 +15,6 @@ import io.github.kloping.qqbot.entities.qqpd.v2.data.PanelRecordPage;
 import io.github.kloping.qqbot.entities.qqpd.v2.data.VersionData;
 import io.github.kloping.qqbot.http.data.Result;
 import io.github.kloping.qqbot.http.*;
-import io.github.kloping.qqbot.utils.HttpUtils;
 import io.github.kloping.spt.annotations.AutoStand;
 import io.github.kloping.spt.annotations.Entity;
 import lombok.Getter;
@@ -62,9 +60,6 @@ public class Bot {
 
     @AutoStand
     public MenuPanelBase menuPanelBase;
-
-    @AutoStand
-    public Start0 start0;
 
     @Getter
     @AutoStand

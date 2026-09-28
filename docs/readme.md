@@ -154,7 +154,6 @@ bot.updatePanelTarget(panelId, new Panel.TargetRequest()
 // 删除面板
 bot.deletePanel(panelId);
 ```
-> `Bot#deletePanel` 直接发送 DELETE 请求：底层 SpringTool 的注解代理会把 DELETE 错误地发送为 GET，详见 `MenuPanelBase` 类注释。
 
 ## 配置连接方式
 ### 自定义 WebSocket 地址

@@ -1,20 +1,8 @@
 package io.github.kloping.qqbot.http;
 
 import io.github.kloping.qqbot.Starter;
-import io.github.kloping.qqbot.entities.qqpd.v2.data.MenuData;
-import io.github.kloping.qqbot.entities.qqpd.v2.data.Panel;
-import io.github.kloping.qqbot.entities.qqpd.v2.data.PanelDetail;
-import io.github.kloping.qqbot.entities.qqpd.v2.data.PanelRecordPage;
-import io.github.kloping.qqbot.entities.qqpd.v2.data.VersionData;
-import io.github.kloping.spt.annotations.http.DefaultValue;
-import io.github.kloping.spt.annotations.http.GetPath;
-import io.github.kloping.spt.annotations.http.Headers;
-import io.github.kloping.spt.annotations.http.HttpClient;
-import io.github.kloping.spt.annotations.http.ParamName;
-import io.github.kloping.spt.annotations.http.PathValue;
-import io.github.kloping.spt.annotations.http.PostPath;
-import io.github.kloping.spt.annotations.http.RequestBody;
-import io.github.kloping.spt.annotations.http.RequestPath;
+import io.github.kloping.qqbot.entities.qqpd.v2.data.*;
+import io.github.kloping.spt.annotations.http.*;
 import org.jsoup.Connection;
 
 /**
@@ -22,6 +10,10 @@ import org.jsoup.Connection;
  *
  * <p>官方文档：<a href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/">自定义菜单与指令面板</a></p>
  *
+ * <p><b>注意：</b>删除指令面板（{@code DELETE /v2/panels/{panel_id}}）依赖底层 SpringTool 的注解代理
+ * 正确发送 DELETE 请求。若所用 SpringTool 版本存在 DELETE 被错误发送为 GET 的问题
+ * （其注解代理仅在 {@link Connection.Method#hasBody()} 为 true 时才设置请求方法），
+ * 请升级 SpringTool 后再使用 {@link #deletePanel(String)}。</p>
  *
  * @author github.kloping
  */
