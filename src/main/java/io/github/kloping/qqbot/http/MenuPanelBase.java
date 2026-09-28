@@ -22,10 +22,6 @@ import org.jsoup.Connection;
  *
  * <p>官方文档：<a href="https://bot.q.qq.com/wiki/develop/api-v2/server-inter/menu-panel/">自定义菜单与指令面板</a></p>
  *
- * <p><b>注意：</b>删除指令面板（{@code DELETE /v2/panels/{panel_id}}）未在此接口声明。
- * 底层 SpringTool 的注解代理仅在 {@link Connection.Method#hasBody()} 为 true 时才会设置请求方法，
- * 而 DELETE 的 hasBody() 恒为 false，会被错误地以 GET 发送，因此删除能力改由
- * {@code Bot#deletePanel(String)} 直接发送 DELETE 请求。</p>
  *
  * @author github.kloping
  */
@@ -114,4 +110,14 @@ public interface MenuPanelBase {
     @RequestPath(value = "/v2/panels/{panel_id}/target", method = Connection.Method.PUT)
     void updatePanelTarget(@PathValue("panel_id") String panelId,
                            @RequestBody(type = RequestBody.type.json) Panel.TargetRequest request);
+
+    /**
+     * 删除指定指令面板，删除后不再对任何用户或群生效。
+     *
+     * <table><tr><td>HTTP URL</td> <td>/v2/panels/{panel_id}</td></tr> <tr><td>HTTP Method</td> <td>DELETE</td></tr></table>
+     *
+     * @param panelId 面板 ID
+     */
+    @RequestPath(value = "/v2/panels/{panel_id}", method = Connection.Method.DELETE)
+    void deletePanel(@PathValue("panel_id") String panelId, @RequestBody(type = RequestBody.type.toString) String empty);
 }

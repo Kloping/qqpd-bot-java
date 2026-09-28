@@ -250,15 +250,12 @@ public class Bot {
     /**
      * 删除指定指令面板，删除后不再对任何用户或群生效。
      *
-     * <p>底层 {@code @HttpClient} 代理无法正确发送 DELETE 请求（详见 {@link MenuPanelBase}），
-     * 故此处直接发送。</p>
-     *
      * @param panelId 面板 ID
      */
     public void deletePanel(String panelId) {
         if (panelId == null || panelId.trim().isEmpty()) {
             throw new IllegalArgumentException("面板 ID 不能为空");
         }
-        HttpUtils.delete(start0.getNet() + "v2/panels/" + panelId, start0.getHeaders());
+        menuPanelBase.deletePanel(panelId,"{}");
     }
 }
