@@ -10,6 +10,7 @@
 - [消息发送](#消息发送)
 - [QQ 群机器人](#qq-群机器人)
 - [自定义菜单与指令面板](#自定义菜单与指令面板)
+- [素材管理](#素材管理)
 - [自定义消息与主动发送](#自定义消息与主动发送)
 - [配置连接方式](#配置连接方式)
 - [依赖兼容性](#依赖兼容性)
@@ -153,6 +154,30 @@ bot.updatePanelTarget(panelId, new Panel.TargetRequest()
 
 // 删除面板
 bot.deletePanel(panelId);
+```
+
+## 素材管理
+预上传 Markdown 图片，换取 `qqbot-media://` 引用链接后在 Markdown 消息中反复引用。对应接口 [素材管理](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html)。
+限制：单图不超过 10MB，仅支持 png/jpeg/gif/webp；单机器人上限 100 张（删除可释放）；引用滑动过期，每次被消息成功引用后 90 天顺延。
+```java
+Bot bot = starter.getBot();
+// 上传（内部依次执行申请上传、直传预签名地址、完成上传）
+// complete 接口仅返回 image_id、url、ttl、preview_url，其余字段按入参与本机时间补齐（近似值）
+MediaImage image = bot.uploadImage("kline.png", bytes);
+
+// 生成 Markdown 引用并发送
+Markdown markdown = Markdown.ofText(image.toMarkdown("分时K线", 800, 400));
+// ![分时K线 #800px #400px](qqbot-media://image/v1/xxx)
+
+// 分页查询当前有效图片 / 删除（删除后引用立即失效，已发送消息不受影响）
+bot.getMediaImages();                     // 第一页
+bot.getMediaImages("cursor");             // 指定游标
+bot.deleteMediaImage(image.getImageId());
+
+// 消息事件监听器内也可直接通过事件调用（简单委托给 Bot）
+// event.uploadImage("kline.png", bytes);
+// event.getMediaImages();
+// event.deleteMediaImage(image.getImageId());
 ```
 
 ## 配置连接方式
